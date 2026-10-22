@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ProgrammeCards from '../components/ProgrammeCards.astro';
+import Faq from '../components/Faq.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import { site, statusLabel, telHref, wa, waText } from '../config/site';
+import { yearRound, registerSteps } from '../content/copy';
+import { parentFaq } from '../content/faq';
+---
+<BaseLayout
+  title="Admissions | Unnati Montessori, Mogappair West"
+  description="Admissions are open all year for ages 2½–6, with Extended Day Care from age 1. How to register at Unnati Montessori, Mogappair West, Chennai."
+>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Admissions</p>
+      <h1>Join when your child is ready</h1>
+      <p class="chip status"><span class="dot" aria-hidden="true"></span>{statusLabel} · Admissions open all year</p>
+      <p class="lead">{yearRound}</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={wa(site.school, waText.general)} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp us</a>
+        <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="programmes-title">
+    <div class="container">
+      <SectionHead eyebrow="Programmes" title="Our programmes" id="programmes-title" />
+      <ProgrammeCards />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="register-title">
+    <div class="container">
+      <SectionHead eyebrow="How to register" title="Three simple steps" id="register-title" />
+      <ol class="steps" role="list" data-reveal="children">
+        {registerSteps.map((s, i) => (
+          <li class="pebble step">
+            <span class="num" aria-hidden="true">{i + 1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text(site.school.display)}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="faq-title">
+    <div class="container-narrow">
+      <SectionHead eyebrow="Parent FAQ" title="Questions parents ask" id="faq-title" />
+      <Faq items={parentFaq} />
+    </div>
+  </section>
+
+  <EnquiryForm />
+</BaseLayout>
+
+<style>
+  .status { margin-top: 1rem; }
+  .steps { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); counter-reset: s; }
+  .step { display: grid; gap: .5rem; align-content: start; }
+  .num { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--forest); color: var(--cream); font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; }
+  .step h3 { margin: .25rem 0 0; }
+</style>

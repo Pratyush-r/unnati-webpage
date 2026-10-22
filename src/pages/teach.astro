@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site, telHref, wa, waText } from '../config/site';
+---
+<BaseLayout
+  title="Montessori Teacher Training in Chennai | Teach with Us"
+  description={`Primary Montessori Teacher Training with Unnati starts ${site.teacherTraining.startLabel}. We're also hiring AMI / IMTC Primary trained educators in Mogappair West.`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">For educators</p>
+      <h1>Teach with us</h1>
+      <p class="lead">Montessori teacher training in Chennai, and a place in a new, authentic Montessori House for Children.</p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container teach-grid">
+      <article class="pebble teach-card" aria-labelledby="training" data-reveal>
+        <span class="icon-badge"><Icon name="teacher" /></span>
+        <h2 id="training">Primary Montessori Teacher Training</h2>
+        <p class="when chip">Starts {site.teacherTraining.startLabel}</p>
+        <ul class="points" role="list">
+          <li>Train to guide children aged 2½–6 the Montessori way, with Unnati.</li>
+          <li>Call or WhatsApp us for the course details and to apply.</li>
+        </ul>
+        {site.teacherTraining.applyOpen && (
+          <div class="btn-row">
+            <a class="btn btn--primary" href={wa(site.school, waText.training)} target="_blank" rel="noopener"><Icon name="whatsapp" />Apply on WhatsApp</a>
+            <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+          </div>
+        )}
+      </article>
+
+      {site.hiring.open && (
+        <article class="pebble teach-card teach-card--hire" aria-labelledby="hiring" data-reveal>
+          <span class="icon-badge icon-badge--blush"><Icon name="people" /></span>
+          <h2 id="hiring">We're hiring</h2>
+          <p class="role">{site.hiring.role}</p>
+          <ul class="points" role="list">
+            <li>Join a new, authentic Montessori House for Children in Mogappair West, Chennai.</li>
+          </ul>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={wa(site.school, waText.hiring)} target="_blank" rel="noopener"><Icon name="whatsapp" />Apply on WhatsApp</a>
+            <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+          </div>
+        </article>
+      )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-narrow note" data-reveal>
+      <p class="hand">Follow the child.</p>
+      <p>Looking for help setting up or strengthening a Montessori school? <a href="/consultancy">See our Montessori consultancy →</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .teach-grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+  .teach-card { display: grid; gap: .9rem; align-content: start; }
+  .teach-card h2 { font-size: clamp(1.5rem, 1.25rem + 1vw, 2.1rem); }
+  .teach-card--hire { background: var(--blush); }
+  .when { width: fit-content; font-size: 1rem; }
+  .role { font-family: var(--font-head); font-size: var(--fs-h3); font-weight: 600; color: var(--forest); }
+  .points { display: grid; gap: .5rem; }
+  .points li { padding-left: 1.5rem; position: relative; }
+  .points li::before { content: ''; position: absolute; left: 0; top: .55em; width: 10px; height: 7px; border-radius: 0 100% 0 100%; background: var(--leaf); }
+  .teach-card .btn-row { margin-top: .5rem; }
+  .note { text-align: center; display: grid; gap: .5rem; justify-items: center; }
+  .note a { font-weight: 700; }
+</style>

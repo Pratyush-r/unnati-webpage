@@ -1,0 +1,44 @@
+---
+// Programme icons in the poster style: sprout (Primary Environment), house with a heart and
+// family (Extended Day Care), tree with two playing children (After-school Activities).
+interface Props {
+  kind: 'primary' | 'daycare' | 'afterschool';
+  size?: number;
+}
+const { kind, size = 96 } = Astro.props;
+---
+<svg class="programme-art" viewBox="0 0 120 100" width={size * 1.2} height={size} aria-hidden="true" focusable="false">
+  {kind === 'primary' && (
+    <g>
+      <path d="M22 92 C30 74 90 74 98 92 Z" fill="#7A4A23" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+      <path d="M38 86 h4 M62 84 h5 M78 88 h3" stroke="#5B3517" stroke-width="2" stroke-linecap="round" />
+      <path d="M60 78 C60 62 58 50 60 38" fill="none" stroke="var(--leaf)" stroke-width="4" stroke-linecap="round" />
+      <path d="M60 50 C50 32 30 30 18 38 C26 54 46 58 60 50 Z" fill="#2E8540" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+      <path d="M60 40 C68 20 90 14 104 22 C98 40 76 46 60 40 Z" fill="var(--leaf)" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+      <path d="M58 49 C46 43 36 40 24 39 M62 39 C74 32 86 26 98 23" fill="none" stroke="#5FA86E" stroke-width="1.6" stroke-linecap="round" />
+    </g>
+  )}
+  {kind === 'daycare' && (
+    <g>
+      <path d="M12 46 L60 10 L108 46" fill="none" stroke="var(--brown)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="84" y="16" width="10" height="18" fill="#D65A3A" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+      <path d="M60 30 c-3-5-11-4-11 2 0 5 7 9 11 12 4-3 11-7 11-12 0-6-8-7-11-2z" fill="var(--brown)" />
+      <circle cx="36" cy="58" r="8" fill="#E2723F" /><path d="M22 92 C22 74 50 74 50 92 Z" fill="#E2723F" />
+      <circle cx="84" cy="58" r="8" fill="#E7A92B" /><path d="M70 92 C70 74 98 74 98 92 Z" fill="#E7A92B" />
+      <circle cx="60" cy="62" r="9" fill="#5E8C3A" /><path d="M44 94 C44 74 76 74 76 94 Z" fill="#5E8C3A" />
+      <path d="M14 94 H106" stroke="var(--brown)" stroke-width="3" stroke-linecap="round" />
+    </g>
+  )}
+  {kind === 'afterschool' && (
+    <g>
+      <path d="M58 94 V54 M58 66 L46 56 M58 62 L70 50" fill="none" stroke="#C9A06A" stroke-width="5" stroke-linecap="round" />
+      <circle cx="58" cy="34" r="14" fill="#5E8C3A" /><circle cx="42" cy="44" r="12" fill="#6FA048" /><circle cx="74" cy="42" r="12" fill="#4F7F33" />
+      <circle cx="50" cy="24" r="10" fill="#6FA048" /><circle cx="68" cy="24" r="10" fill="#5E8C3A" />
+      <circle cx="22" cy="52" r="6" fill="#E2723F" />
+      <path d="M22 58 L20 76 M20 66 L10 58 M20 66 L30 62 M20 76 L12 88 M20 76 L28 88" fill="none" stroke="#E2723F" stroke-width="6" stroke-linecap="round" />
+      <circle cx="96" cy="54" r="6" fill="#2F6E3A" />
+      <path d="M96 60 L98 76 M98 66 L108 58 M98 66 L86 62 M98 76 L90 88 M98 76 L106 88" fill="none" stroke="#2F6E3A" stroke-width="6" stroke-linecap="round" />
+      <path d="M6 94 H114" stroke="var(--brown)" stroke-width="3" stroke-linecap="round" />
+    </g>
+  )}
+</svg>

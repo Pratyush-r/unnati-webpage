@@ -1,0 +1,17 @@
+---
+// 4.4.8 FAQs — native <details>/<summary>; height animates where ::details-content is supported.
+import type { QA } from '../content/faq';
+
+interface Props {
+  items: QA[];
+}
+const { items } = Astro.props;
+---
+<div class="faq" data-reveal="children">
+  {items.map((item) => (
+    <details>
+      <summary>{item.q}</summary>
+      <div class="answer"><p set:html={item.a} /></div>
+    </details>
+  ))}
+</div>

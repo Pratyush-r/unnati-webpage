@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import VineSteps from '../components/VineSteps.astro';
+import VineDivider from '../components/VineDivider.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { Image } from 'astro:assets';
+import emblem from '../assets/brand/emblem.png';
+import { mission, vision, ourName, founderNote, journey } from '../content/copy';
+import { site, statusLabel } from '../config/site';
+
+const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : undefined }));
+---
+<BaseLayout
+  title="About Unnati Montessori | Mission, Vision & Founder"
+  description="Our mission, vision and story. Unnati Montessori in Mogappair West, Chennai is led by Manisha Aashish, an AMI-trained Montessori educator."
+>
+  <section class="page-hero">
+    <div class="container about-hero">
+      <div>
+        <p class="eyebrow">About us</p>
+        <h1>Growth that begins from within</h1>
+        <p class="lead">{site.name} — {site.tagline}. An authentic Montessori environment in {site.address.area}, {site.address.city}.</p>
+      </div>
+      <Image src={emblem} alt="" width={200} height={264} class="about-emblem" loading="eager" />
+    </div>
+  </section>
+
+  <section class="section--tight" aria-labelledby="mission">
+    <div class="container mv">
+      <article class="pebble mv-card" data-reveal>
+        <p class="eyebrow">Mission</p>
+        <h2 id="mission" class="sr-only">Our mission</h2>
+        <p class="mv-text">{mission}</p>
+      </article>
+      <article class="pebble mv-card mv-card--vision" data-reveal>
+        <p class="eyebrow">Vision</p>
+        <h2 class="sr-only">Our vision</h2>
+        <p class="mv-body">{vision}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section bg-sage" aria-labelledby="our-name">
+    <div class="container-narrow name-block" data-reveal>
+      <p class="eyebrow">Our name</p>
+      <h2 id="our-name">{ourName.word} <span lang="hi" class="deva">{ourName.devanagari}</span></h2>
+      <p class="lead">{ourName.word} ({ourName.devanagari}) {ourName.meaning}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="founder-note">
+    <div class="container-narrow">
+      <SectionHead eyebrow="A note from our founder" title={`Meet ${site.contactPerson}`} id="founder-note" />
+      <div class="prose founder-note" data-reveal>
+        {founderNote.map((p) => <p>{p}</p>)}
+        <p class="signature">— {site.contactPerson}, Founder</p>
+      </div>
+      <VineDivider />
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="journey">
+    <div class="container">
+      <SectionHead eyebrow="Our journey" title="From after-school to a House for Children" id="journey" />
+      <VineSteps steps={steps} ordered={false} />
+    </div>
+  </section>
+
+  <CtaBand title="Come and see the prepared environment." text="Call or WhatsApp us — we'll answer every question." />
+</BaseLayout>
+
+<style>
+  .about-hero { display: grid; gap: 1.5rem; align-items: center; }
+  .about-hero :global(.about-emblem) { width: 140px; height: auto; justify-self: start; }
+  .mv { display: grid; gap: 1.25rem; }
+  .mv-card { display: grid; gap: .75rem; }
+  .mv-text { font-family: var(--font-head); font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem); line-height: 1.35; color: var(--brown); font-weight: 500; }
+  .mv-card--vision { background: var(--blush); }
+  .name-block { text-align: center; display: grid; gap: .75rem; justify-items: center; }
+  .deva { font-family: 'Nirmala UI', 'Noto Sans Devanagari', 'Mangal', sans-serif; font-weight: 600; color: var(--leaf); }
+  .founder-note { font-size: 1.125rem; }
+  .signature { font-weight: 800; color: var(--brown); margin-top: 1.25rem !important; }
+  @media (min-width: 768px) {
+    .about-hero { grid-template-columns: 1fr auto; }
+    .about-hero :global(.about-emblem) { width: 200px; }
+    .mv { grid-template-columns: 1fr 1.3fr; align-items: stretch; }
+  }
+</style>

@@ -27,7 +27,7 @@ export const site = {
   },
   teacherTraining: { startLabel: 'November 2026', applyOpen: true },
   hiring: { open: true, role: 'AMI / IMTC Primary Montessori trained educators' },
-  announcement: 'Admissions open for ages 2½–6 · Extended Day Care from age 1 · Join any time of the year',
+  announcement: 'Admissions open for ages 2½–6 · Join any time of the year',
   social: { instagram: '', facebook: '', youtube: '' }, // an icon renders only when filled
 };
 

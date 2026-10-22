@@ -1,0 +1,148 @@
+---
+// 4.4.4 Principles wheel — 8 segments in alternating soft peach and sage. Tap, hover or focus a
+// segment → it lifts 6 px and its explanation cross-fades into the centre panel (below on mobile).
+// Keyboard: arrow keys move between segments (radiogroup pattern, roving tabindex).
+import { principles } from '../content/copy';
+
+const R_IN = 104;
+const R_OUT = 202;
+const PAD = 1.6;
+const rad = (d: number) => (d * Math.PI) / 180;
+const pt = (r: number, a: number) => `${(r * Math.cos(rad(a))).toFixed(2)} ${(r * Math.sin(rad(a))).toFixed(2)}`;
+const lines: Record<string, string[]> = {
+  'Child-centred learning': ['Child-', 'centred', 'learning'],
+  'Prepared environment': ['Prepared', 'environment'],
+  'Hands-on learning': ['Hands-on', 'learning'],
+  'Self-directed activity': ['Self-directed', 'activity'],
+  'Respect for the child': ['Respect for', 'the child'],
+  'Mixed-age classrooms': ['Mixed-age', 'classrooms'],
+  'Freedom within limits': ['Freedom', 'within limits'],
+  'Intrinsic motivation': ['Intrinsic', 'motivation'],
+};
+const segs = principles.map((p, i) => {
+  const mid = -112.5 + i * 45;
+  const a0 = mid - 22.5 + PAD;
+  const a1 = mid + 22.5 - PAD;
+  const d = `M${pt(R_OUT, a0)} A${R_OUT} ${R_OUT} 0 0 1 ${pt(R_OUT, a1)} L${pt(R_IN, a1)} A${R_IN} ${R_IN} 0 0 0 ${pt(R_IN, a0)} Z`;
+  const lr = (R_IN + R_OUT) / 2;
+  return {
+    ...p,
+    i,
+    d,
+    lx: lr * Math.cos(rad(mid)),
+    ly: lr * Math.sin(rad(mid)),
+    dx: (6 * Math.cos(rad(mid))).toFixed(2),
+    dy: (6 * Math.sin(rad(mid))).toFixed(2),
+    tint: i % 2 ? 'sage' : 'peach',
+    lines: lines[p.label] ?? [p.label],
+  };
+});
+---
+<div class="wheel-wrap" data-wheel>
+  <div class="wheel-stage">
+    <svg class="wheel" viewBox="-214 -214 428 428" role="radiogroup" aria-label="Montessori principles">
+      <circle r={R_IN - 6} fill="var(--paper)" stroke="rgb(118 61 13 / .18)" stroke-width="2" aria-hidden="true" />
+      {segs.map((s) => (
+        <g
+          class={`seg seg--${s.tint}`}
+          role="radio"
+          aria-checked={s.i === 0 ? 'true' : 'false'}
+          tabindex={s.i === 0 ? 0 : -1}
+          aria-label={s.label}
+          data-i={s.i}
+          style={`--dx:${s.dx}px;--dy:${s.dy}px`}
+        >
+          <path d={s.d} class="seg-shape" />
+          <text class="seg-label" text-anchor="middle" aria-hidden="true">
+            {s.lines.map((ln, k) => (
+              <tspan x={s.lx.toFixed(1)} y={(s.ly + (k - (s.lines.length - 1) / 2) * 19 + 6).toFixed(1)}>{ln}</tspan>
+            ))}
+          </text>
+        </g>
+      ))}
+      <text class="center-title" text-anchor="middle" aria-hidden="true"><tspan x="0" y="-6">Montessori</tspan><tspan x="0" y="22">principles</tspan></text>
+    </svg>
+    <div class="panel" aria-live="polite">
+      {segs.map((s) => (
+        <div class="panel-item" data-panel={s.i} hidden={s.i !== 0}>
+          <p class="panel-title">{s.label}</p>
+          <p class="panel-text">{s.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+  <noscript>
+    <ul class="wheel-list">{principles.map((p) => <li><strong>{p.label}</strong> — {p.text}</li>)}</ul>
+  </noscript>
+</div>
+
+<style>
+  .wheel-wrap { max-width: 620px; margin-inline: auto; }
+  .wheel-stage { position: relative; }
+  .wheel { width: 100%; height: auto; overflow: visible; }
+  .seg { cursor: pointer; outline: none; transition: transform 250ms var(--ease-move); }
+  .seg-shape { stroke: rgb(118 61 13 / .35); stroke-width: 1.5; transition: fill 250ms ease; }
+  .seg--peach .seg-shape { fill: #F6D9BD; }
+  .seg--sage .seg-shape { fill: #D6E4CC; }
+  .seg[aria-checked='true'] { transform: translate(var(--dx), var(--dy)); }
+  .seg--peach[aria-checked='true'] .seg-shape { fill: #EDB98C; }
+  .seg--sage[aria-checked='true'] .seg-shape { fill: #A9C79A; }
+  .seg:hover .seg-shape { stroke: var(--brown); }
+  .seg:focus-visible .seg-shape { stroke: var(--leaf); stroke-width: 5; }
+  .seg-label { font: 700 16.5px var(--font-body); fill: var(--ink); pointer-events: none; }
+  .center-title { font: 600 25px var(--font-head); fill: var(--brown); }
+  .panel {
+    margin-top: 1rem; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md);
+    padding: 1.1rem 1.25rem; min-height: 120px; box-shadow: var(--shadow);
+  }
+  .panel-item[hidden] { display: none; }
+  .panel-title { font-family: var(--font-head); font-weight: 600; font-size: 1.375rem; color: var(--brown); line-height: 1.2; }
+  .panel-text { margin-top: .35rem; }
+  .wheel-list { display: grid; gap: .5rem; }
+  @media (min-width: 768px) {
+    .center-title { display: none; }
+    .panel {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 43%; aspect-ratio: 1; border-radius: 50%; margin: 0; padding: 1.25rem; display: grid; place-items: center;
+      text-align: center; background: transparent; border: 0; box-shadow: none; min-height: 0;
+    }
+    .panel-title { font-size: clamp(1.125rem, .8rem + .8vw, 1.375rem); }
+    .panel-text { font-size: .975rem; line-height: 1.45; }
+  }
+</style>
+
+<script>
+  import { animate } from '../lib/motion';
+
+  document.querySelectorAll<HTMLElement>('[data-wheel]').forEach((root) => {
+    const segs = Array.from(root.querySelectorAll<SVGGElement>('.seg'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    let current = 0;
+    const select = (i: number, focus = false) => {
+      if (i === current && !focus) return;
+      current = i;
+      segs.forEach((s, k) => {
+        s.setAttribute('aria-checked', String(k === i));
+        s.setAttribute('tabindex', k === i ? '0' : '-1');
+      });
+      panels.forEach((p, k) => (p.hidden = k !== i));
+      animate(panels[i], [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+      if (focus) segs[i].focus();
+    };
+    segs.forEach((s, i) => {
+      s.addEventListener('click', () => select(i));
+      s.addEventListener('focus', () => select(i));
+      s.addEventListener('pointerenter', (e) => {
+        if ((e as PointerEvent).pointerType === 'mouse') select(i);
+      });
+      s.addEventListener('keydown', (e) => {
+        const n = segs.length;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); select((current + 1) % n, true); }
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); select((current - 1 + n) % n, true); }
+        else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+        else if (e.key === 'End') { e.preventDefault(); select(n - 1, true); }
+        else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); select(i); }
+      });
+    });
+  });
+</script>

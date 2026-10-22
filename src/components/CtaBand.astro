@@ -1,0 +1,38 @@
+---
+// Forest closing band with WhatsApp + Call. Logos never sit on forest — text only.
+import Icon from './Icon.astro';
+import { site, telHref, wa, waText } from '../config/site';
+
+interface Props {
+  title: string;
+  text?: string;
+  phone?: 'school' | 'consultancy';
+  waMessage?: string;
+  waLabel?: string;
+}
+const { title, text, phone = 'school', waMessage, waLabel } = Astro.props;
+const number = site[phone];
+const message = waMessage ?? (phone === 'consultancy' ? waText.consultancy : waText.general);
+---
+<section class="cta bg-forest section--tight">
+  <div class="container cta-inner">
+    <div>
+      <p class="cta-brand">Unnati Montessori</p>
+      <h2>{title}</h2>
+      {text && <p class="cta-text">{text}</p>}
+    </div>
+    <div class="btn-row">
+      <a class="btn btn--light" href={wa(number, message)} target="_blank" rel="noopener"><Icon name="whatsapp" />{waLabel ?? `WhatsApp ${number.display}`}</a>
+      <a class="btn btn--ghost-light" href={telHref(number)}><Icon name="phone" />Call</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { padding-block: clamp(2.5rem, 2rem + 2vw, 4rem); }
+  .cta-inner { display: grid; gap: 1.5rem; align-items: center; }
+  .cta-brand { font-family: var(--font-head); font-size: 1.125rem; color: var(--sage); margin-bottom: .35rem; }
+  .cta h2 { max-width: 22ch; }
+  .cta-text { margin-top: .6rem; color: rgb(253 244 229 / .9); }
+  @media (min-width: 900px) { .cta-inner { grid-template-columns: 1fr auto; } }
+</style>

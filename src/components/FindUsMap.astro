@@ -1,0 +1,195 @@
+---
+// 4.4.6 Find us — illustrated street map recreating the poster. No map embed, no third-party requests.
+import Icon from './Icon.astro';
+import { site, fullAddress, telHref } from '../config/site';
+
+interface Props {
+  headingId?: string;
+}
+const { headingId = 'find-us' } = Astro.props;
+
+const landmarks = [
+  { id: 'temple', name: 'Sai Baba Temple', x: 70, y: 112 },
+  { id: 'brigade', name: 'Brigade', x: 330, y: 98 },
+  { id: 'tudor', name: 'Casagrand Tudor', x: 505, y: 98 },
+  { id: 'millenia', name: 'Casagrand Millenia', x: 500, y: 300 },
+];
+const trees = [
+  [150, 120], [250, 128], [430, 128], [580, 128], [30, 230], [120, 250], [60, 330], [140, 345],
+  [380, 250], [415, 345], [585, 350], [100, 445], [150, 445],
+];
+---
+<div class="findus">
+  <figure class="map-card" data-map>
+    <svg viewBox="0 0 600 470" role="group" aria-labelledby={`${headingId}-map-title`} class="map">
+      <title id={`${headingId}-map-title`}>Illustrated map: Unnati Montessori is on Chanakyan Cross Road, just east of Annamalai Avenue, near Casagrand Millenia</title>
+      <rect width="600" height="470" rx="24" fill="#F6EEDC" />
+      <g fill="#EADFC6" aria-hidden="true">
+        <rect x="236" y="214" width="150" height="10" rx="5" opacity=".7" /><rect x="420" y="214" width="70" height="10" rx="5" opacity=".7" />
+        <rect x="40" y="290" width="110" height="10" rx="5" opacity=".7" /><rect x="40" y="380" width="120" height="10" rx="5" opacity=".7" />
+      </g>
+      <!-- Roads -->
+      <g aria-hidden="true">
+        <rect x="0" y="150" width="600" height="44" fill="#DCD3C2" />
+        <rect x="186" y="194" width="40" height="230" fill="#DCD3C2" />
+        <rect x="186" y="380" width="414" height="44" fill="#DCD3C2" />
+      </g>
+      <g class="road-label" aria-hidden="true">
+        <text x="400" y="179" text-anchor="middle">Chanakyan Main Road</text>
+        <text x="440" y="409" text-anchor="middle">Chanakyan Cross Road</text>
+        <text transform="translate(213 300) rotate(-90)" text-anchor="middle">Annamalai Avenue</text>
+      </g>
+      <!-- Trees -->
+      <g aria-hidden="true">
+        {trees.map(([x, y]) => (
+          <g transform={`translate(${x} ${y})`}>
+            <rect x="-2" y="2" width="4" height="12" rx="1" fill="#A47148" />
+            <circle r="11" fill="#7FAF6A" stroke="rgb(118 61 13 / .35)" stroke-width="1.5" />
+          </g>
+        ))}
+      </g>
+      <!-- Landmarks (tap shows the name) -->
+      <g class="lm" data-lm="temple" role="button" tabindex="0" aria-label="Sai Baba Temple" transform="translate(70 112)">
+        <rect x="-36" y="-34" width="72" height="72" rx="14" fill="transparent" />
+        <path d="M-24 34 V-2 H24 V34 Z" fill="#E9A66B" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-14 -2 L0 -32 L14 -2 Z" fill="#D6905E" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-6 34 V18 Q0 10 6 18 V34" fill="#B5683A" />
+        <circle cx="0" cy="-34" r="3" fill="#D6905E" />
+      </g>
+      <g class="lm" data-lm="brigade" role="button" tabindex="0" aria-label="Brigade" transform="translate(330 98)">
+        <rect x="-38" y="-48" width="76" height="96" rx="12" fill="transparent" />
+        <rect x="-30" y="-40" width="60" height="80" rx="4" fill="#9CC8E8" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-20 -28 h10 M2 -28 h10 M-20 -14 h10 M2 -14 h10 M-20 0 h10 M2 0 h10 M-20 14 h10 M2 14 h10" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+      </g>
+      <g class="lm" data-lm="tudor" role="button" tabindex="0" aria-label="Casagrand Tudor" transform="translate(505 98)">
+        <rect x="-44" y="-48" width="88" height="96" rx="12" fill="transparent" />
+        <rect x="-36" y="-40" width="72" height="80" rx="4" fill="#B9D6EC" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-26 -28 h10 M-6 -28 h10 M14 -28 h10 M-26 -12 h10 M-6 -12 h10 M14 -12 h10 M-26 4 h10 M-6 4 h10 M14 4 h10 M-26 20 h10 M-6 20 h10 M14 20 h10" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+      </g>
+      <g class="lm" data-lm="millenia" role="button" tabindex="0" aria-label="Casagrand Millenia" transform="translate(500 316)">
+        <rect x="-50" y="-60" width="100" height="120" rx="12" fill="transparent" />
+        <rect x="-42" y="-50" width="84" height="100" rx="4" fill="#9CC8E8" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-32 -38 h12 M-6 -38 h12 M20 -38 h12 M-32 -20 h12 M-6 -20 h12 M20 -20 h12 M-32 -2 h12 M-6 -2 h12 M20 -2 h12 M-32 16 h12 M-6 16 h12 M20 16 h12 M-32 34 h12 M-6 34 h12 M20 34 h12" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+      </g>
+      <!-- Unnati -->
+      <g class="unnati" aria-hidden="true" transform="translate(300 340)">
+        <rect x="-50" y="-14" width="100" height="52" rx="4" fill="#FFF6E6" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M-60 -10 L0 -46 L60 -10 Z" fill="var(--leaf)" stroke="rgb(118 61 13 / .7)" stroke-width="2" stroke-linejoin="round" />
+        <rect x="-10" y="12" width="20" height="26" rx="3" fill="#C9A46A" />
+        <rect x="-38" y="2" width="16" height="14" rx="2" fill="#9CC8E8" /><rect x="22" y="2" width="16" height="14" rx="2" fill="#9CC8E8" />
+      </g>
+      <g class="pin" aria-hidden="true">
+        <g class="pin-inner" transform="translate(300 264)">
+          <path d="M0 26 C-14 10 -20 0 -20 -10 A20 20 0 0 1 20 -10 C20 0 14 10 0 26 Z" fill="#C2410C" stroke="#7A2A08" stroke-width="2" />
+          <circle cx="0" cy="-10" r="7" fill="#fff" />
+        </g>
+      </g>
+      <g aria-hidden="true">
+        <text class="unnati-label" x="300" y="230" text-anchor="middle">Unnati Montessori</text>
+      </g>
+      <!-- North arrow + not-to-scale -->
+      <g aria-hidden="true" transform="translate(560 40)">
+        <circle r="20" fill="var(--paper)" stroke="rgb(118 61 13 / .45)" stroke-width="2" />
+        <path d="M0 -13 L7 6 L0 2 L-7 6 Z" fill="var(--brown)" />
+        <text y="-24" text-anchor="middle" class="n-label">N</text>
+      </g>
+      <text x="20" y="40" class="scale-note" aria-hidden="true">Map not to scale</text>
+      <!-- Tooltip -->
+      <g class="tip" aria-hidden="true" data-tip opacity="0">
+        <rect class="tip-bg" x="0" y="0" width="10" height="36" rx="18" fill="var(--forest)" />
+        <text class="tip-text" x="0" y="24" text-anchor="middle" fill="#FDF4E5"></text>
+      </g>
+    </svg>
+    <figcaption class="sr-only" aria-live="polite" data-map-live></figcaption>
+  </figure>
+
+  <div class="findus-info">
+    <address>
+      <Icon name="pin" size={24} />
+      <span><strong>{site.name}</strong><br />{fullAddress}<br /><span class="muted">Near Casagrand Millenia</span></span>
+    </address>
+    <div class="btn-row">
+      <a class="btn btn--primary" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="directions" />Get directions</a>
+      <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+    </div>
+    <p class="map-hint muted">Tap a building on the map to see its name.</p>
+  </div>
+</div>
+
+<style>
+  .findus { display: grid; gap: 1.5rem; align-items: center; }
+  .map-card { margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 10px; box-shadow: var(--shadow); }
+  .map { width: 100%; height: auto; }
+  .road-label { font: 700 19px var(--font-body); fill: #5B4636; letter-spacing: .02em; }
+  .unnati-label { font: 600 22px var(--font-head); fill: var(--brown); }
+  .n-label { font: 800 16px var(--font-body); fill: var(--brown); }
+  .scale-note { font: italic 600 17px var(--font-body); fill: #6B5444; }
+  .tip-text { font: 800 19px var(--font-body); }
+  .lm { cursor: pointer; outline: none; }
+  .lm:focus-visible > :first-child { stroke: var(--leaf); stroke-width: 4; }
+  .lm > *:not(:first-child) { transition: transform 200ms var(--ease-pop); }
+  .lm:hover > *:not(:first-child), .lm[aria-pressed='true'] > *:not(:first-child) { transform: translateY(-3px); }
+  .pin { transform-box: fill-box; transform-origin: 50% 100%; }
+  .findus-info address { display: flex; gap: .75rem; font-style: normal; font-size: 1.0625rem; }
+  .findus-info address :global(svg) { color: var(--brown); flex: none; margin-top: .2rem; }
+  .findus-info .btn-row { margin-top: 1.25rem; }
+  .map-hint { margin-top: .75rem; font-size: var(--fs-small); }
+  @media (min-width: 900px) { .findus { grid-template-columns: 1.35fr 1fr; gap: 2.5rem; } }
+</style>
+
+<script>
+  import { onceInView, animate } from '../lib/motion';
+
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((card) => {
+    const svg = card.querySelector('svg')!;
+    const tip = svg.querySelector<SVGGElement>('[data-tip]')!;
+    const bg = tip.querySelector('rect')!;
+    const text = tip.querySelector('text')!;
+    const live = card.querySelector('[data-map-live]')!;
+    const lms = Array.from(svg.querySelectorAll<SVGGElement>('.lm'));
+
+    const show = (lm: SVGGElement | null) => {
+      lms.forEach((l) => l.setAttribute('aria-pressed', String(l === lm)));
+      if (!lm) {
+        tip.setAttribute('opacity', '0');
+        return;
+      }
+      const name = lm.getAttribute('aria-label')!;
+      const m = /translate\((\d+)\s+(\d+)\)/.exec(lm.getAttribute('transform') || '')!;
+      const x = Math.min(Math.max(+m[1], 110), 490);
+      const y = +m[2] - 64;
+      text.textContent = name;
+      const w = name.length * 11 + 36;
+      bg.setAttribute('x', String(x - w / 2));
+      bg.setAttribute('y', String(y));
+      bg.setAttribute('width', String(w));
+      text.setAttribute('x', String(x));
+      text.setAttribute('y', String(y + 24));
+      tip.setAttribute('opacity', '1');
+      animate(tip, [{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
+      live.textContent = name;
+    };
+
+    lms.forEach((lm) => {
+      lm.setAttribute('aria-pressed', 'false');
+      lm.addEventListener('click', (e) => {
+        e.stopPropagation();
+        show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
+      });
+      lm.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
+        }
+      });
+    });
+    document.addEventListener('click', () => show(null));
+
+    onceInView(card, () => {
+      animate(svg.querySelector('.pin'), [
+        { transform: 'translateY(0)' }, { transform: 'translateY(-16px)', offset: 0.35 }, { transform: 'translateY(0)', offset: 0.6 },
+        { transform: 'translateY(-6px)', offset: 0.78 }, { transform: 'translateY(0)' },
+      ], { duration: 700, easing: 'ease-in-out' });
+    }, 0.5);
+  });
+</script>

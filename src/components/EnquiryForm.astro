@@ -1,0 +1,228 @@
+---
+// 4.8 Enquiry form → WhatsApp (plus an optional fire-and-forget webhook). Nothing is stored.
+import Ankur from './Ankur.astro';
+import Icon from './Icon.astro';
+import { site, webhookUrl } from '../config/site';
+
+interface Props {
+  title?: string;
+  intro?: string;
+  /** Pre-ticked programme, e.g. on the Day Care page. */
+  preselect?: string;
+}
+const {
+  title = 'Send us an enquiry',
+  intro = `Tell us a little about your child and we'll reply on WhatsApp. Prefer to talk? Call ${site.contactPerson} on ${site.school.display}.`,
+  preselect,
+} = Astro.props;
+
+const ages = ['Under 1', '1–2½', '2½–3', '3–4', '4–5', '5–6', '6+'];
+const programmes = ['Primary Environment', site.dayCare.name, 'After-school Activities'];
+---
+<section class="enquiry section" id="enquire" aria-labelledby="enquire-title">
+  <div class="container">
+    <div class="enq-card" data-enquiry data-wa={site.school.wa} data-webhook={webhookUrl || undefined}>
+      <div class="peek-slot" aria-hidden="true"><Ankur size={70} blink={false} class="enq-ankur" /></div>
+      <div class="leaves" aria-hidden="true">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <svg class="drift-leaf" style={`--i:${i}`} viewBox="0 0 24 24" width="22" height="22"><path d="M4 20C4 11 10 4 20 4c0 10-7 16-16 16z" fill={i % 2 ? '#2E8540' : 'var(--leaf)'} /></svg>
+        ))}
+      </div>
+
+      <div class="enq-form-wrap" data-form-wrap>
+        <h2 id="enquire-title">{title}</h2>
+        <p class="enq-intro">{intro}</p>
+        <form novalidate data-form>
+          <div class="grid-fields">
+            <div class="field">
+              <label for="enq-name">Parent's name <span class="req">(required)</span></label>
+              <input class="input" id="enq-name" name="name" autocomplete="name" required aria-describedby="enq-name-err" />
+              <p class="error" id="enq-name-err" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="enq-mobile">Mobile number <span class="req">(required)</span></label>
+              <input class="input" id="enq-mobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="enq-mobile-hint enq-mobile-err" />
+              <p class="hint" id="enq-mobile-hint">10-digit Indian mobile number</p>
+              <p class="error" id="enq-mobile-err" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="enq-age">Child's age</label>
+              <select class="select" id="enq-age" name="age">
+                <option value="">Choose an age group</option>
+                {ages.map((a) => <option value={a}>{a}</option>)}
+              </select>
+            </div>
+          </div>
+          <fieldset class="field checks">
+            <legend>Interested in</legend>
+            <div class="check-row">
+              {programmes.map((p) => (
+                <label class="check">
+                  <input type="checkbox" name="programmes" value={p} checked={preselect === p} />
+                  <span class="box" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                  <span>{p}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="enq-msg">Message <span class="opt">(optional)</span></label>
+            <textarea class="textarea" id="enq-msg" name="message" maxlength="500" rows="4" aria-describedby="enq-msg-count"></textarea>
+            <p class="hint" id="enq-msg-count" data-count>0 / 500</p>
+          </div>
+          <button type="submit" class="btn btn--primary submit"><Icon name="whatsapp" />Send on WhatsApp</button>
+          <p class="privacy-line">We'll use these details only to reply to your enquiry. <a href="/privacy">Privacy note <span aria-hidden="true">→</span></a></p>
+        </form>
+      </div>
+
+      <div class="enq-success" data-success hidden tabindex="-1">
+        <h2>Thank you.</h2>
+        <p class="lead">Your message is ready in WhatsApp — just press send.</p>
+        <a class="btn btn--primary" href="#" data-wa-again target="_blank" rel="noopener"><Icon name="whatsapp" />Open WhatsApp again</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .enquiry { background: var(--sage); }
+  .enq-card {
+    position: relative; max-width: 780px; margin-inline: auto; isolation: isolate;
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
+    padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  }
+  .peek-slot { position: absolute; right: 28px; top: -70px; height: 72px; width: 70px; overflow: hidden; pointer-events: none; }
+  .peek-slot :global(.enq-ankur) { position: absolute; top: 0; left: 0; }
+  :global(.js) .peek-slot :global(.enq-ankur) { transform: translateY(105%); }
+  :global(.js) .peek-slot.is-peeked :global(.enq-ankur) { transform: none; }
+  .leaves { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: visible; }
+  .drift-leaf { position: absolute; top: -10px; left: calc(14% + var(--i) * 17%); opacity: 0; }
+  .enq-intro { margin-top: .6rem; margin-bottom: 1.5rem; }
+  form { display: grid; gap: 1.1rem; }
+  .grid-fields { display: grid; gap: 1.1rem; }
+  @media (min-width: 640px) { .grid-fields { grid-template-columns: 1fr 1fr; } .grid-fields .field:first-child { grid-column: 1 / -1; } }
+  .req, .opt { font-weight: 600; color: rgb(59 36 20 / .75); font-size: .875rem; }
+  .checks { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .checks legend { margin-bottom: .5rem; padding: 0; }
+  .check-row { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .check {
+    position: relative; display: inline-flex; align-items: center; gap: .6rem; min-height: 48px; padding: .35rem 1rem .35rem .6rem;
+    border: 1.5px solid var(--line-strong); border-radius: 999px; background: #fff; cursor: pointer; font-weight: 700;
+  }
+  .check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .box { width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--line-strong); display: grid; place-items: center; color: transparent; flex: none; }
+  .check input:checked + .box { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+  .check:has(input:checked) { border-color: var(--leaf); background: #F1F7EE; }
+  .check:has(input:focus-visible) { outline: 3px solid var(--leaf); outline-offset: 3px; }
+  .submit { justify-self: start; min-height: 52px; padding-inline: 1.75rem; }
+  .privacy-line { font-size: var(--fs-small); }
+  .privacy-line a { font-weight: 700; display: inline-flex; align-items: center; min-height: 44px; }
+  .enq-success { text-align: center; display: grid; gap: 1rem; justify-items: center; padding-block: 1.5rem; }
+  .enq-success[hidden] { display: none; }
+  .enq-success:focus { outline: none; }
+</style>
+
+<script>
+  import { animate, onceInView, reducedMotion } from '../lib/motion';
+  import { getItem, setItem } from '../lib/storage';
+  import { play } from './ankur';
+
+  const MOBILE = /^(?:\+?91[\s-]?|0)?[6-9]\d{4}[\s-]?\d{5}$/;
+
+  document.documentElement.classList.add('js');
+  document.querySelectorAll<HTMLElement>('[data-enquiry]').forEach((card) => {
+    const form = card.querySelector<HTMLFormElement>('[data-form]')!;
+    const wrap = card.querySelector<HTMLElement>('[data-form-wrap]')!;
+    const success = card.querySelector<HTMLElement>('[data-success]')!;
+    const again = card.querySelector<HTMLAnchorElement>('[data-wa-again]')!;
+    const slot = card.querySelector<HTMLElement>('.peek-slot')!;
+    const ankur = slot.querySelector<HTMLElement>('[data-ankur]')!;
+    const name = form.elements.namedItem('name') as HTMLInputElement;
+    const mobile = form.elements.namedItem('mobile') as HTMLInputElement;
+    const msg = form.elements.namedItem('message') as HTMLTextAreaElement;
+    const count = form.querySelector<HTMLElement>('[data-count]')!;
+
+    // Ankur peeks from the card's corner the first time it enters view (once per session).
+    if (getItem('unnati:peek', 'session') || reducedMotion()) {
+      slot.classList.add('is-peeked');
+    } else {
+      onceInView(card, () => {
+        setItem('unnati:peek', '1', 'session');
+        play(ankur, 'peek').then(() => slot.classList.add('is-peeked'));
+        slot.classList.add('is-peeked');
+      }, 0.4);
+    }
+
+    const setError = (input: HTMLInputElement, message: string) => {
+      const field = input.closest('.field') as HTMLElement;
+      const err = field.querySelector('.error')!;
+      err.textContent = message;
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      if (message) field.dataset.invalid = '';
+      else delete field.dataset.invalid;
+      return !message;
+    };
+    const checkName = () => setError(name, name.value.trim() ? '' : "Please add your name so we know who we're talking to.");
+    const checkMobile = () => {
+      const v = mobile.value.trim();
+      if (!v) return setError(mobile, 'Please add a 10-digit mobile number.');
+      return setError(mobile, MOBILE.test(v) ? '' : 'Please add a 10-digit mobile number, like 98765 43210.');
+    };
+    name.addEventListener('blur', () => name.value && checkName());
+    mobile.addEventListener('blur', () => mobile.value && checkMobile());
+    msg.addEventListener('input', () => (count.textContent = `${msg.value.length} / 500`));
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const okName = checkName();
+      const okMobile = checkMobile();
+      if (!okName || !okMobile) {
+        (!okName ? name : mobile).focus();
+        return;
+      }
+      const data = new FormData(form);
+      const fields = {
+        name: name.value.trim(),
+        mobile: mobile.value.trim(),
+        age: String(data.get('age') || ''),
+        programmes: data.getAll('programmes').map(String),
+        message: msg.value.trim(),
+      };
+      const lines = [
+        "Hello Unnati Montessori! I'd like to know more.",
+        `Parent: ${fields.name}`,
+        `Mobile: ${fields.mobile}`,
+        `Child's age: ${fields.age || 'Not given'}`,
+        `Interested in: ${fields.programmes.join(', ') || 'Not sure yet'}`,
+      ];
+      if (fields.message) lines.push(fields.message);
+      const url = `https://wa.me/${card.dataset.wa}?text=${encodeURIComponent(lines.join('\n'))}`;
+
+      // Optional lead log — fire-and-forget, never blocks the WhatsApp hand-off.
+      const hook = card.dataset.webhook;
+      if (hook && 'sendBeacon' in navigator) {
+        try {
+          navigator.sendBeacon(hook, new Blob([JSON.stringify({ ...fields, page: location.pathname, sentAt: new Date().toISOString() })], { type: 'text/plain;charset=UTF-8' }));
+        } catch { /* ignore */ }
+      }
+
+      // Open WhatsApp synchronously inside the handler (popup blockers).
+      const touch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+      if (touch) location.href = url;
+      else window.open(url, '_blank', 'noopener');
+
+      again.href = url;
+      wrap.hidden = true;
+      success.hidden = false;
+      success.focus();
+      play(ankur, 'wave');
+      card.querySelectorAll('.drift-leaf').forEach((leaf, i) =>
+        animate(leaf, [
+          { opacity: 0, transform: 'translate(0, 0) rotate(0deg)' },
+          { opacity: 1, transform: `translate(${i % 2 ? 14 : -14}px, 60px) rotate(${i % 2 ? 60 : -60}deg)`, offset: 0.3 },
+          { opacity: 0, transform: `translate(${i % 2 ? -10 : 10}px, 220px) rotate(${i % 2 ? 160 : -160}deg)` },
+        ], { duration: 1200, delay: i * 70, easing: 'ease-in' }),
+      );
+    });
+  });
+</script>

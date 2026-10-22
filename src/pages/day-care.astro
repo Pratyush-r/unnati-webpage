@@ -1,0 +1,122 @@
+---
+// Extended Day Care — added at the owner's request (22 Oct 2026).
+// Confirmed facts only: ages 1–6, rest / nap time, daily updates to parents. Hours from site.ts.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import VineSteps from '../components/VineSteps.astro';
+import Faq from '../components/Faq.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import ProgrammeArt from '../components/illustrations/ProgrammeArt.astro';
+import { site, statusLabel, telHref, wa, waText } from '../config/site';
+import { dayCare } from '../content/copy';
+import { dayCareFaq } from '../content/faq';
+
+const name = site.dayCare.name;
+const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
+---
+<BaseLayout
+  title="Extended Day Care in Mogappair West | Unnati Montessori"
+  description="Montessori Extended Day Care for ages 1–6 in Mogappair West, Chennai. A calm, prepared environment, daily rest and nap time, and an update every day."
+>
+  <section class="page-hero dc-hero">
+    <div class="container dc-hero-grid">
+      <div class="dc-hero-text">
+        <p class="eyebrow">Ages {site.dayCare.ages} · {site.address.area}, {site.address.city}</p>
+        <h1>{name}</h1>
+        <p class="subhead">{dayCare.subhead}</p>
+        <p class="lead">{dayCare.lead}</p>
+        <ul class="facts" role="list">
+          <li><Icon name="people" /><span><strong>Ages</strong> {site.dayCare.ages} years</span></li>
+          <li><Icon name="clock" /><span><strong>Timings</strong> {hours}</span></li>
+          <li><Icon name="check" /><span><strong>{statusLabel}</strong> · Admissions open all year</span></li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--primary" href={wa(site.school, waText.programme(name))} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp about {name}</a>
+          <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+        </div>
+      </div>
+      <div class="dc-art" aria-hidden="true">
+        <ProgrammeArt kind="daycare" size={200} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="dc-why">
+    <div class="container">
+      <SectionHead eyebrow="Day care, the Montessori way" title="More than minding — a day that helps children grow" id="dc-why" />
+      <ul class="ideas" role="list" data-reveal="children">
+        {dayCare.ideas.map((idea, i) => (
+          <li class="pebble pebble--hover idea">
+            <span class:list={['icon-badge', { 'icon-badge--blush': i % 2 === 1 }]}><Icon name={idea.icon} /></span>
+            <h3>{idea.title}</h3>
+            <p>{idea.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="dc-rhythm">
+    <div class="container rhythm-grid">
+      <SectionHead eyebrow="Through the day" title="A familiar rhythm" id="dc-rhythm"
+        intro="Young children feel safe when they know what comes next. The day follows a gentle, predictable order — the rhythm, not a rush." />
+      <VineSteps steps={dayCare.rhythm} ordered={false} />
+    </div>
+  </section>
+
+  <section class="section bg-sage" aria-labelledby="dc-parents">
+    <div class="container">
+      <SectionHead eyebrow="For parents" title="Rest, and an update every day" id="dc-parents" />
+      <div class="parents" data-reveal="children">
+        {dayCare.forParents.map((p) => (
+          <article class="pebble parent-card">
+            <span class="icon-badge"><Icon name={p.icon} /></span>
+            <div>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="ages pebble" data-reveal>
+        <h3>{dayCare.ages.title}</h3>
+        <p>{dayCare.ages.text} <a href="/admissions#programme-primary">About the Primary Environment →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="dc-faq">
+    <div class="container-narrow">
+      <SectionHead eyebrow="Questions" title={`${name}: what parents ask`} id="dc-faq" />
+      <Faq items={dayCareFaq} />
+    </div>
+  </section>
+
+  <EnquiryForm title={`Ask about ${name}`} preselect={name} />
+</BaseLayout>
+
+<style>
+  .dc-hero-grid { display: grid; gap: 2rem; align-items: center; }
+  .dc-hero-text { display: grid; gap: .9rem; justify-items: start; }
+  .subhead { font-family: var(--font-head); font-size: var(--fs-h3); color: var(--forest); font-weight: 500; }
+  .facts { display: grid; gap: .5rem; margin-top: .25rem; }
+  .facts li { display: flex; gap: .6rem; align-items: flex-start; }
+  .facts :global(svg) { color: var(--leaf); flex: none; margin-top: .15rem; }
+  .facts strong { color: var(--brown); margin-right: .25rem; }
+  .dc-art { display: none; background: var(--blush); border-radius: 50%; width: 320px; aspect-ratio: 1; place-items: center; justify-self: center; }
+  .ideas { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .idea { display: grid; gap: .6rem; align-content: start; }
+  .idea h3 { margin: .25rem 0 0; }
+  .rhythm-grid { display: grid; gap: 1rem; }
+  .parents { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+  .parent-card { display: flex; gap: 1rem; align-items: flex-start; }
+  .parent-card h3 { margin-bottom: .35rem; }
+  .ages { margin-top: 1rem; background: var(--cream); }
+  .ages a { font-weight: 700; }
+  @media (min-width: 900px) {
+    .dc-hero-grid { grid-template-columns: 1.4fr 1fr; }
+    .dc-art { display: grid; }
+    .rhythm-grid { grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; }
+  }
+</style>

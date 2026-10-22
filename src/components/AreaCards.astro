@@ -1,0 +1,42 @@
+---
+// The five areas of the Montessori curriculum, each linking to its Little Hands Corner game.
+import MaterialArt from './illustrations/MaterialArt.astro';
+import { areas } from '../content/copy';
+
+interface Props {
+  detail?: boolean;
+}
+const { detail = false } = Astro.props;
+type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
+---
+<ol class:list={['areas', { 'areas--detail': detail }]} role="list" data-reveal="children">
+  {areas.map((a, i) => (
+    <li class="area pebble pebble--hover">
+      <div class="area-art" style={`background:${a.tint}`}>
+        <MaterialArt kind={a.id as Kind} size={detail ? 104 : 88} />
+      </div>
+      <div class="area-body">
+        <p class="area-num">Area {i + 1}</p>
+        <h3>{a.name}</h3>
+        <p>{a.text}</p>
+        <a class="btn btn--secondary area-try" href={a.href}>Try it: {a.game}<span aria-hidden="true">&nbsp;→</span></a>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .areas { display: grid; gap: clamp(1rem, .8rem + 1vw, 1.5rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+  .area { display: flex; flex-direction: column; gap: .9rem; padding: 1rem; }
+  .area-art { border-radius: 22px; display: grid; place-items: center; padding: .75rem; }
+  .area-body { display: flex; flex-direction: column; gap: .5rem; flex: 1; padding: 0 .35rem .35rem; }
+  .area-num { font-weight: 800; font-size: .8125rem; color: var(--leaf); letter-spacing: .1em; text-transform: uppercase; }
+  .area h3 { margin: 0; }
+  .area-body > p:not(.area-num) { font-size: .975rem; }
+  .area-try { margin-top: auto; align-self: flex-start; padding-inline: 1.1rem; font-size: .95rem; }
+  .areas--detail { grid-template-columns: 1fr; }
+  @media (min-width: 768px) {
+    .areas--detail .area { flex-direction: row; align-items: center; gap: 1.5rem; padding: 1.25rem; }
+    .areas--detail .area-art { flex: none; width: 180px; height: 160px; }
+  }
+</style>

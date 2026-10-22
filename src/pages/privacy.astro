@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, webhookUrl, telHref } from '../config/site';
+
+const built = new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+---
+<BaseLayout
+  title="Privacy Note | Unnati Montessori"
+  description="No cookies, analytics or advertising. Games run in your browser and collect nothing. Enquiries go only to our WhatsApp."
+>
+  <section class="page-hero">
+    <div class="container-narrow">
+      <p class="eyebrow">Privacy</p>
+      <h1>Privacy note</h1>
+      <p class="lead">Short and plain, because there is very little to say.</p>
+    </div>
+  </section>
+  <section class="section--tight">
+    <div class="container-narrow">
+      <ul class="privacy pebble" role="list">
+        <li>We don't use cookies, analytics or advertising on this website.</li>
+        <li>The games run entirely in your browser. Nothing your child does is recorded or sent anywhere. Your browser remembers only small settings on this device, such as sound on or off.</li>
+        <li>When you send an enquiry, it opens WhatsApp with your message. We receive only what you choose to send: your name, mobile number, your child's age group, the programmes you're interested in and your message.</li>
+        {webhookUrl && <li>A copy of your enquiry is saved to our admissions list so we don't miss it.</li>}
+        <li>We use these details only to reply to you about admissions. We never sell or share them.</li>
+        <li>To have your details deleted, message us on WhatsApp at <a href={telHref(site.school)}>{site.school.display}</a>.</li>
+      </ul>
+      <p class="updated">Last updated: {built}.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .privacy { display: grid; gap: 1rem; }
+  .privacy li { position: relative; padding-left: 1.75rem; }
+  .privacy li::before { content: ''; position: absolute; left: 0; top: .55em; width: 12px; height: 8px; border-radius: 0 100% 0 100%; background: var(--leaf); }
+  .privacy a { font-weight: 700; }
+  .updated { margin-top: 1.25rem; color: rgb(59 36 20 / .8); }
+</style>

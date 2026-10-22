@@ -1,0 +1,69 @@
+---
+// Steps along a growing vine (4.4.7 Journey; also the Day Care rhythm). No dates.
+// Each step's leaf unfurls once as it enters view.
+interface Props {
+  steps: { title: string; text?: string; badge?: string }[];
+  ordered?: boolean;
+}
+const { steps, ordered = true } = Astro.props;
+const List = ordered ? 'ol' : 'ul';
+---
+<List class="vine-steps" role="list" data-vine-steps>
+  {steps.map((s, i) => (
+    <li class="step">
+      <span class="node" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <circle cx="24" cy="24" r="21" fill="var(--paper)" stroke="rgb(118 61 13 / .45)" stroke-width="2" />
+          <g class="step-leaf">
+            <path d="M15 33 C15 21 23 13 35 13 C35 25 27 33 15 33 Z" fill="var(--leaf)" stroke="rgb(118 61 13 / .6)" stroke-width="1.5" />
+            <path d="M17 31 C22 25 27 20 32 16" fill="none" stroke="#5FA86E" stroke-width="1.5" stroke-linecap="round" />
+          </g>
+        </svg>
+      </span>
+      <div class="step-body">
+        {ordered && <p class="step-num">Step {i + 1}</p>}
+        <h3>{s.title}</h3>
+        {s.badge && <p class="chip step-badge"><span class="dot"></span>{s.badge}</p>}
+        {s.text && <p>{s.text}</p>}
+      </div>
+    </li>
+  ))}
+</List>
+
+<style>
+  .vine-steps { position: relative; display: grid; gap: 1.75rem; max-width: 720px; }
+  .vine-steps::before {
+    content: ''; position: absolute; left: 23px; top: 24px; bottom: 24px; width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--brown) 0 10px, transparent 10px 14px); opacity: .5;
+  }
+  .step { position: relative; display: grid; grid-template-columns: 48px 1fr; gap: 1.1rem; align-items: start; }
+  .node { position: relative; z-index: 1; }
+  .step-leaf { transform-box: fill-box; transform-origin: 0% 100%; }
+  :global(.js-vine) .step:not(.is-open) .step-leaf { transform: scale(.25) rotate(-50deg); opacity: 0; }
+  .step-body { padding-top: .35rem; }
+  .step-num { font-weight: 800; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: var(--leaf); }
+  .step-body h3 { margin: .1rem 0 .35rem; }
+  .step-badge { margin-bottom: .4rem; }
+</style>
+
+<script>
+  import { onceInView, settle, reducedMotion, EASE_POP } from '../lib/motion';
+  document.querySelectorAll<HTMLElement>('[data-vine-steps]').forEach((list) => {
+    if (reducedMotion()) return;
+    const vh = window.innerHeight;
+    list.querySelectorAll<HTMLElement>('.step').forEach((step) => {
+      if (step.getBoundingClientRect().top < vh * 0.9) {
+        step.classList.add('is-open');
+        return;
+      }
+      const leaf = step.querySelector('.step-leaf');
+      list.classList.add('js-vine');
+      onceInView(step, () => {
+        settle(leaf, [{ transform: 'scale(.25) rotate(-50deg)', opacity: 0 }, { transform: 'scale(1) rotate(0deg)', opacity: 1 }], { duration: 600, easing: EASE_POP }).then(() => {
+          step.classList.add('is-open');
+          (leaf as HTMLElement | null)?.removeAttribute('style');
+        });
+      }, 0.6);
+    });
+  });
+</script>

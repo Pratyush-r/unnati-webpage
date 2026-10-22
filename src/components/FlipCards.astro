@@ -1,0 +1,68 @@
+---
+// 4.4.3 Did you know? flip cards. Tap / Enter / Space flips (400 ms 3D flip).
+// Both faces stay in the DOM so screen readers always get the title and the explanation.
+import Icon from './Icon.astro';
+import { didYouKnow } from '../content/copy';
+
+interface Props {
+  ids?: string[];
+}
+const { ids } = Astro.props;
+const items = ids ? ids.map((id) => didYouKnow.find((d) => d.id === id)!) : didYouKnow;
+---
+<ul class="flips" role="list" data-flips>
+  {items.map((d, i) => (
+    <li class="flip-item">
+      <button type="button" class="flip" aria-pressed="false" data-flip>
+        <span class="flip-inner">
+          <span class="face front" style={`--tint:${i % 2 ? 'var(--blush)' : 'var(--sage)'}`}>
+            <span class="f-icon"><Icon name={d.icon} size={30} /></span>
+            <span class="f-title">{d.title}</span>
+            <span class="f-hint" aria-hidden="true">Tap to turn over</span>
+          </span>
+          <span class="face back">
+            <span class="b-title">{d.title}</span>
+            <span class="b-text">{d.text}</span>
+          </span>
+        </span>
+      </button>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .flips {
+    display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 280px); gap: 1rem;
+    overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    padding: 4px var(--gutter) 1.25rem; margin-inline: calc(var(--gutter) * -1);
+    scroll-padding-inline: var(--gutter); scrollbar-width: thin;
+  }
+  .flip-item { scroll-snap-align: start; }
+  .flip { display: block; width: 100%; height: 100%; text-align: left; perspective: 1000px; border-radius: var(--r-pebble); }
+  .flip-inner {
+    display: grid; height: 100%; min-height: 220px; transform-style: preserve-3d;
+    transition: transform 400ms var(--ease-move);
+  }
+  .flip[aria-pressed='true'] .flip-inner { transform: rotateY(180deg); }
+  .face {
+    grid-area: 1 / 1; display: flex; flex-direction: column; gap: .6rem; padding: 1.4rem;
+    border-radius: var(--r-pebble); border: 1px solid var(--line); box-shadow: var(--shadow);
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  }
+  .front { background: var(--paper); justify-content: space-between; }
+  .f-icon { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; background: var(--tint); color: var(--forest); }
+  .f-title { font-family: var(--font-head); font-weight: 600; font-size: 1.375rem; line-height: 1.2; color: var(--brown); }
+  .f-hint { font-size: .875rem; font-weight: 700; color: var(--leaf); }
+  .back { background: var(--forest); color: var(--cream); transform: rotateY(180deg); justify-content: center; }
+  .b-title { font-weight: 800; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: var(--sage); }
+  .b-text { font-size: 1.0625rem; line-height: 1.5; }
+  @media (min-width: 768px) {
+    .flips { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((btn) =>
+    btn.addEventListener('click', () => btn.setAttribute('aria-pressed', String(btn.getAttribute('aria-pressed') !== 'true'))),
+  );
+</script>

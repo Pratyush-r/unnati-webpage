@@ -1,0 +1,153 @@
+---
+// 4.4.5 The four planes of development. Mobile: ARIA tabs, each plane as a list of 8 rows.
+// ≥ 1024 px: the full table; hovering or focusing a column highlights it. Infancy is pre-selected.
+import Icon from './Icon.astro';
+import { planes } from '../content/copy';
+import { site } from '../config/site';
+
+const badge = `Unnati's children: ${site.primary.ages}`;
+const colors = ['#C8553D', '#3E7CA6', '#B5653F', '#5E7F32'];
+const tints = ['#FBE7E1', '#E3EEF6', '#F8E7DD', '#EAF0DE'];
+---
+<div class="planes" data-planes>
+  <!-- Mobile / tablet: tabs -->
+  <div class="planes-tabs">
+    <div class="tablist" role="tablist" aria-label="The four planes of development">
+      {planes.columns.map((c, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`plane-tab-${c.id}`}
+          aria-controls={`plane-panel-${c.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          style={`--c:${colors[i]}`}
+        >
+          <span class="t-name">{c.name}</span>
+          <span class="t-ages">{c.ages}</span>
+        </button>
+      ))}
+    </div>
+    {planes.columns.map((c, i) => (
+      <div class="tabpanel" role="tabpanel" id={`plane-panel-${c.id}`} aria-labelledby={`plane-tab-${c.id}`} tabindex="0" hidden={i !== 0} style={`--tint:${tints[i]}`}>
+        <p class="panel-head">
+          <span>{c.name} · {c.ages}{c.sub ? ` (${c.sub})` : ''}</span>
+          {i === 0 && <span class="chip badge">{badge}</span>}
+        </p>
+        <dl>
+          {planes.rows.map((r) => (
+            <div class="dl-row">
+              <dt><Icon name={r.icon} size={20} />{r.label}</dt>
+              <dd>{r.cells[i]}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    ))}
+  </div>
+
+  <!-- Desktop: full table -->
+  <div class="planes-table-wrap">
+    <table class="planes-table">
+      <caption class="sr-only">The four planes of development, compared across eight aspects</caption>
+      <thead>
+        <tr>
+          <td></td>
+          {planes.columns.map((c, i) => (
+            <th scope="col" data-col={i} tabindex="0" style={`--c:${colors[i]}`} class:list={{ 'is-ours': i === 0 }}>
+              <span class="th-name">{c.name}</span>
+              <span class="th-ages">{c.ages}{c.sub ? ` (${c.sub})` : ''}</span>
+              {i === 0 && <span class="chip badge">{badge}</span>}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {planes.rows.map((r) => (
+          <tr>
+            <th scope="row"><span class="rh"><Icon name={r.icon} size={20} />{r.label}</span></th>
+            {r.cells.map((cell, i) => <td data-col={i} style={`--tint:${tints[i]}`} class:list={{ 'is-ours': i === 0 }}>{cell}</td>)}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .tablist { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; margin-bottom: 1rem; }
+  [role='tab'] {
+    display: grid; justify-items: start; gap: 0; min-height: 56px; padding: .5rem .9rem; border-radius: var(--r-sm);
+    border: 2px solid var(--line-strong); background: var(--paper); text-align: left;
+    transition: background-color 200ms ease, transform 180ms var(--ease-pop);
+  }
+  [role='tab']:active { transform: scale(.97); }
+  [role='tab'][aria-selected='true'] { background: var(--c); border-color: var(--c); color: #fff; }
+  .t-name { font-weight: 800; }
+  .t-ages { font-size: .875rem; font-weight: 700; opacity: .9; }
+  .tabpanel { background: var(--tint); border-radius: var(--r-md); padding: 1.1rem 1.1rem .5rem; border: 1px solid var(--line); }
+  .tabpanel[hidden] { display: none; }
+  .panel-head { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; color: var(--brown); margin-bottom: .5rem; }
+  .badge { font-family: var(--font-body); font-size: .8125rem; }
+  .dl-row { padding: .75rem 0; border-top: 1px dashed var(--line-strong); }
+  dt { display: flex; align-items: center; gap: .45rem; font-weight: 800; font-size: .875rem; letter-spacing: .04em; text-transform: uppercase; color: var(--brown); }
+  dd { margin: .2rem 0 0; font-size: 1.0625rem; }
+  .planes-table-wrap { display: none; }
+
+  @media (min-width: 1024px) {
+    .planes-tabs { display: none; }
+    .planes-table-wrap { display: block; }
+    .planes-table { width: 100%; border-collapse: separate; border-spacing: 6px; table-layout: fixed; }
+    .planes-table thead td { width: 16%; }
+    .planes-table thead th {
+      background: var(--c); color: #fff; border-radius: 16px 16px 8px 8px; padding: .8rem .75rem; text-align: center; vertical-align: top;
+      transition: transform 200ms var(--ease-move);
+    }
+    .th-name { display: block; font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; }
+    .th-ages { display: block; font-weight: 700; font-size: .9rem; }
+    .planes-table thead .badge { margin-top: .4rem; background: var(--cream); color: var(--forest); }
+    .planes-table tbody th { text-align: left; vertical-align: middle; padding: .5rem .4rem; }
+    .rh { display: flex; align-items: center; gap: .45rem; font-weight: 800; font-size: .9rem; color: var(--brown); }
+    .planes-table td[data-col] {
+      background: var(--tint); border-radius: 10px; padding: .7rem .75rem; text-align: center; font-size: .95rem; line-height: 1.45;
+      transition: box-shadow 200ms ease, transform 200ms var(--ease-move);
+    }
+    .planes-table td.is-ours { box-shadow: inset 0 0 0 2px rgb(200 85 61 / .35); }
+    .planes-table [data-col].is-hl { box-shadow: inset 0 0 0 3px var(--brown); }
+    .planes-table thead th.is-hl { transform: translateY(-3px); }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-planes]').forEach((root) => {
+    // Tabs (WAI-ARIA tabs pattern, automatic activation).
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const select = (i: number, focus = true) => {
+      tabs.forEach((t, k) => {
+        const on = k === i;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls')!);
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i, false));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        const map: Record<string, number> = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 };
+        if (e.key in map) { e.preventDefault(); select(map[e.key]); }
+      });
+    });
+
+    // Table column highlight on hover / focus.
+    const table = root.querySelector('table');
+    if (!table) return;
+    const hl = (col: string | null) => table.querySelectorAll<HTMLElement>('[data-col]').forEach((c) => c.classList.toggle('is-hl', c.dataset.col === col));
+    table.addEventListener('pointerover', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null));
+    table.addEventListener('pointerleave', () => hl(null));
+    table.addEventListener('focusin', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null));
+    table.addEventListener('focusout', () => hl(null));
+  });
+</script>

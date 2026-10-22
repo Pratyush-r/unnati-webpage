@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FindUsMap from '../components/FindUsMap.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import { site, telHref, wa, waText } from '../config/site';
+
+const cards = [
+  { title: 'School & admissions', text: `Admissions, ${site.dayCare.name}, teacher training and hiring.`, phone: site.school, msg: waText.general, tint: 'var(--sage)' },
+  { title: 'Montessori consultancy', text: 'Setting up or strengthening a Montessori school.', phone: site.consultancy, msg: waText.consultancy, tint: 'var(--blush)' },
+];
+---
+<BaseLayout
+  title="Contact Unnati Montessori | Mogappair West, Chennai"
+  description="Call or WhatsApp Unnati Montessori in Mogappair West, Chennai — school and admissions, or Montessori consultancy. Find us on Chanakyan Cross Road."
+>
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Contact</p>
+      <h1>Talk to {site.contactPerson}</h1>
+      <p class="lead">Call or WhatsApp — whichever is easier. We reply to every message.</p>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container cards">
+      {cards.map((c) => (
+        <article class="pebble contact-card" style={`--tint:${c.tint}`} data-reveal>
+          <h2>{c.title}</h2>
+          <p>{c.text}</p>
+          <a class="number" href={telHref(c.phone)}>{c.phone.display}</a>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={wa(c.phone, c.msg)} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp</a>
+            <a class="btn btn--secondary" href={telHref(c.phone)}><Icon name="phone" />Call</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="find-us">
+    <div class="container">
+      <SectionHead eyebrow="Find us" title="Visit us in Mogappair West" id="find-us" />
+      <FindUsMap headingId="contact-map" />
+    </div>
+  </section>
+
+  <EnquiryForm />
+</BaseLayout>
+
+<style>
+  .cards { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+  .contact-card { display: grid; gap: .6rem; background: var(--tint); }
+  .contact-card h2 { font-size: var(--fs-h3); }
+  .number { display: inline-flex; align-items: center; min-height: 48px; font-family: var(--font-head); font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem); font-weight: 600; color: var(--brown); text-decoration: none; width: fit-content; }
+</style>

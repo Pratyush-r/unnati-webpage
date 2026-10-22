@@ -1,0 +1,87 @@
+---
+// 4.4.2 Montessori vs traditional — segmented toggle over 5 rows; row text cross-fades (300 ms).
+// split: on /approach at ≥ 1024 px both columns show side by side and the toggle hides.
+import Icon from './Icon.astro';
+import { compare, compareClose } from '../content/copy';
+
+interface Props {
+  split?: boolean;
+  id?: string;
+}
+const { split = false, id = 'compare-toggle' } = Astro.props;
+---
+<div class:list={['compare', { 'compare--split': split }]} data-compare data-mode="m">
+  <div class="seg" role="group" aria-label="Show">
+    <button type="button" class="seg-btn" aria-pressed="true" data-mode-btn="m" aria-controls={`${id}-rows`}>Montessori</button>
+    <button type="button" class="seg-btn" aria-pressed="false" data-mode-btn="t" aria-controls={`${id}-rows`}>Traditional</button>
+  </div>
+  <div class="cols-head" aria-hidden="true">
+    <span></span><span class="col-m">Montessori</span><span class="col-t">Traditional education</span>
+  </div>
+  <ul class="rows" role="list" id={`${id}-rows`} aria-live="polite">
+    {compare.map((r) => (
+      <li class="row">
+        <span class="row-icon"><Icon name={r.icon} size={26} /></span>
+        <span class="row-text">
+          <span class="txt m"><span class="sr-only">Montessori: </span>{r.m}</span>
+          <span class="txt t"><span class="sr-only">Traditional: </span>{r.t}</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+  <p class="compare-close">{compareClose}</p>
+</div>
+
+<style>
+  .compare { max-width: 860px; margin-inline: auto; }
+  .seg {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; width: min(100%, 420px); margin: 0 auto 1.25rem;
+    background: var(--paper); border: 1px solid var(--line-strong); border-radius: 999px;
+  }
+  .seg-btn {
+    min-height: 48px; border-radius: 999px; font-weight: 800; color: var(--brown);
+    transition: background-color 200ms ease, color 200ms ease, transform 180ms var(--ease-pop);
+  }
+  .seg-btn:active { transform: scale(.96); }
+  .seg-btn[aria-pressed='true'][data-mode-btn='m'] { background: var(--leaf); color: #fff; }
+  .seg-btn[aria-pressed='true'][data-mode-btn='t'] { background: var(--brown); color: #fff; }
+  .cols-head { display: none; }
+  .rows { display: grid; gap: .75rem; }
+  .row {
+    display: grid; grid-template-columns: 56px 1fr; gap: 1rem; align-items: center;
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-md); padding: .9rem 1.1rem;
+  }
+  .row-icon { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--sage); color: var(--forest); transition: background-color 300ms ease, color 300ms ease; }
+  [data-mode='t'] .row-icon { background: var(--blush); color: var(--brown); }
+  .row-text { display: grid; }
+  .txt { grid-area: 1 / 1; font-size: 1.0625rem; font-weight: 600; transition: opacity 300ms var(--ease-move), visibility 0s linear 0s; }
+  [data-mode='m'] .t, [data-mode='t'] .m { opacity: 0; visibility: hidden; transition: opacity 300ms var(--ease-move), visibility 0s linear 300ms; }
+  .compare-close { text-align: center; margin: 1.5rem auto 0; font-family: var(--font-head); font-size: var(--fs-h3); color: var(--brown); max-width: 36ch; }
+
+  @media (min-width: 1024px) {
+    .compare--split { max-width: none; }
+    .compare--split .seg { display: none; }
+    .compare--split .cols-head {
+      display: grid; grid-template-columns: 56px 1fr 1fr; gap: 1rem; padding: 0 1.1rem .75rem;
+      font-weight: 800; font-size: .875rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .compare--split .col-m { color: var(--leaf); }
+    .compare--split .col-t { color: var(--brown); }
+    .compare--split .row-text { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .compare--split .txt { grid-area: auto; opacity: 1 !important; visibility: visible !important; }
+    .compare--split .t { color: rgb(59 36 20 / .85); padding-left: 1rem; border-left: 2px dashed var(--line-strong); }
+    .compare--split .row-icon { background: var(--sage) !important; color: var(--forest) !important; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
+    const btns = root.querySelectorAll<HTMLButtonElement>('[data-mode-btn]');
+    btns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        root.dataset.mode = btn.dataset.modeBtn;
+        btns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      }),
+    );
+  });
+</script>

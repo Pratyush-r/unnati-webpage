@@ -1,0 +1,128 @@
+---
+// Picture-book illustrations of the five shelf materials (one per curriculum area).
+// Flat fills, 2 px brown outlines at 70%, wood grain as thin curved lines. viewBox 0 0 120 120.
+// Animated parts carry .m-* classes (driven by PreparedShelf).
+interface Props {
+  kind: 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
+  size?: number;
+  class?: string;
+}
+const { kind, size = 120, class: cls } = Astro.props;
+const uid = `m${Math.random().toString(36).slice(2, 7)}`;
+---
+<svg class:list={['material-art', cls]} viewBox="0 0 120 120" width={size} height={size} aria-hidden="true" focusable="false">
+  {kind === 'practical' && (
+    <g>
+      <defs>
+        <clipPath id={`${uid}-glass`}><path d="M74 64 H98 L95 101 H77 Z" /></clipPath>
+      </defs>
+      <rect class="o" x="6" y="101" width="108" height="11" rx="4" fill="var(--wood)" />
+      <path class="grain" d="M14 106 C40 104 70 108 106 105" />
+      <g class="m-jug">
+        <path class="o" d="M30 63 C22 63 20 83 30 85" fill="none" stroke-width="5" />
+        <path class="o" d="M30 50 H56 L60 46 L62 50 C58 55 56 58 56 64 L58 96 Q58 101 53 101 H33 Q28 101 28 96 L30 64 C30 58 28 55 26 50 Z" fill="#FFFFFF" />
+        <path d="M30 74 H57" stroke="var(--water)" stroke-width="5" opacity=".75" />
+      </g>
+      <g class="m-drops" fill="var(--water)">
+        <circle class="m-drop" cx="70" cy="52" r="2.6" opacity="0" />
+        <circle class="m-drop" cx="72" cy="58" r="2.6" opacity="0" />
+        <circle class="m-drop" cx="74" cy="64" r="2.6" opacity="0" />
+      </g>
+      <g clip-path={`url(#${uid}-glass)`}>
+        <rect class="m-water" x="70" y="62" width="32" height="40" fill="var(--water)" />
+      </g>
+      <path class="o" d="M74 64 H98 L95 101 H77 Z" fill="rgb(212 234 247 / .35)" />
+      <path d="M78 70 L80 96" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".8" />
+    </g>
+  )}
+  {kind === 'sensorial' && (
+    <g>
+      <rect class="o" x="6" y="78" width="108" height="32" rx="5" fill="var(--wood)" />
+      <path class="grain" d="M12 90 C40 86 76 94 108 88" />
+      <path class="grain" d="M12 100 C44 97 80 104 108 99" />
+      <g class="m-cyl-static">
+        <rect class="o" x="17" y="62" width="10" height="17" rx="2" fill="var(--wood)" />
+        <rect class="o" x="21" y="54" width="2" height="8" fill="var(--wood-grain)" />
+        <circle class="o" cx="22" cy="52" r="3.5" fill="var(--wood)" />
+        <rect class="o" x="37" y="64" width="13" height="15" rx="2" fill="var(--wood)" />
+        <rect class="o" x="42.5" y="56" width="2" height="8" fill="var(--wood-grain)" />
+        <circle class="o" cx="43.5" cy="54" r="3.5" fill="var(--wood)" />
+        <rect class="o" x="83" y="66" width="21" height="13" rx="2" fill="var(--wood)" />
+        <rect class="o" x="92.5" y="58" width="2" height="8" fill="var(--wood-grain)" />
+        <circle class="o" cx="93.5" cy="56" r="3.5" fill="var(--wood)" />
+      </g>
+      <ellipse cx="68" cy="79" rx="9" ry="2.5" fill="var(--wood-grain)" opacity=".7" />
+      <g class="m-lift">
+        <rect class="o" x="59" y="65" width="18" height="14" rx="2" fill="var(--wood)" />
+        <path class="grain" d="M62 70 C66 72 70 68 74 70" />
+        <rect class="o" x="67" y="57" width="2" height="8" fill="var(--wood-grain)" />
+        <circle class="o" cx="68" cy="55" r="3.8" fill="var(--wood)" />
+      </g>
+    </g>
+  )}
+  {kind === 'language' && (
+    <g>
+      <defs>
+        <filter id={`${uid}-sand`} x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.35  0 0 0 0 0.27  0 0 0 0 0.18  0 0 0 .55 0" result="g" />
+          <feComposite in="g" in2="SourceGraphic" operator="in" result="gi" />
+          <feMerge><feMergeNode in="SourceGraphic" /><feMergeNode in="gi" /></feMerge>
+        </filter>
+      </defs>
+      <rect class="o" x="22" y="20" width="76" height="92" rx="9" fill="var(--pink-board)" />
+      <path d="M44 46 C50 34 70 34 74 44" fill="none" />
+      <path d="M75 44 C71 36 52 34 47 44 C42 54 56 60 61 62 C71 66 76 77 69 86 C62 95 45 94 42 84" fill="none" stroke="#B49A7E" stroke-width="11" stroke-linecap="round" filter={`url(#${uid}-sand)`} />
+      <path class="m-trace" d="M75 44 C71 36 52 34 47 44 C42 54 56 60 61 62 C71 66 76 77 69 86 C62 95 45 94 42 84" pathLength="100" fill="none" stroke="#FFF4C9" stroke-width="5" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" opacity="0" />
+    </g>
+  )}
+  {kind === 'maths' && (
+    <g>
+      <rect class="o" x="6" y="70" width="108" height="16" rx="3" fill="#EBCDA6" />
+      <rect class="o" x="6" y="84" width="108" height="26" rx="4" fill="var(--wood)" />
+      <path class="o" d="M33 84 V110 M60 84 V110 M87 84 V110" fill="none" />
+      <g font-family="Fraunces Variable, Georgia, serif" font-weight="600" font-size="12" fill="var(--brown)" text-anchor="middle">
+        <text x="19.5" y="82">0</text><text x="46.5" y="82">1</text><text x="73.5" y="82">2</text><text x="100.5" y="82">3</text>
+      </g>
+      <path class="o" d="M46 60 Q47.5 54 49 60 L48.5 96 Q47 98 45.5 96 Z" fill="#E9C99B" transform="rotate(-6 47 80)" />
+      <g class="m-bundle">
+        <path class="o" d="M93 34 Q95 27 97 34 L96.5 96 Q95 98 93.5 96 Z" fill="#E9C99B" />
+        <path class="o" d="M99 34 Q101 27 103 34 L102.5 96 Q101 98 99.5 96 Z" fill="#E9C99B" />
+        <path class="o" d="M105 36 Q107 29 109 36 L108.5 96 Q107 98 105.5 96 Z" fill="#E9C99B" transform="rotate(4 107 66)" />
+        <path class="m-ribbon" d="M91 62 C96 66 104 66 111 61 M101 64 C98 70 96 72 94 74 M101 64 C104 70 106 72 109 73" pathLength="100" fill="none" stroke="var(--leaf)" stroke-width="3" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100" />
+      </g>
+    </g>
+  )}
+  {kind === 'cultural' && (
+    <g>
+      <defs>
+        <clipPath id={`${uid}-globe`}><circle cx="60" cy="52" r="34" /></clipPath>
+      </defs>
+      <ellipse class="o" cx="60" cy="108" rx="26" ry="6" fill="var(--wood)" />
+      <path class="o" d="M60 102 V92" stroke-width="5" fill="none" />
+      <path d="M26 74 C14 54 24 22 52 16" fill="none" stroke="var(--wood-grain)" stroke-width="4" stroke-linecap="round" />
+      <circle cx="60" cy="52" r="34" fill="var(--water)" />
+      <g clip-path={`url(#${uid}-globe)`}>
+        <g class="m-land" fill="var(--land)" stroke="rgb(118 61 13 / .45)" stroke-width="1.2">
+          <path d="M30 34 C36 26 48 28 50 36 C52 44 44 46 40 52 C36 58 28 54 28 46 Z" />
+          <path d="M58 54 C64 50 72 54 70 62 C68 72 60 80 56 74 C52 68 54 58 58 54 Z" />
+          <path d="M74 28 C82 24 92 30 90 38 C86 44 78 42 74 36 Z" />
+          <path d="M98 34 C104 26 116 28 118 36 C120 44 112 46 108 52 C104 58 96 54 96 46 Z" />
+          <path d="M126 54 C132 50 140 54 138 62 C136 72 128 80 124 74 C120 68 122 58 126 54 Z" />
+          <path d="M142 28 C150 24 160 30 158 38 C154 44 146 42 142 36 Z" />
+        </g>
+      </g>
+      <circle class="o" cx="60" cy="52" r="34" fill="none" />
+      <path d="M44 32 C48 28 54 26 58 26" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".6" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .material-art { overflow: visible; }
+  .material-art :global(.o) { stroke: rgb(118 61 13 / .7); stroke-width: 2; stroke-linejoin: round; }
+  .material-art :global(.grain) { fill: none; stroke: var(--wood-grain); stroke-width: 1.4; stroke-linecap: round; opacity: .9; }
+  .material-art :global(.m-jug) { transform-box: fill-box; transform-origin: 100% 100%; }
+  .material-art :global(.m-water) { transform-box: fill-box; transform-origin: 50% 100%; transform: translateY(62%); }
+  .material-art :global(.m-lift), .material-art :global(.m-bundle) { transform-box: fill-box; }
+</style>
