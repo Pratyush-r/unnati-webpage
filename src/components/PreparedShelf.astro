@@ -97,6 +97,7 @@ const tiers = [materials.slice(0, 3), materials.slice(3)];
   .chip-area { font-weight: 800; color: var(--ink); }
   .chip-link { display: inline-flex; align-items: center; gap: .3rem; min-height: 48px; font-weight: 800; color: var(--leaf); }
   .shelf-hint { text-align: center; margin: 1.6rem auto 0; color: var(--brown); }
+  .shelf-hint.is-used { visibility: hidden; }
 
   @media (min-width: 768px) {
     .shelf-wrap { max-width: 640px; }
@@ -176,7 +177,7 @@ const tiers = [materials.slice(0, 3), materials.slice(3)];
     buttons.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        hint?.setAttribute('hidden', '');
+        hint?.classList.add('is-used');
         const open = btn.getAttribute('aria-expanded') !== 'true';
         closeAll(btn);
         btn.setAttribute('aria-expanded', String(open));
