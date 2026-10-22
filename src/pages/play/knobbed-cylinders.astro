@@ -28,7 +28,7 @@ const NAMES = ['smallest', 'small', 'middle', 'big', 'biggest'];
               <circle r={d / 2 + 3} fill="#8A5A2E" stroke={O} stroke-width="2" />
               <circle r={d / 2 - 4} fill="#6B4322" />
               <path d={`M${-d / 2 + 8} 4 A${d / 2 - 8} ${d / 2 - 8} 0 0 0 ${d / 2 - 8} 4`} fill="none" stroke="#A9773F" stroke-width="3" opacity=".6" />
-              <circle r={d / 2 + 18} class="target-hl" />
+              <circle r={Math.max(80, d / 2 + 18)} class="target-hl" />
             </g>
           </g>
         ))}
@@ -39,7 +39,7 @@ const NAMES = ['smallest', 'small', 'middle', 'big', 'biggest'];
           return (
             <g data-p={i} data-size={d} data-name={NAMES[i]}>
               <g class="lift">
-                <circle class="hit" r={Math.max(71, d / 2 + 6)} fill="transparent" />
+                <circle class="hit" r={Math.max(80, d / 2 + 6)} fill="transparent" />
                 <circle cx="5" cy="8" r={d / 2} fill="rgb(59 36 20 / .16)" />
                 <circle r={d / 2} fill="var(--wood)" stroke={O} stroke-width="3" />
                 <circle r={d / 2 - 9} fill="none" stroke="#F1D6B1" stroke-width="3" opacity=".9" />

@@ -10,7 +10,7 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description, path, jsonLd, noindex } = Astro.props;
-const canonical = siteUrl + (path === '/' ? '/' : path);
+const canonical = siteUrl + (path === '/' ? '/' : `${path}/`);
 const ogImage = `${siteUrl}/og/default.png`;
 ---
 <meta charset="utf-8" />

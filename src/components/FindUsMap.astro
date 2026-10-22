@@ -10,7 +10,7 @@ const { headingId = 'find-us' } = Astro.props;
 
 const trees = [
   [150, 120], [250, 128], [430, 128], [580, 128], [30, 230], [120, 250], [60, 330], [140, 345],
-  [380, 250], [415, 345], [585, 350], [100, 445], [150, 445],
+  [560, 236], [415, 345], [585, 350], [100, 445], [150, 445],
 ];
 ---
 <div class="findus">
@@ -29,9 +29,9 @@ const trees = [
         <rect x="186" y="380" width="414" height="44" fill="#DCD3C2" />
       </g>
       <g class="road-label" aria-hidden="true">
-        <text x="400" y="179" text-anchor="middle">Chanakyan Main Road</text>
-        <text x="440" y="409" text-anchor="middle">Chanakyan Cross Road</text>
-        <text transform="translate(213 300) rotate(-90)" text-anchor="middle">Annamalai Avenue</text>
+        <text x="400" y="180" text-anchor="middle">Chanakyan Main Road</text>
+        <text x="440" y="410" text-anchor="middle">Chanakyan Cross Road</text>
+        <text transform="translate(214 290) rotate(-90)" text-anchor="middle">Annamalai Avenue</text>
       </g>
       <!-- Trees -->
       <g aria-hidden="true">
@@ -44,24 +44,24 @@ const trees = [
       </g>
       <!-- Landmarks (tap shows the name) -->
       <g class="lm" data-lm="temple" role="button" tabindex="0" aria-label="Sai Baba Temple" transform="translate(70 112)">
-        <rect x="-36" y="-34" width="72" height="72" rx="14" fill="transparent" />
+        <rect x="-60" y="-60" width="120" height="120" rx="16" fill="transparent" />
         <path d="M-24 34 V-2 H24 V34 Z" fill="#E9A66B" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
         <path d="M-14 -2 L0 -32 L14 -2 Z" fill="#D6905E" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
         <path d="M-6 34 V18 Q0 10 6 18 V34" fill="#B5683A" />
         <circle cx="0" cy="-34" r="3" fill="#D6905E" />
       </g>
       <g class="lm" data-lm="brigade" role="button" tabindex="0" aria-label="Brigade" transform="translate(330 98)">
-        <rect x="-38" y="-48" width="76" height="96" rx="12" fill="transparent" />
+        <rect x="-60" y="-60" width="120" height="120" rx="16" fill="transparent" />
         <rect x="-30" y="-40" width="60" height="80" rx="4" fill="#9CC8E8" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
         <path d="M-20 -28 h10 M2 -28 h10 M-20 -14 h10 M2 -14 h10 M-20 0 h10 M2 0 h10 M-20 14 h10 M2 14 h10" stroke="#fff" stroke-width="5" stroke-linecap="round" />
       </g>
       <g class="lm" data-lm="tudor" role="button" tabindex="0" aria-label="Casagrand Tudor" transform="translate(505 98)">
-        <rect x="-44" y="-48" width="88" height="96" rx="12" fill="transparent" />
+        <rect x="-60" y="-60" width="120" height="120" rx="16" fill="transparent" />
         <rect x="-36" y="-40" width="72" height="80" rx="4" fill="#B9D6EC" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
         <path d="M-26 -28 h10 M-6 -28 h10 M14 -28 h10 M-26 -12 h10 M-6 -12 h10 M14 -12 h10 M-26 4 h10 M-6 4 h10 M14 4 h10 M-26 20 h10 M-6 20 h10 M14 20 h10" stroke="#fff" stroke-width="5" stroke-linecap="round" />
       </g>
       <g class="lm" data-lm="millenia" role="button" tabindex="0" aria-label="Casagrand Millenia" transform="translate(500 316)">
-        <rect x="-50" y="-60" width="100" height="120" rx="12" fill="transparent" />
+        <rect x="-60" y="-60" width="120" height="120" rx="16" fill="transparent" />
         <rect x="-42" y="-50" width="84" height="100" rx="4" fill="#9CC8E8" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
         <path d="M-32 -38 h12 M-6 -38 h12 M20 -38 h12 M-32 -20 h12 M-6 -20 h12 M20 -20 h12 M-32 -2 h12 M-6 -2 h12 M20 -2 h12 M-32 16 h12 M-6 16 h12 M20 16 h12 M-32 34 h12 M-6 34 h12 M20 34 h12" stroke="#fff" stroke-width="5" stroke-linecap="round" />
       </g>
@@ -79,7 +79,7 @@ const trees = [
         </g>
       </g>
       <g aria-hidden="true">
-        <text class="unnati-label" x="300" y="230" text-anchor="middle">Unnati Montessori</text>
+        <text class="unnati-label" x="238" y="222" text-anchor="start">Unnati Montessori</text>
       </g>
       <!-- North arrow + not-to-scale -->
       <g aria-hidden="true" transform="translate(560 40)">
@@ -114,8 +114,8 @@ const trees = [
   .findus { display: grid; gap: 1.5rem; align-items: center; }
   .map-card { margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 10px; box-shadow: var(--shadow); }
   .map { width: 100%; height: auto; }
-  .road-label { font: 700 19px var(--font-body); fill: #5B4636; letter-spacing: .02em; }
-  .unnati-label { font: 600 22px var(--font-head); fill: var(--brown); }
+  .road-label { font: 700 23px var(--font-body); fill: #5B4636; letter-spacing: .02em; }
+  .unnati-label { font: 600 27px var(--font-head); fill: var(--brown); }
   .n-label { font: 800 16px var(--font-body); fill: var(--brown); }
   .scale-note { font: italic 600 17px var(--font-body); fill: #6B5444; }
   .tip-text { font: 800 19px var(--font-body); }

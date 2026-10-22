@@ -206,8 +206,7 @@ h4 { font-size: 1.0625rem; font-family: var(--font-body); font-weight: 800; }
 .textarea { min-height: 120px; resize: vertical; }
 .input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline-offset: 1px; border-color: var(--leaf); }
 .field[data-invalid] .input, .field[data-invalid] .select { border-color: #A3361A; }
-.error { color: #A3361A; font-weight: 700; font-size: var(--fs-small); }
-.error:empty { display: none; }
+.error { color: #A3361A; font-weight: 700; font-size: var(--fs-small); min-height: 1.4em; line-height: 1.4; }
 
 .vine-divider { display: block; width: min(320px, 70%); height: 28px; margin: 0 auto; color: var(--brown); }
 

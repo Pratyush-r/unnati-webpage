@@ -59,7 +59,7 @@ function render(): void {
   basketSpindles.replaceChildren();
   const left = TOTAL - inBox;
   for (let i = 0; i < left; i++) spindle(basketSpindles, -150 + i * 33, -150 - (i % 2) * 14, -18 + i * 4);
-  boxZone.setAttribute('aria-label', `Spindle box for ${WORDS[target()] ?? ''}, ${inBox} spindle${inBox === 1 ? '' : 's'} inside`);
+  boxZone.setAttribute('aria-label', `Spindle box, number ${target()}, ${inBox} spindle${inBox === 1 ? '' : 's'} inside`);
   basketZone.setAttribute('aria-label', `Basket of spindles, ${left} left`);
   progress.querySelectorAll('.pdot').forEach((d, i) => d.classList.toggle('is-done', i < round));
 }
@@ -145,7 +145,9 @@ async function cancelHold(from: Pt): Promise<void> {
   if (origin === 'box') render();
 }
 
+let checkToken = 0;
 async function check(): Promise<void> {
+  const token = ++checkToken;
   const n = target();
   if (inBox > n) {
     if (!tilted) {
@@ -156,13 +158,14 @@ async function check(): Promise<void> {
   }
   if (inBox <= n) tilted = false;
   if (inBox !== n || tying) return;
-  // Tie the bundle.
+  // A short pause before tying; any further move cancels it and re-checks.
+  await wait(450);
+  if (token !== checkToken || inBox !== n) return;
   tying = true;
   const x0 = boxSpindleX(0) - 22;
   const x1 = boxSpindleX(n - 1) + 22;
   const mid = (x0 + x1) / 2;
   ribbon.setAttribute('d', `M${x0} 40 C${x0 + 10} 52 ${x1 - 10} 52 ${x1} 40 M${mid} 46 C${mid - 26} 20 ${mid - 44} 40 ${mid - 30} 58 C${mid - 20} 66 ${mid - 6} 56 ${mid} 46 C${mid + 26} 20 ${mid + 44} 40 ${mid + 30} 58 C${mid + 20} 66 ${mid + 6} 56 ${mid} 46 M${mid} 46 L${mid - 16} 84 M${mid} 46 L${mid + 16} 84`);
-  await wait(450);
   await settle(ribbon, [{ strokeDashoffset: '101' }, { strokeDashoffset: '0' }], { duration: 600 });
   tok();
   announce('Tied');
