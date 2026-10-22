@@ -1,0 +1,77 @@
+---
+// Keyword picture cards for Sandpaper Letters: s sun · a ant · t tiger · m mango · p peacock ·
+// i insect (a ladybird) · n nest · c coconut. Flat picture-book style, brown outlines, no black.
+const O = 'rgb(118 61 13 / .7)';
+const INK = '#3B2414';
+---
+<g class="pic" data-pic="s">
+  <g stroke="#E39B2D" stroke-width="10" stroke-linecap="round">
+    {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+      <path d="M0 -118 V-92" transform={`rotate(${a})`} />
+    ))}
+  </g>
+  <circle r="70" fill="#F6C343" stroke={O} stroke-width="3" />
+  <circle cx="-24" cy="-10" r="7" fill={INK} /><circle cx="24" cy="-10" r="7" fill={INK} />
+  <path d="M-24 18 Q0 40 24 18" fill="none" stroke={INK} stroke-width="6" stroke-linecap="round" />
+  <circle cx="-42" cy="12" r="10" fill="#F29A6B" opacity=".6" /><circle cx="42" cy="12" r="10" fill="#F29A6B" opacity=".6" />
+</g>
+<g class="pic" data-pic="a">
+  <g stroke="#7A4A23" stroke-width="6" stroke-linecap="round" fill="none">
+    <path d="M-20 10 L-40 50 M0 14 L-4 56 M20 10 L40 50 M-20 0 L-50 -16 M20 0 L50 -16" />
+    <path d="M70 -36 C80 -60 92 -66 100 -60 M60 -40 C62 -66 72 -76 82 -76" />
+  </g>
+  <ellipse cx="-62" cy="6" rx="40" ry="30" fill="#A0522D" stroke={O} stroke-width="3" />
+  <ellipse cx="0" cy="0" rx="26" ry="22" fill="#A0522D" stroke={O} stroke-width="3" />
+  <circle cx="52" cy="-20" r="26" fill="#A0522D" stroke={O} stroke-width="3" />
+  <circle cx="60" cy="-26" r="5" fill={INK} />
+</g>
+<g class="pic" data-pic="t">
+  <path d="M-84 -70 L-60 -110 L-36 -84 Z M84 -70 L60 -110 L36 -84 Z" fill="#E8862E" stroke={O} stroke-width="3" />
+  <ellipse rx="96" ry="88" fill="#E8862E" stroke={O} stroke-width="3" />
+  <path d="M-96 -10 L-60 -4 M-94 20 L-62 16 M96 -10 L60 -4 M94 20 L62 16 M-20 -88 L-14 -58 M0 -88 V-54 M20 -88 L14 -58" stroke="#5B3517" stroke-width="8" stroke-linecap="round" />
+  <ellipse cy="40" rx="50" ry="38" fill="#FFF4E2" />
+  <circle cx="-34" cy="-20" r="9" fill={INK} /><circle cx="34" cy="-20" r="9" fill={INK} />
+  <path d="M-14 22 H14 L0 36 Z" fill="#C2410C" />
+  <path d="M0 36 V48 M0 48 Q-14 60 -26 50 M0 48 Q14 60 26 50" fill="none" stroke={INK} stroke-width="4" stroke-linecap="round" />
+</g>
+<g class="pic" data-pic="m">
+  <path d="M6 -86 C14 -110 40 -116 60 -104 C44 -92 24 -86 6 -86 Z" fill="#2E8540" stroke={O} stroke-width="3" />
+  <path d="M0 -82 C70 -90 100 -10 70 50 C46 98 -30 104 -66 60 C-96 22 -74 -70 0 -82 Z" fill="#F6B73C" stroke={O} stroke-width="3" />
+  <path d="M30 -60 C60 -40 70 0 60 30" fill="none" stroke="#F09A2A" stroke-width="10" stroke-linecap="round" opacity=".7" />
+  <path d="M-40 -30 C-46 -10 -44 10 -36 24" fill="none" stroke="#FFF1C6" stroke-width="10" stroke-linecap="round" opacity=".8" />
+  <path d="M0 -82 C2 -90 4 -96 6 -100" stroke="#7A4A23" stroke-width="5" stroke-linecap="round" />
+</g>
+<g class="pic" data-pic="p">
+  {[-60, -35, -12, 12, 35, 60].map((a) => (
+    <g transform={`rotate(${a} 0 40)`}>
+      <ellipse cx="0" cy="-60" rx="22" ry="62" fill="#3E9E7E" stroke={O} stroke-width="2" />
+      <circle cx="0" cy="-92" r="13" fill="#2F6FB0" stroke="#F6C343" stroke-width="4" />
+    </g>
+  ))}
+  <ellipse cx="0" cy="60" rx="30" ry="44" fill="#1F6FB5" stroke={O} stroke-width="3" />
+  <circle cx="0" cy="6" r="20" fill="#1F6FB5" stroke={O} stroke-width="3" />
+  <path d="M-6 -14 L-12 -30 M0 -16 V-34 M6 -14 L12 -30" stroke="#1F6FB5" stroke-width="3" stroke-linecap="round" />
+  <circle cx="6" cy="2" r="4" fill="#fff" /><path d="M18 8 L30 12 L18 14 Z" fill="#E8862E" />
+</g>
+<g class="pic" data-pic="i">
+  <path d="M-30 -70 C-40 -96 -56 -100 -64 -94 M30 -70 C40 -96 56 -100 64 -94" fill="none" stroke={INK} stroke-width="5" stroke-linecap="round" />
+  <circle cy="-56" r="32" fill="#5B3A2A" stroke={O} stroke-width="3" />
+  <circle cx="-12" cy="-62" r="6" fill="#fff" /><circle cx="12" cy="-62" r="6" fill="#fff" />
+  <path d="M-80 0 C-80 -56 80 -56 80 0 C80 70 30 96 0 96 C-30 96 -80 70 -80 0 Z" fill="#E0412F" stroke={O} stroke-width="3" />
+  <path d="M0 -38 V96" stroke="#5B3A2A" stroke-width="5" />
+  <g fill="#5B3A2A"><circle cx="-40" cy="-4" r="13" /><circle cx="40" cy="-4" r="13" /><circle cx="-34" cy="48" r="11" /><circle cx="34" cy="48" r="11" /></g>
+</g>
+<g class="pic" data-pic="n">
+  <ellipse cx="-26" cy="-12" rx="22" ry="28" fill="#DCEAF2" stroke={O} stroke-width="3" />
+  <ellipse cx="22" cy="-16" rx="22" ry="28" fill="#F3F1E6" stroke={O} stroke-width="3" />
+  <ellipse cx="0" cy="-6" rx="22" ry="28" fill="#DCEAF2" stroke={O} stroke-width="3" />
+  <path d="M-110 0 C-100 70 100 70 110 0 C70 14 -70 14 -110 0 Z" fill="#A47148" stroke={O} stroke-width="3" />
+  <path d="M-100 14 C-50 40 50 40 100 14 M-90 34 C-40 56 40 56 90 34 M-60 0 L-30 50 M-20 6 L10 54 M30 6 L56 46 M70 4 L82 30" fill="none" stroke="#7A4A23" stroke-width="4" stroke-linecap="round" />
+</g>
+<g class="pic" data-pic="c">
+  <path d="M-20 -60 C-60 -120 -110 -110 -126 -90 C-90 -94 -60 -84 -30 -60 Z" fill="#2E8540" stroke={O} stroke-width="3" />
+  <path d="M10 -64 C40 -120 96 -120 116 -96 C80 -98 50 -88 24 -58 Z" fill="#3F9A50" stroke={O} stroke-width="3" />
+  <circle r="86" fill="#8B5A2B" stroke={O} stroke-width="3" />
+  <path d="M-60 -30 C-40 -50 -10 -58 20 -56 M-70 10 C-40 -6 0 -10 40 -4 M-60 50 C-30 36 10 34 50 42" fill="none" stroke="#6E4521" stroke-width="5" stroke-linecap="round" />
+  <g fill="#5B3517"><circle cx="-20" cy="-26" r="10" /><circle cx="20" cy="-26" r="10" /><circle cx="0" cy="6" r="10" /></g>
+</g>
