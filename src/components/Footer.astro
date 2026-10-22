@@ -1,0 +1,90 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site, fullAddress, telHref, wa, waText } from '../config/site';
+
+const year = new Date().getFullYear();
+const socials = Object.entries(site.social).filter(([, url]) => url);
+const quick = [
+  { href: '/about', label: 'About' },
+  { href: '/approach', label: 'Our Approach' },
+  { href: '/admissions', label: 'Admissions' },
+  { href: '/day-care', label: site.dayCare.name },
+  { href: '/play', label: 'Little Hands Corner' },
+  { href: '/teach', label: 'Teach with Us' },
+  { href: '/consultancy', label: 'Montessori Consultancy' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <Logo loading="lazy" class="footer-logo" />
+      <p class="tagline">{site.tagline}</p>
+      <address>
+        <Icon name="pin" size={20} />
+        <span>{fullAddress}</span>
+      </address>
+      {socials.length > 0 && (
+        <ul class="socials" role="list">
+          {socials.map(([name, url]) => (
+            <li><a href={url} target="_blank" rel="noopener" aria-label={`Unnati Montessori on ${name}`}><Icon name={name} /></a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <div class="footer-contact">
+      <h2 class="footer-h">Talk to us</h2>
+      <div class="contact-row">
+        <p class="label">School &amp; admissions</p>
+        <a class="phone" href={telHref(site.school)}>{site.school.display}</a>
+        <a class="wa-link" href={wa(site.school, waText.general)} target="_blank" rel="noopener">WhatsApp the school</a>
+      </div>
+      <div class="contact-row">
+        <p class="label">Montessori consultancy</p>
+        <a class="phone" href={telHref(site.consultancy)}>{site.consultancy.display}</a>
+        <a class="wa-link" href={wa(site.consultancy, waText.consultancy)} target="_blank" rel="noopener">WhatsApp consultancy</a>
+      </div>
+    </div>
+
+    <nav class="footer-links" aria-label="Footer">
+      <h2 class="footer-h">Explore</h2>
+      <ul role="list">
+        {quick.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer-base">
+    <p>© {year} Unnati Montessori</p>
+    <a href="/privacy">Privacy</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--paper); border-top: 1px solid var(--line); padding-top: clamp(2.5rem, 2rem + 2vw, 4rem); }
+  .footer-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  .footer-brand :global(.footer-logo), .footer-brand :global(.footer-logo img) { height: 64px; width: auto; }
+  .tagline { font-family: var(--font-head); font-size: 1.25rem; color: var(--brown); margin-top: .5rem; }
+  address { display: flex; gap: .5rem; font-style: normal; margin-top: .75rem; color: var(--ink); max-width: 34ch; }
+  address :global(svg) { color: var(--brown); margin-top: .2rem; }
+  .footer-h { font-family: var(--font-body); font-weight: 800; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; color: var(--leaf); margin-bottom: .75rem; }
+  .contact-row + .contact-row { margin-top: 1rem; }
+  .label { font-weight: 700; font-size: var(--fs-small); color: rgb(59 36 20 / .82); }
+  .phone {
+    display: inline-flex; align-items: center; min-height: 48px; font-family: var(--font-head); font-size: 1.375rem; font-weight: 600;
+    color: var(--brown); text-decoration: none;
+  }
+  .wa-link { display: flex; align-items: center; min-height: 48px; font-weight: 700; width: fit-content; }
+  .footer-links ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; }
+  .footer-links a { display: flex; align-items: center; min-height: 48px; color: var(--ink); font-weight: 600; text-decoration: none; }
+  .footer-links a:hover { color: var(--brown); text-decoration: underline; }
+  .socials { display: flex; gap: .5rem; margin-top: .75rem; }
+  .socials a { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--sage); color: var(--forest); }
+  .footer-base {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem;
+    margin-top: 2rem; padding-block: 1rem 1.5rem; border-top: 1px solid var(--line); font-size: var(--fs-small);
+  }
+  .footer-base a { display: inline-flex; align-items: center; min-height: 48px; min-width: 48px; font-weight: 700; }
+  @media (min-width: 768px) { .footer-grid { grid-template-columns: 1.2fr 1fr 1.2fr; } }
+</style>

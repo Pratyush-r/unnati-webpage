@@ -1,0 +1,20 @@
+---
+import { Picture } from 'astro:assets';
+import logo from '../assets/brand/logo-wide.png';
+
+interface Props {
+  class?: string;
+  loading?: 'eager' | 'lazy';
+}
+const { class: cls, loading = 'eager' } = Astro.props;
+---
+<Picture
+  src={logo}
+  formats={['avif', 'webp']}
+  widths={[129, 158, 258, 317]}
+  sizes="(min-width: 1024px) 158px, 129px"
+  alt="Unnati Montessori"
+  class={cls}
+  loading={loading}
+  fetchpriority={loading === 'eager' ? 'high' : 'auto'}
+/>

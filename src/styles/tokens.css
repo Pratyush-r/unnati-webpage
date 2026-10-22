@@ -1,0 +1,62 @@
+/* Design tokens — colours sampled from the logo files (brief 4.2). Use exactly. */
+:root {
+  color-scheme: light;
+
+  --cream: #FDF4E5;
+  --paper: #FFFAF2;
+  --brown: #763D0D;
+  --ink: #3B2414;
+  --forest: #0B4121;
+  --leaf: #0F692F;
+  --peach: #E1AB7F;      /* illustration only, never text */
+  --terracotta: #D6905E; /* illustration only, never text */
+  --sage: #DCE6D3;
+  --blush: #F6E1D3;
+
+  /* Montessori material colours — shelf and games only */
+  --wood: #E3BC8D;
+  --wood-grain: #C99766;
+  --pink-board: #F4B5C4;
+  --blue-board: #9CC8E8;
+  --land: #C9A46A;
+  --water: #7FB8D9;
+  --air: #D4EAF7;
+  --felt: #9DBB8A;
+
+  --line: rgb(118 61 13 / .12);
+  --line-strong: rgb(118 61 13 / .28);
+  --outline: rgb(118 61 13 / .7);
+
+  --font-head: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Nunito Variable', 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', 'Comic Sans MS', cursive;
+
+  --fs-h1: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
+  --fs-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --fs-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --fs-small: 0.9375rem;
+  --fs-lead: clamp(1.0625rem, 1rem + 0.45vw, 1.3125rem);
+
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 32px;
+  --r-pebble: 28px;
+
+  --shadow: 0 12px 32px -16px rgb(118 61 13 / .25);
+  --shadow-lift: 0 20px 40px -18px rgb(118 61 13 / .38);
+
+  --ease-move: cubic-bezier(.2, .8, .2, 1);
+  --ease-pop: cubic-bezier(.34, 1.56, .64, 1);
+
+  --gutter: clamp(20px, 4vw, 40px);
+  --container: 1200px;
+  --space-section: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
+  --space-block: clamp(1.5rem, 1.1rem + 1.5vw, 2.5rem);
+
+  --sticky-bar-h: 0px;
+}
+
+@media (max-width: 767.98px) {
+  :root { --sticky-bar-h: calc(64px + env(safe-area-inset-bottom)); }
+}

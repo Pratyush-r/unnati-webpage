@@ -1,0 +1,33 @@
+---
+// One-line, dismissible announcement from site.announcement. Dismissal is remembered in localStorage.
+// An inline head script (BaseLayout) hides it before first paint when already dismissed — no layout shift.
+import Icon from './Icon.astro';
+import { site } from '../config/site';
+---
+<div class="announce" data-announce>
+  <div class="container announce-inner">
+    <p><span class="dot" aria-hidden="true"></span>{site.announcement}</p>
+    <button type="button" class="announce-close" aria-label="Dismiss announcement" data-announce-close>
+      <Icon name="close" size={20} />
+    </button>
+  </div>
+</div>
+
+<style>
+  .announce { background: var(--forest); color: var(--cream); font-size: .9rem; font-weight: 700; }
+  :global(html.announce-dismissed) .announce { display: none; }
+  .announce-inner { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 48px; }
+  .announce p { display: flex; align-items: center; gap: .6rem; line-height: 1.35; padding-block: .4rem; max-width: none; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #8FD19E; flex: none; }
+  .announce-close { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; color: var(--cream); margin-right: -12px; }
+  .announce-close:hover { background: rgb(253 244 229 / .12); }
+</style>
+
+<script>
+  import { setItem } from '../lib/storage';
+  import { site } from '../config/site';
+  document.querySelector('[data-announce-close]')?.addEventListener('click', () => {
+    setItem('unnati:announce', site.announcement);
+    document.documentElement.classList.add('announce-dismissed');
+  });
+</script>

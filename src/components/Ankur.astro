@@ -1,0 +1,82 @@
+---
+// Ankur (अंकुर, "sprout") — the site's only character. A smiling terracotta pot with a sprout.
+// Parts use classes rather than ids (Ankur can appear twice on one page):
+// .ankur-pot .ankur-eyes .ankur-mouth .ankur-stem .ankur-leaf-l .ankur-leaf-r .ankur-new-leaf
+interface Props {
+  size?: number;
+  /** Render as a button (tap → wave). */
+  button?: boolean;
+  label?: string;
+  class?: string;
+  blink?: boolean;
+}
+const { size = 96, button = false, label = 'Ankur, the Unnati sprout — say hello', class: cls, blink = true } = Astro.props;
+const Tag = button ? 'button' : 'span';
+---
+<Tag
+  class:list={['ankur', cls]}
+  data-ankur
+  data-blink={blink ? '' : undefined}
+  type={button ? 'button' : undefined}
+  aria-label={button ? label : undefined}
+  aria-hidden={button ? undefined : 'true'}
+  style={`--ankur-size:${size}px`}
+>
+  <svg viewBox="0 0 100 140" width={size} height={size * 1.4} aria-hidden="true" focusable="false">
+    <g class="ankur-body">
+      <g class="ankur-sprout">
+        <path class="ankur-stem" d="M50 62 C50 50 46.5 41 49.5 31 C51.2 25 53.5 21 54 15" />
+        <g class="ankur-new-leaf">
+          <path class="leaf-shape" d="M50.5 47 C56 38.5 68 37 76 41.5 C70.5 51.5 58 53.5 50.5 47Z" />
+          <path class="leaf-vein" d="M52.5 46.6 C59 44 66 42.6 72.5 42.2" />
+        </g>
+        <g class="ankur-leaf-l">
+          <path class="leaf-shape" d="M49.5 34 C41.5 22.5 27 19.5 16.5 25.5 C22.5 38.5 39.5 42.5 49.5 34Z" />
+          <path class="leaf-vein" d="M47 33.2 C38 30.5 29 28 21 26.6" />
+        </g>
+        <g class="ankur-leaf-r">
+          <path class="leaf-shape" d="M53.5 17 C59.5 5 75.5 1.5 86.5 7.5 C80.5 20 65 24 53.5 17Z" />
+          <path class="leaf-vein" d="M56 16.4 C64.5 12.5 73.5 9.8 82 8.6" />
+        </g>
+      </g>
+      <g class="ankur-pot">
+        <path class="pot-body" d="M20.5 70 H79.5 L73 129 Q72.2 135.5 65.8 135.5 H34.2 Q27.8 135.5 27 129 Z" />
+        <path class="pot-shine" d="M29 80 Q30.5 102 34 122" />
+        <rect class="pot-rim" x="13.5" y="57.5" width="73" height="16" rx="7.5" />
+        <ellipse class="cheek" cx="33" cy="108" rx="6" ry="3.6" />
+        <ellipse class="cheek" cx="67" cy="108" rx="6" ry="3.6" />
+        <g class="ankur-eyes">
+          <circle cx="40" cy="97" r="4.2" />
+          <circle cx="60" cy="97" r="4.2" />
+          <circle class="eye-glint" cx="41.3" cy="95.6" r="1.2" />
+          <circle class="eye-glint" cx="61.3" cy="95.6" r="1.2" />
+        </g>
+        <path class="ankur-mouth" d="M43.5 107.5 Q50 114.5 56.5 107.5" />
+      </g>
+    </g>
+  </svg>
+</Tag>
+
+<style>
+  .ankur {
+    display: inline-block; line-height: 0; position: relative; flex: none;
+    width: var(--ankur-size); -webkit-tap-highlight-color: transparent;
+  }
+  button.ankur { border-radius: 24px; min-width: 48px; min-height: 48px; cursor: pointer; }
+  .ankur svg { width: 100%; height: auto; overflow: visible; }
+  .ankur-body { transform-box: fill-box; transform-origin: 50% 100%; }
+  .ankur-stem { fill: none; stroke: #0F692F; stroke-width: 4; stroke-linecap: round; }
+  .leaf-shape { fill: #0F692F; stroke: rgb(118 61 13 / .7); stroke-width: 2; stroke-linejoin: round; }
+  .leaf-vein { fill: none; stroke: #3F8F55; stroke-width: 1.8; stroke-linecap: round; }
+  .ankur-leaf-r { transform-box: fill-box; transform-origin: 0% 85%; }
+  .ankur-leaf-l { transform-box: fill-box; transform-origin: 100% 80%; }
+  .ankur-new-leaf { transform-box: fill-box; transform-origin: 0% 70%; transform: scale(0); }
+  :global(.is-grown) .ankur-new-leaf { transform: none; }
+  .pot-body { fill: var(--terracotta); stroke: rgb(118 61 13 / .7); stroke-width: 2; stroke-linejoin: round; }
+  .pot-shine { fill: none; stroke: var(--peach); stroke-width: 3.5; stroke-linecap: round; opacity: .7; }
+  .pot-rim { fill: var(--peach); stroke: rgb(118 61 13 / .7); stroke-width: 2; }
+  .cheek { fill: #F2A9A0; opacity: .9; }
+  .ankur-eyes { fill: var(--ink); transform-box: fill-box; transform-origin: 50% 50%; }
+  .eye-glint { fill: #fff; }
+  .ankur-mouth { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
+</style>

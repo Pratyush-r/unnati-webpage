@@ -1,0 +1,54 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/motion.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyBar from '../components/StickyBar.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
+import Head from '../components/Head.astro';
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Contact number used by the header sheet and sticky bar. */
+  phone?: 'school' | 'consultancy';
+  /** Hide the announcement and sticky bars (Little Hands Corner). */
+  quiet?: boolean;
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+const { title, description, phone = 'school', quiet = false, jsonLd, noindex = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <Head title={title} description={description} path={path} jsonLd={jsonLd} noindex={noindex} />
+    {!quiet && (
+      <script is:inline define:vars={{ text: site.announcement }}>
+        try { if (localStorage.getItem('unnati:announce') === text) document.documentElement.classList.add('announce-dismissed'); } catch (e) {}
+      </script>
+    )}
+  </head>
+  <body class:list={[{ 'no-sticky': quiet }]}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {!quiet && <AnnouncementBar />}
+    <Header path={path} phone={phone} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    {!quiet && <StickyBar phone={phone} />}
+    <script>
+      import { initReveal } from '../lib/reveal';
+      initReveal();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  body.no-sticky { padding-bottom: 0; }
+  main:focus { outline: none; }
+</style>
