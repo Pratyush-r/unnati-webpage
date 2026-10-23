@@ -14,8 +14,8 @@ type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
 >
   <section class="page-hero">
     <div class="container">
-      <p class="eyebrow">For children aged 2½–6 · with a grown-up</p>
-      <h1>Little Hands Corner</h1>
+      <h1>Little <span class="scribble">Hands</span> Corner</h1>
+      <p class="play-sub">For children aged 2½–6, with a grown-up.</p>
       <div class="grownups pebble">
         <p class="g-title"><Icon name="people" size={22} /> A note for grown-ups</p>
         <p>Montessori learning happens with real materials and real hands. These five short activities are a gentle peek into our classroom — best enjoyed together, a few minutes at a time.</p>
@@ -43,6 +43,7 @@ type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
 </BaseLayout>
 
 <style>
+  .play-sub { margin-top: .5rem; font-size: var(--fs-lead); font-weight: 700; color: var(--brown); }
   .grownups { margin-top: 1.25rem; max-width: 760px; background: var(--paper); display: grid; gap: .5rem; }
   .g-title { display: flex; align-items: center; gap: .5rem; font-weight: 800; color: var(--forest); }
   .small { font-weight: 700; color: var(--brown); }

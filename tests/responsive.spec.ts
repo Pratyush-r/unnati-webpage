@@ -3,6 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { ALL_PAGES, GAME_PAGES, VIEWPORTS, GAME_EXTRA_VIEWPORTS, SKIP_SHOWME, slugOf } from './pages';
 
 async function scrollThrough(page: Page) {
+  await page.waitForTimeout(1500); // let start-up settle so scroll reveals fire in headless Chromium
   await page.evaluate(async () => {
     for (let y = 0; y < document.documentElement.scrollHeight; y += Math.max(300, window.innerHeight * 0.6)) {
       window.scrollTo(0, y);

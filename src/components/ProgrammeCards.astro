@@ -12,7 +12,7 @@ const H = headingLevel;
 const tints: Record<string, string> = { primary: 'var(--sage)', daycare: 'var(--blush)', afterschool: '#F3E7CF' };
 const short: Record<string, string> = { primary: 'Primary', daycare: 'Day Care', afterschool: 'After-school' };
 ---
-<ul class="programmes" role="list" data-reveal="children">
+<ul class="programmes scatter" role="list" data-reveal="children">
   {programmes.map((p) => (
     <li class="programme pebble pebble--hover" id={`programme-${p.id}`}>
       <div class="art" style={`background:${tints[p.id]}`} transition:name={`programme-${p.id}`}><ProgrammeArt kind={p.id} size={84} /></div>
@@ -33,7 +33,13 @@ const short: Record<string, string> = { primary: 'Primary', daycare: 'Day Care',
 </ul>
 
 <style>
-  .programmes { display: grid; gap: clamp(1rem, .8rem + 1vw, 1.5rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+  .programmes { display: grid; gap: clamp(1rem, .8rem + 1vw, 1.75rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; }
+  /* Uneven on purpose: the Primary Environment leads, the others sit lower and narrower. */
+  @media (min-width: 1024px) {
+    .programmes { grid-template-columns: 1.3fr 1fr 1fr; }
+    .programme:nth-child(2) { margin-top: 3rem; }
+    .programme:nth-child(3) { margin-top: 1.25rem; }
+  }
   .programme { display: flex; flex-direction: column; gap: .6rem; }
   .art { border-radius: var(--r-md); display: grid; place-items: center; padding: .9rem; margin-bottom: .4rem; }
   .p-title { margin: 0; }

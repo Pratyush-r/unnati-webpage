@@ -1,0 +1,43 @@
+---
+// Real photos of the school, shown as taped polaroids. Drop photos into brand-assets/photos/ and rebuild.
+// The file name becomes the caption and alt text: "children-pouring-water.jpg" → "Children pouring water".
+// With no photos, nothing renders — there are never placeholder or stock images.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title?: string;
+  max?: number;
+  headingId?: string;
+}
+const { title = 'Inside Unnati', max = 6, headingId = 'inside-unnati' } = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../../brand-assets/photos/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG}', { eager: true });
+const caption = (path: string) => {
+  const name = path.split('/').pop()!.replace(/\.[^.]+$/, '').replace(/^\d+[-_ ]*/, '').replace(/[-_]+/g, ' ').trim();
+  return name ? name.charAt(0).toUpperCase() + name.slice(1) : 'A moment at Unnati';
+};
+const photos = Object.entries(files)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .slice(0, max)
+  .map(([path, mod], i) => ({ src: mod.default, text: caption(path), tape: ['', 'tape--sage', 'tape--blush'][i % 3] }));
+---
+{photos.length > 0 && (
+  <section class="section photo-strip" aria-labelledby={headingId}>
+    <div class="container">
+      <h2 id={headingId} class="strip-title">{title}</h2>
+      <div class="polaroids">
+        {photos.map((p, i) => (
+          <figure class:list={['polaroid', 'tape', p.tape]}>
+            <Image src={p.src} alt={p.text} widths={[260, 520]} sizes="260px" loading={i < 2 ? 'eager' : 'lazy'} />
+            <figcaption>{p.text}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .strip-title { text-align: center; margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+</style>

@@ -22,7 +22,6 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
   <section class="page-hero dc-hero">
     <div class="container dc-hero-grid">
       <div class="dc-hero-text">
-        <p class="eyebrow">Ages {site.dayCare.ages} · {site.address.area}, {site.address.city}</p>
         <h1>{name}</h1>
         <p class="subhead">{dayCare.subhead}</p>
         <p class="lead">{dayCare.lead}</p>
@@ -44,8 +43,8 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section bg-paper" aria-labelledby="dc-why">
     <div class="container">
-      <SectionHead eyebrow="Day care, the Montessori way" title="More than minding — a day that helps children grow" id="dc-why" />
-      <ul class="ideas" role="list" data-reveal="children">
+      <SectionHead title="More than minding — a day that helps children grow" mark="helps children grow" id="dc-why" />
+      <ul class="ideas scatter stagger" role="list" data-reveal="children">
         {dayCare.ideas.map((idea, i) => (
           <li class="pebble pebble--hover idea">
             <span class:list={['icon-badge', { 'icon-badge--blush': i % 2 === 1 }]}><Icon name={idea.icon} /></span>
@@ -59,7 +58,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section" aria-labelledby="dc-rhythm">
     <div class="container rhythm-grid">
-      <SectionHead eyebrow="Through the day" title="A familiar rhythm" id="dc-rhythm"
+      <SectionHead title="A familiar rhythm" mark="rhythm" id="dc-rhythm"
         intro="Young children feel safe when they know what comes next. The day follows a gentle, predictable order — the rhythm, not a rush." />
       <VineSteps steps={dayCare.rhythm} ordered={false} />
     </div>
@@ -67,10 +66,10 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section bg-sage" aria-labelledby="dc-parents">
     <div class="container">
-      <SectionHead eyebrow="For parents" title="Rest, and an update every day" id="dc-parents" />
-      <div class="parents" data-reveal="children">
+      <SectionHead title="Rest, and an update every day" mark="every day" offset id="dc-parents" />
+      <div class="parents scatter" data-reveal="children">
         {dayCare.forParents.map((p) => (
-          <article class="pebble parent-card">
+          <article class="pebble parent-card tape tape--left">
             <span class="icon-badge"><Icon name={p.icon} /></span>
             <div>
               <h3>{p.title}</h3>
@@ -88,7 +87,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section bg-paper" aria-labelledby="dc-faq">
     <div class="container-narrow">
-      <SectionHead eyebrow="Questions" title={`${name}: what parents ask`} id="dc-faq" />
+      <SectionHead title={`${name}: what parents ask`} id="dc-faq" />
       <Faq items={dayCareFaq} />
     </div>
   </section>

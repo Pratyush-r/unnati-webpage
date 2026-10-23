@@ -9,15 +9,14 @@ import { site, telHref, wa, waText } from '../config/site';
 >
   <section class="page-hero">
     <div class="container">
-      <p class="eyebrow">For educators</p>
       <h1>Teach with us</h1>
       <p class="lead">Montessori teacher training in Chennai, and a place in a new, authentic Montessori House for Children.</p>
     </div>
   </section>
 
   <section class="section--tight">
-    <div class="container teach-grid">
-      <article class="pebble teach-card" aria-labelledby="training" data-reveal>
+    <div class="container teach-grid scatter">
+      <article class="pebble teach-card tape tape--sage" aria-labelledby="training" data-reveal>
         <span class="icon-badge"><Icon name="teacher" /></span>
         <h2 id="training">Primary Montessori Teacher Training</h2>
         <p class="when chip">Starts {site.teacherTraining.startLabel}</p>
@@ -34,7 +33,7 @@ import { site, telHref, wa, waText } from '../config/site';
       </article>
 
       {site.hiring.open && (
-        <article class="pebble teach-card teach-card--hire" aria-labelledby="hiring" data-reveal>
+        <article class="pebble teach-card teach-card--hire tape tape--right" aria-labelledby="hiring" data-reveal>
           <span class="icon-badge icon-badge--blush"><Icon name="people" /></span>
           <h2 id="hiring">We're hiring</h2>
           <p class="role">{site.hiring.role}</p>

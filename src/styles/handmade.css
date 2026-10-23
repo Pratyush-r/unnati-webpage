@@ -1,0 +1,117 @@
+/* Hand-made layer — "a Montessori classroom notice board".
+   Paper grain, pencil marks, washi tape, wobbly section edges and cards that sit slightly askew,
+   so the site feels made by a person rather than generated from a template.
+   Static decoration only (no animation added); every mark is aria-hidden or a CSS pseudo-element. */
+
+:root {
+  /* Fine paper grain (tiny inline SVG noise, multiplied over the cream). */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .46  0 0 0 0 .24  0 0 0 0 .05  0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Wobbly torn-paper edge used as a mask on section tops and bottoms. */
+  --edge-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 18' preserveAspectRatio='none'%3E%3Cpath d='M0 11 C14 7 26 13 41 10 S66 5 83 9 S112 15 128 10 S152 4 170 8 S203 14 218 9 S234 7 240 10 V18 H0Z' fill='black'/%3E%3C/svg%3E");
+  /* Pencil underline (leaf green). */
+  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9 C40 4 74 11 108 7 S170 3 197 6 M12 12 C60 9 120 12 186 9' fill='none' stroke='%230F692F' stroke-width='2.6' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E");
+  /* Pencil circle drawn around a word or chip. */
+  --circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' preserveAspectRatio='none'%3E%3Cpath d='M22 12 C70 0 160 2 188 18 C204 30 186 52 120 56 C60 60 8 50 6 32 C4 18 30 8 70 6' fill='none' stroke='%23763D0D' stroke-width='1.8' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E");
+  /* Washi tape with torn ends. */
+  --tape-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 24' preserveAspectRatio='none'%3E%3Cpath d='M3 1 L97 0 L99 4 L96 8 L99 12 L96 16 L99 20 L97 24 L2 23 L0 19 L3 15 L0 11 L3 7 L0 3Z' fill='black'/%3E%3C/svg%3E");
+  --r-paper: 26px 32px 24px 30px / 30px 24px 32px 26px;
+  --r-paper-2: 32px 24px 30px 26px / 24px 32px 26px 30px;
+}
+
+body { background-image: var(--paper-grain); }
+
+/* ——— Wobbly edges between coloured sections ——— */
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry) { position: relative; }
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry)::before,
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry)::after {
+  content: ''; position: absolute; left: 0; right: 0; height: 18px; pointer-events: none;
+  background: inherit;
+  -webkit-mask: var(--edge-wave) 0 0 / 360px 18px repeat-x;
+  mask: var(--edge-wave) 0 0 / 360px 18px repeat-x;
+}
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry)::before { top: -17px; }
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry)::after { bottom: -17px; transform: scaleY(-1); -webkit-mask-position: 120px 0; mask-position: 120px 0; z-index: 1; }
+/* When two coloured sections meet, only the lower one's top edge draws (no double seam). */
+:is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry):has(+ :is(.bg-paper, .bg-sage, .bg-blush, .bg-forest, .enquiry))::after { display: none; }
+.site-footer { position: relative; }
+.site-footer::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -17px; height: 18px; background: inherit; pointer-events: none;
+  -webkit-mask: var(--edge-wave) 60px 0 / 360px 18px repeat-x; mask: var(--edge-wave) 60px 0 / 360px 18px repeat-x;
+}
+
+/* ——— Pencil marks on words ——— */
+.scribble {
+  background: var(--scribble) left bottom / 100% .34em no-repeat;
+  padding-bottom: .1em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+.circled { position: relative; isolation: isolate; }
+.circled::after {
+  content: ''; position: absolute; inset: -9px -14px -8px -12px; z-index: -1; pointer-events: none;
+  background: var(--circle) center / 100% 100% no-repeat;
+}
+
+/* ——— Paper cards: irregular corners, a little askew, tape on some ——— */
+.pebble { border-radius: var(--r-paper); }
+.pebble:nth-child(even) { border-radius: var(--r-paper-2); }
+.tape { position: relative; }
+.tape::before {
+  content: ''; position: absolute; top: -13px; left: 50%; width: 96px; height: 26px; z-index: 2; pointer-events: none;
+  translate: -50% 0; rotate: -4deg;
+  background: rgb(225 171 127 / .62);
+  -webkit-mask: var(--tape-mask) center / 100% 100% no-repeat; mask: var(--tape-mask) center / 100% 100% no-repeat;
+}
+.tape--sage::before { background: rgb(157 187 138 / .62); }
+.tape--blush::before { background: rgb(244 181 196 / .62); }
+.tape--left::before { left: 22%; rotate: 5deg; }
+.tape--right::before { left: 78%; rotate: -6deg; }
+
+/* Scattered: children sit slightly askew and straighten under the pointer. */
+@media (min-width: 768px) {
+  .scatter > * { rotate: -.7deg; transition: rotate 220ms var(--ease-move), transform 200ms var(--ease-move), box-shadow 200ms var(--ease-move); }
+  .scatter > *:nth-child(3n + 2) { rotate: .6deg; }
+  .scatter > *:nth-child(3n + 3) { rotate: -.25deg; }
+  .scatter > *:nth-child(4n + 4) { rotate: .9deg; }
+  .stagger > *:nth-child(even) { margin-top: 2.25rem; }
+  .stagger > *:nth-child(3n) { margin-top: 1rem; }
+}
+@media (min-width: 768px) and (pointer: fine) {
+  .scatter > *:hover, .scatter > *:focus-within { rotate: 0deg; }
+}
+
+/* Section heads don't all line up on the same left edge. */
+@media (min-width: 1024px) {
+  .section-head--offset { margin-left: clamp(2rem, 9vw, 9rem); }
+}
+
+/* Doodles live in the margins and never take part in layout. */
+.doodle { position: absolute; pointer-events: none; color: var(--brown); opacity: .55; z-index: 0; }
+.doodle--leaf { color: var(--leaf); opacity: .6; }
+@media (max-width: 767.98px) { .doodle--wide-only { display: none; } }
+
+/* Lined notebook paper (the enquiry card). */
+.notebook {
+  background-image:
+    linear-gradient(90deg, transparent 0 46px, rgb(214 144 94 / .28) 46px 47.5px, transparent 47.5px),
+    repeating-linear-gradient(to bottom, transparent 0 31px, rgb(118 61 13 / .07) 31px 32px);
+  background-color: var(--paper);
+}
+@media (max-width: 639.98px) {
+  .notebook { background-image: repeating-linear-gradient(to bottom, transparent 0 31px, rgb(118 61 13 / .07) 31px 32px); }
+}
+
+/* Polaroids for real photos. */
+.polaroids { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1rem, .5rem + 2vw, 2rem); }
+.polaroid {
+  margin: 0; width: min(100%, 260px); background: #fff; padding: 10px 10px 14px; border-radius: 4px;
+  box-shadow: 0 14px 28px -16px rgb(59 36 20 / .45), 0 2px 4px rgb(59 36 20 / .08);
+}
+.polaroid img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
+.polaroid figcaption { margin-top: .6rem; text-align: center; font-weight: 700; font-size: .9375rem; color: var(--brown); line-height: 1.35; }
+.polaroid:nth-child(odd) { rotate: -2.2deg; }
+.polaroid:nth-child(3n) { rotate: 1.6deg; translate: 0 12px; }
+.polaroid:nth-child(4n) { rotate: 2.4deg; }
+
+@media print {
+  body { background-image: none; }
+  .doodle, .tape::before { display: none; }
+}

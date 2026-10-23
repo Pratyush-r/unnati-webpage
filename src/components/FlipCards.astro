@@ -10,7 +10,7 @@ interface Props {
 const { ids } = Astro.props;
 const items = ids ? ids.map((id) => didYouKnow.find((d) => d.id === id)!) : didYouKnow;
 ---
-<ul class="flips" role="list" data-flips>
+<ul class="flips scatter" role="list" data-flips>
   {items.map((d, i) => (
     <li class="flip-item">
       <button type="button" class="flip" aria-pressed="false" data-flip>

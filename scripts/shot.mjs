@@ -8,6 +8,7 @@ const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1, reducedMotion: process.env.REDUCE ? 'reduce' : 'no-preference' });
 for (const p of paths) {
   await page.goto(base + p, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1500); // headless Chromium delivers scroll observers only after start-up settles
   if (process.env.FULL !== '0') {
     // Scroll through so below-the-fold reveals run, then return to the top.
     await page.evaluate(async () => {

@@ -15,7 +15,6 @@ import { parentFaq } from '../content/faq';
 >
   <section class="page-hero">
     <div class="container">
-      <p class="eyebrow">Admissions</p>
       <h1>Join when your child is ready</h1>
       <p class="chip status"><span class="dot" aria-hidden="true"></span>{statusLabel} · Admissions open all year</p>
       <p class="lead">{yearRound}</p>
@@ -28,17 +27,17 @@ import { parentFaq } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="programmes-title">
     <div class="container">
-      <SectionHead eyebrow="Programmes" title="Our programmes" id="programmes-title" />
+      <SectionHead title="Our programmes" mark="programmes" id="programmes-title" />
       <ProgrammeCards />
     </div>
   </section>
 
   <section class="section" aria-labelledby="register-title">
     <div class="container">
-      <SectionHead eyebrow="How to register" title="Three simple steps" id="register-title" />
-      <ol class="steps" role="list" data-reveal="children">
+      <SectionHead title="Three simple steps" mark="simple" offset id="register-title" />
+      <ol class="steps scatter stagger" role="list" data-reveal="children">
         {registerSteps.map((s, i) => (
-          <li class="pebble step">
+          <li class:list={['pebble', 'step', 'tape', ['', 'tape--sage', 'tape--blush'][i]]}>
             <span class="num" aria-hidden="true">{i + 1}</span>
             <h3>{s.title}</h3>
             <p>{s.text(site.school.display)}</p>
@@ -50,7 +49,7 @@ import { parentFaq } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="faq-title">
     <div class="container-narrow">
-      <SectionHead eyebrow="Parent FAQ" title="Questions parents ask" id="faq-title" />
+      <SectionHead title="Questions parents ask" mark="parents" id="faq-title" />
       <Faq items={parentFaq} />
     </div>
   </section>

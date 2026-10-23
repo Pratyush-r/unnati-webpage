@@ -51,7 +51,13 @@ Edit only the text between quotes `'…'`. If a sentence contains an apostrophe 
 
 ## 4. Add real photos of the school
 
-Put photos (JPG or PNG) in `brand-assets/photos/`, then ask a developer to add an "Inside Unnati" strip to the About page (at most 6 photos). Photos are compressed automatically when the site is built. Only use photos you have permission to publish, especially of children.
+Put photos (JPG or PNG) in `brand-assets/photos/` and rebuild. They appear as taped polaroids in an "Inside Unnati"
+section on the home and About pages (up to 6, in file-name order).
+
+**Name each file after what it shows.** The name becomes the caption and the description for screen readers, for example
+`children-pouring-water.jpg` → "Children pouring water". A number at the start sets the order and is hidden:
+`1-morning-circle.jpg`. Photos are compressed automatically. Only use photos you have permission to publish,
+especially of children.
 
 ## 5. Add recorded letter sounds (Sandpaper Letters)
 

@@ -77,3 +77,12 @@ One line per judgement call made during the build.
 67. **Storage:** growth is stored in localStorage (`unnati:ankur-growth`, `unnati:pages-seen`). It stays on the device and nothing is sent anywhere, and the privacy note already covers small on-device settings.
 68. **Growth animation:** the new part pops in (700 ms) and he nods, but only for an Ankur on screen, and always in answer to what the visitor just did. Reduced motion shows the part instantly. Screen readers hear a polite message ("Ankur grew a new leaf.").
 69. **Placement:** growth parts sit behind or above the existing leaves, so the game's own "grow" leaf, wave and point still work. The flowers grow upwards into space the dock and shelf already leave free.
+
+## Hand-made look (owner request, 23 Oct 2026)
+
+70. **Direction:** "a Montessori classroom notice board". Faint paper grain, wobbly torn-paper edges between coloured sections, washi tape, pencil underlines (`.scribble`) and a hand-drawn circle around the status chip, pencil doodles in the margins, and the enquiry card on lined notebook paper. All of it lives in `src/styles/handmade.css`, `Doodle.astro` and `PhotoStrip.astro`.
+71. **Less symmetrical:** cards sit at slight, varied angles (`.scatter`) and straighten under the pointer. Rows are staggered (`.stagger`). Programme cards have uneven widths and heights. Home area cards are laid out three over two, like the shelf. Some section heads are offset. The founder quote is a tilted, taped note. On phones the cards stay straight, for easy reading.
+72. **Labels removed:** the small all-caps labels above section and page headings are gone (a template tell), and so are the "Area 1–5" labels. The two hero labels the brief specifies (home and consultancy) stay. About's Mission and Vision now have visible headings.
+73. **Real photos:** photos placed in `brand-assets/photos/` become taped polaroids on the home and About pages (max 6), captioned and alt-texted from the file name. With no photos, nothing renders; no stock or AI imagery is ever used.
+74. **Handwriting font:** Caveat stays at one line per page, as the brief asks. The hand-made feel comes from drawn marks rather than more handwriting.
+75. **QA timing:** headless Chromium delivers scroll observers only after start-up settles, so the screenshot helper and the responsive test now wait 1.5 s before scrolling. Earlier full-page QA screenshots could show unrevealed sections; this doesn't affect real visitors.

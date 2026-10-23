@@ -17,16 +17,15 @@ const cards = [
 >
   <section class="page-hero">
     <div class="container">
-      <p class="eyebrow">Contact</p>
       <h1>Talk to {site.contactPerson}</h1>
       <p class="lead">Call or WhatsApp — whichever is easier. We reply to every message.</p>
     </div>
   </section>
 
   <section class="section--tight">
-    <div class="container cards">
+    <div class="container cards scatter">
       {cards.map((c) => (
-        <article class="pebble contact-card" style={`--tint:${c.tint}`} data-reveal>
+        <article class="pebble contact-card tape" style={`--tint:${c.tint}`} data-reveal>
           <h2>{c.title}</h2>
           <p>{c.text}</p>
           <a class="number" href={telHref(c.phone)}>{c.phone.display}</a>
@@ -41,7 +40,7 @@ const cards = [
 
   <section class="section bg-paper" aria-labelledby="find-us">
     <div class="container">
-      <SectionHead eyebrow="Find us" title="Visit us in Mogappair West" id="find-us" />
+      <SectionHead title="Visit us in Mogappair West" mark="Mogappair West" id="find-us" />
       <FindUsMap headingId="contact-map" />
     </div>
   </section>

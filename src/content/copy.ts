@@ -150,7 +150,7 @@ export const registerSteps = [
 // Day Care facts confirmed by the owner: ages 1–6, rest / nap time, daily updates to parents.
 // Hours come from site.dayCare.hours. Do not add other facility claims without confirmation.
 export const dayCare = {
-  subhead: 'A calm, unhurried day, in the same prepared environment.',
+  subhead: 'A calm, unhurried day in Mogappair West, in the same prepared environment.',
   lead: `A warm, calm day care in the same prepared environment, with the same respect for each child's rhythm. Children aged ${site.dayCare.ages} spend their extended day the Montessori way: real work, rest when they need it, and adults who follow the child.`,
   ideas: [
     { icon: 'shelf', title: 'The same prepared environment', text: 'Low shelves, child-sized furniture and real materials. The extended day happens in a space built for children, not just for minding them.' },
