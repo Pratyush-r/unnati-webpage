@@ -48,14 +48,30 @@ export class PlacementEngine {
   private heldByKeyboard = false;
   private drag: { piece: Piece; pointerId: number; start: Pt; offset: Pt; moved: boolean; fromTarget: Target | null } | null = null;
   private busy = false;
+  private ac = new AbortController();
 
   constructor(private board: Board, private rules: Rules) {
     const svg = board.svg;
-    svg.addEventListener('pointerdown', this.onDown);
-    svg.addEventListener('pointermove', this.onMove);
-    svg.addEventListener('pointerup', this.onUp);
-    svg.addEventListener('pointercancel', this.onCancel);
-    svg.addEventListener('keydown', this.onKey);
+    const signal = this.ac.signal;
+    svg.addEventListener('pointerdown', this.onDown, { signal });
+    svg.addEventListener('pointermove', this.onMove, { signal });
+    svg.addEventListener('pointerup', this.onUp, { signal });
+    svg.addEventListener('pointercancel', this.onCancel, { signal });
+    svg.addEventListener('keydown', this.onKey, { signal });
+  }
+
+  /** Remove listeners and close any in-progress drag (page navigation). */
+  destroy(): void {
+    if (this.drag) {
+      try {
+        this.board.svg.releasePointerCapture(this.drag.pointerId);
+      } catch {
+        /* ignore */
+      }
+      this.drag = null;
+    }
+    this.held = null;
+    this.ac.abort();
   }
 
   addPiece(id: string, el: SVGGElement, label: string): Piece {

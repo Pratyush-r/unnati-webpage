@@ -13,7 +13,7 @@ const soundDir = path.join(process.cwd(), 'public', 'audio', 'sounds');
 const sounds = LETTERS.map((l) => l.letter).filter((l) => fs.existsSync(path.join(soundDir, `${l}.mp3`)));
 const O = 'rgb(118 61 13 / .7)';
 ---
-<GameLayout title="Sandpaper Letters" area="Language" doneText="You traced every letter."
+<GameLayout slug="sandpaper-letters" title="Sandpaper Letters" area="Language" doneText="You traced every letter."
   description="A Language activity for children aged 2½–6: trace sandpaper letters with a finger, the Montessori way.">
   <div class="board">
     <svg data-board-svg data-sounds={sounds.join(',')} aria-label="Sandpaper letter board">

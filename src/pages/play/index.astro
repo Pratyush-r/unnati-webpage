@@ -30,7 +30,7 @@ type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
         {areas.map((a) => (
           <li>
             <a class="game-card" href={a.href} style={`--tint:${a.tint}`}>
-              <span class="g-art"><MaterialArt kind={a.id as Kind} size={150} /></span>
+              <span class="g-art" transition:name={`game-${a.href.split('/').pop()}`}><MaterialArt kind={a.id as Kind} size={150} /></span>
               <span class="g-area">{a.name}</span>
               <span class="g-name">{a.game}</span>
               <span class="g-play"><Icon name="play" size={30} /> Play</span>

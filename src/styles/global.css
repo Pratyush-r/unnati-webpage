@@ -23,9 +23,6 @@
   src: url('/fonts/caveat-latin-600-normal.woff2') format('woff2');
 }
 
-@view-transition { navigation: auto; }
-::view-transition-old(root),
-::view-transition-new(root) { animation-duration: 200ms; }
 
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }

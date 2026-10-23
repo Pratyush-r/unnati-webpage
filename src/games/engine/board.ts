@@ -9,6 +9,7 @@ export class Board {
   readonly svg: SVGSVGElement;
   layout: Layout = 'landscape';
   private listeners: ((l: Layout) => void)[] = [];
+  private ro: ResizeObserver;
 
   constructor(svg: SVGSVGElement) {
     this.svg = svg;
@@ -23,8 +24,14 @@ export class Board {
         this.listeners.forEach((fn) => fn(next));
       }
     };
-    new ResizeObserver(apply).observe(host);
+    this.ro = new ResizeObserver(apply);
+    this.ro.observe(host);
     apply();
+  }
+
+  destroy(): void {
+    this.ro.disconnect();
+    this.listeners = [];
   }
 
   onLayout(fn: (l: Layout) => void): void {

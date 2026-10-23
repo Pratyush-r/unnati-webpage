@@ -75,13 +75,19 @@ const { split = false, id = 'compare-toggle' } = Astro.props;
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
-    const btns = root.querySelectorAll<HTMLButtonElement>('[data-mode-btn]');
-    btns.forEach((btn) =>
-      btn.addEventListener('click', () => {
-        root.dataset.mode = btn.dataset.modeBtn;
-        btns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      }),
-    );
+  import { onPageLoad } from '../scripts/lifecycle';
+
+  onPageLoad(() => {
+    const ac = new AbortController();
+    document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
+      const btns = root.querySelectorAll<HTMLButtonElement>('[data-mode-btn]');
+      btns.forEach((btn) =>
+        btn.addEventListener('click', () => {
+          root.dataset.mode = btn.dataset.modeBtn;
+          btns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        }, { signal: ac.signal }),
+      );
+    });
+    return () => ac.abort();
   });
 </script>

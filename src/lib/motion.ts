@@ -27,11 +27,11 @@ export function done(anim: Animation | null): Promise<void> {
   );
 }
 
-/** Run a callback once when the element first enters the viewport. */
-export function onceInView(el: Element, cb: () => void, threshold = 0.35): void {
+/** Run a callback once when the element first enters the viewport. Returns a cleanup. */
+export function onceInView(el: Element, cb: () => void, threshold = 0.35): () => void {
   if (!('IntersectionObserver' in window)) {
     cb();
-    return;
+    return () => {};
   }
   const io = new IntersectionObserver(
     (entries) => {
@@ -43,6 +43,7 @@ export function onceInView(el: Element, cb: () => void, threshold = 0.35): void 
     { threshold },
   );
   io.observe(el);
+  return () => io.disconnect();
 }
 
 /**

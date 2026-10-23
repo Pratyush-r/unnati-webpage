@@ -32,7 +32,7 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
       <div class="enq-form-wrap" data-form-wrap>
         <h2 id="enquire-title">{title}</h2>
         <p class="enq-intro">{intro}</p>
-        <form novalidate data-form>
+        <form novalidate data-form data-astro-reload>
           <div class="grid-fields">
             <div class="field">
               <label for="enq-name">Parent's name <span class="req">(required)</span></label>
@@ -91,10 +91,10 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
     background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
     padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
   }
-  .peek-slot { position: absolute; right: 28px; top: -70px; height: 72px; width: 70px; overflow: hidden; pointer-events: none; }
+  /* The form's own Ankur appears only in the success state (the floating guide points at the form instead). */
+  .peek-slot { position: absolute; right: 28px; top: -70px; height: 72px; width: 70px; overflow: hidden; pointer-events: none; visibility: hidden; }
+  .peek-slot.is-shown { visibility: visible; }
   .peek-slot :global(.enq-ankur) { position: absolute; top: 0; left: 0; }
-  :global(.js) .peek-slot :global(.enq-ankur) { transform: translateY(105%); }
-  :global(.js) .peek-slot.is-peeked :global(.enq-ankur) { transform: none; }
   .leaves { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: visible; }
   .drift-leaf { position: absolute; top: -10px; left: calc(14% + var(--i) * 17%); opacity: 0; }
   .enq-intro { margin-top: .6rem; margin-bottom: 1.5rem; }
@@ -123,13 +123,15 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
 </style>
 
 <script>
-  import { animate, onceInView, reducedMotion } from '../lib/motion';
-  import { getItem, setItem } from '../lib/storage';
+  import { animate } from '../lib/motion';
   import { play } from './ankur';
+  import { onPageLoad } from '../scripts/lifecycle';
 
   const MOBILE = /^(?:\+?91[\s-]?|0)?[6-9]\d{4}[\s-]?\d{5}$/;
 
-  document.documentElement.classList.add('js');
+  onPageLoad(() => {
+  const ac = new AbortController();
+  const signal = ac.signal;
   document.querySelectorAll<HTMLElement>('[data-enquiry]').forEach((card) => {
     const form = card.querySelector<HTMLFormElement>('[data-form]')!;
     const wrap = card.querySelector<HTMLElement>('[data-form-wrap]')!;
@@ -141,17 +143,6 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
     const mobile = form.elements.namedItem('mobile') as HTMLInputElement;
     const msg = form.elements.namedItem('message') as HTMLTextAreaElement;
     const count = form.querySelector<HTMLElement>('[data-count]')!;
-
-    // Ankur peeks from the card's corner the first time it enters view (once per session).
-    if (getItem('unnati:peek', 'session') || reducedMotion()) {
-      slot.classList.add('is-peeked');
-    } else {
-      onceInView(card, () => {
-        setItem('unnati:peek', '1', 'session');
-        play(ankur, 'peek').then(() => slot.classList.add('is-peeked'));
-        slot.classList.add('is-peeked');
-      }, 0.4);
-    }
 
     const setError = (input: HTMLInputElement, message: string) => {
       const field = input.closest('.field') as HTMLElement;
@@ -168,9 +159,9 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
       if (!v) return setError(mobile, 'Please add a 10-digit mobile number.');
       return setError(mobile, MOBILE.test(v) ? '' : 'Please add a 10-digit mobile number, like 98765 43210.');
     };
-    name.addEventListener('blur', () => name.value && checkName());
-    mobile.addEventListener('blur', () => mobile.value && checkMobile());
-    msg.addEventListener('input', () => (count.textContent = `${msg.value.length} / 500`));
+    name.addEventListener('blur', () => name.value && checkName(), { signal });
+    mobile.addEventListener('blur', () => mobile.value && checkMobile(), { signal });
+    msg.addEventListener('input', () => (count.textContent = `${msg.value.length} / 500`), { signal });
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -215,6 +206,8 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
       wrap.hidden = true;
       success.hidden = false;
       success.focus();
+      slot.classList.add('is-shown');
+      document.dispatchEvent(new Event('unnati:ankurs'));
       play(ankur, 'wave');
       card.querySelectorAll('.drift-leaf').forEach((leaf, i) =>
         animate(leaf, [
@@ -223,6 +216,8 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
           { opacity: 0, transform: `translate(${i % 2 ? -10 : 10}px, 220px) rotate(${i % 2 ? 160 : -160}deg)` },
         ], { duration: 1200, delay: i * 70, easing: 'ease-in' }),
       );
-    });
+    }, { signal });
+  });
+  return () => ac.abort();
   });
 </script>

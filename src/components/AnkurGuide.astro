@@ -1,0 +1,108 @@
+---
+// Ankur, the floating guide: a small corner dock + speech bubble that stays with the visitor across
+// pages (transition:persist). Rendered in both layouts; hidden (not removed) on games, /404 and /privacy.
+// Turn off with site.ankurGuide = false. Tips live in src/config/ankur-tips.ts.
+import Ankur from './Ankur.astro';
+import { site } from '../config/site';
+import { GUIDE_PAGES } from '../config/ankur-tips';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+const hidden = !GUIDE_PAGES.includes(path);
+---
+{site.ankurGuide && (
+  <div class="ankur-guide" data-ankur-guide data-hidden={hidden ? '' : undefined} transition:persist="ankur-guide">
+    <div class="ag-dock is-away" data-dock>
+      <button type="button" class="ag-ankur" data-ankur-btn aria-label="Ankur: tip for this page" aria-expanded="false" aria-controls="ankur-bubble">
+        <Ankur size={46} blink={false} class="ag-art" />
+      </button>
+      <div class="ag-bubble" id="ankur-bubble" role="dialog" aria-label="Tip from Ankur" hidden data-bubble>
+        <button type="button" class="ag-close" aria-label="Close" data-close>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+        </button>
+        <p class="ag-text"><strong class="ag-greet" data-greet hidden></strong> <span data-tip></span></p>
+        <div class="ag-chips" data-chips></div>
+        <button type="button" class="ag-hide" data-hide>Hide Ankur</button>
+      </div>
+    </div>
+    <button type="button" class="ag-tab" data-tab hidden aria-label="Show Ankur">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" fill="#0F692F" /><path d="M6.5 17.5c3.5-3.5 7-6.5 10.5-10" fill="none" stroke="#5FA86E" stroke-width="1.5" stroke-linecap="round" /></svg>
+    </button>
+  </div>
+)}
+
+<style>
+  .ankur-guide {
+    position: fixed; z-index: 35; right: max(16px, env(safe-area-inset-right));
+    bottom: calc(var(--sticky-bar-h) + 12px);
+    pointer-events: none;
+  }
+  :global(body.no-sticky) .ankur-guide { bottom: calc(16px + env(safe-area-inset-bottom)); }
+  .ankur-guide[data-hidden], :global(html.scroll-locked) .ankur-guide { display: none; }
+  .ag-dock { position: relative; pointer-events: auto; }
+  .ag-dock.is-away { visibility: hidden; }
+  .ag-dock.is-away .ag-bubble { display: none; }
+
+  .ag-ankur {
+    position: relative; display: grid; place-items: end center; width: 64px; height: 64px; padding: 0;
+    border-radius: 22px; clip-path: inset(-40px -40px 0 -40px);
+    -webkit-tap-highlight-color: transparent; transition: transform 180ms var(--ease-pop);
+  }
+  .ag-ankur::before { /* the little dock mat he sits on */
+    content: ''; position: absolute; left: 6px; right: 6px; bottom: 0; height: 10px; border-radius: 50%;
+    background: rgb(118 61 13 / .16);
+  }
+  .ag-ankur:active { transform: scale(.96); }
+  .ag-ankur :global(.ag-art) { position: relative; width: 44px; margin-bottom: 2px; }
+  .ag-ankur:focus-visible { outline: 3px solid var(--leaf); outline-offset: 3px; }
+
+  .ag-bubble {
+    position: absolute; right: 0; bottom: calc(100% + 12px); width: max-content; max-width: min(280px, calc(100vw - 32px));
+    background: var(--paper); border: 1px solid rgb(118 61 13 / .25); border-radius: 20px;
+    box-shadow: var(--shadow-lift); padding: 14px 16px 12px; transform-origin: calc(100% - 32px) calc(100% + 12px);
+    font: 600 16px/1.45 var(--font-body); color: var(--ink);
+  }
+  .ag-bubble[hidden] { display: none; }
+  .ag-bubble::after { /* tail pointing at Ankur */
+    content: ''; position: absolute; right: 24px; bottom: -8px; width: 14px; height: 14px; background: var(--paper);
+    border-right: 1px solid rgb(118 61 13 / .25); border-bottom: 1px solid rgb(118 61 13 / .25); transform: rotate(45deg);
+  }
+  .ag-text { padding-right: 36px; max-width: none; }
+  .ag-greet { color: var(--brown); font-weight: 800; }
+  .ag-close {
+    position: absolute; top: 2px; right: 2px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: var(--brown);
+  }
+  .ag-close:hover { background: rgb(118 61 13 / .07); }
+  .ag-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .ag-chips:empty { display: none; }
+  .ag-chips :global(a) {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 999px;
+    background: var(--forest); color: var(--cream); font-weight: 800; font-size: .9375rem; text-decoration: none;
+  }
+  .ag-chips :global(a + a) { background: transparent; color: var(--brown); border: 2px solid var(--brown); }
+  .ag-hide {
+    display: inline-flex; align-items: center; min-height: 48px; margin-top: 4px; padding: 0 4px;
+    font-weight: 700; font-size: .875rem; color: rgb(59 36 20 / .82); text-decoration: underline; text-underline-offset: .18em;
+  }
+
+  .ag-tab {
+    position: fixed; right: 0; bottom: inherit; width: 48px; height: 48px; display: grid; place-items: center;
+    pointer-events: auto; border-radius: 24px 0 0 24px; background: var(--paper);
+    border: 1px solid rgb(118 61 13 / .25); border-right: 0; box-shadow: var(--shadow);
+  }
+  .ag-tab[hidden] { display: none; }
+
+  @media (min-width: 1024px) {
+    .ankur-guide { right: 24px; bottom: 24px; }
+    :global(body.no-sticky) .ankur-guide { bottom: 24px; }
+    .ag-ankur { width: 88px; height: 88px; border-radius: 28px; }
+    .ag-ankur :global(.ag-art) { width: 62px; }
+  }
+  @media print { .ankur-guide { display: none !important; } }
+</style>
+
+<script>
+  import '../scripts/ankur-guide';
+</script>

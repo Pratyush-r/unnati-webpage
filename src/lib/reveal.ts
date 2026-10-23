@@ -2,7 +2,7 @@
 // Anything already visible on first paint is left alone.
 import { reducedMotion } from './motion';
 
-export function initReveal(): void {
+export function initReveal(): (() => void) | void {
   if (reducedMotion() || !('IntersectionObserver' in window)) return;
   const groups = document.querySelectorAll<HTMLElement>('[data-reveal]');
   const vh = window.innerHeight;
@@ -30,6 +30,7 @@ export function initReveal(): void {
     items(group).forEach((el) => el.classList.add('will-reveal'));
     io.observe(group);
   });
+  return () => io.disconnect();
 }
 
 function items(group: HTMLElement): HTMLElement[] {

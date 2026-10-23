@@ -1,0 +1,43 @@
+/* Page transitions for the client router (Ankur guide + transitions add-on).
+   Picture-book page turns: content slides, the header stays still, cards morph into the page they
+   open, and Little Hands Corner opens with a sprout reveal. Nothing lasts longer than 500 ms.
+   Astro also disables every view-transition animation under prefers-reduced-motion. */
+
+@keyframes unnati-out-left { to { opacity: 0; transform: translateX(-24px); } }
+@keyframes unnati-out-right { to { opacity: 0; transform: translateX(24px); } }
+@keyframes unnati-in-right { from { opacity: 0; transform: translateX(24px); } }
+@keyframes unnati-in-left { from { opacity: 0; transform: translateX(-24px); } }
+@keyframes unnati-sprout {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to { clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}
+@keyframes unnati-dim { to { opacity: .85; transform: scale(.98); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The header is its own layer and never moves. */
+  .site-header { view-transition-name: site-header; }
+  ::view-transition-group(site-header),
+  ::view-transition-old(site-header),
+  ::view-transition-new(site-header) { animation: none; }
+  ::view-transition-old(site-header) { display: none; }
+
+  /* The page itself doesn't cross-fade — only <main> slides (pageSlide in animations.ts). */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
+
+  /* Card morphs (transition:name="game-…" / "programme-…"). */
+  ::view-transition-group(*) {
+    animation-duration: 320ms;
+    animation-timing-function: cubic-bezier(.2, .8, .2, 1);
+  }
+
+  /* Sprout reveal into /play and the games: one transition style per navigation. */
+  html[data-vt='sprout'] main { view-transition-name: none !important; }
+  html[data-vt='sprout']::view-transition-new(root) {
+    animation: unnati-sprout 450ms cubic-bezier(.2, .8, .2, 1) both;
+  }
+  html[data-vt='sprout']::view-transition-old(root) {
+    animation: unnati-dim 450ms cubic-bezier(.2, .8, .2, 1) both;
+    transform-origin: var(--vt-x, 50%) var(--vt-y, 50%);
+  }
+}

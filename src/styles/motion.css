@@ -26,7 +26,6 @@
 
 /* Reduced motion: everything off, states change instantly. */
 @media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;

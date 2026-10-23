@@ -28,6 +28,8 @@ export const site = {
   teacherTraining: { startLabel: 'November 2026', applyOpen: true },
   hiring: { open: true, role: 'AMI / IMTC Primary Montessori trained educators' },
   announcement: 'Admissions open for ages 2½–6 · Join any time of the year',
+  // Ankur, the floating guide. Set to false and the guide doesn't render anywhere.
+  ankurGuide: true,
   social: { instagram: '', facebook: '', youtube: '' }, // an icon renders only when filled
 };
 

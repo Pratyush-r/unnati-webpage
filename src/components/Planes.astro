@@ -119,35 +119,42 @@ const tints = ['#FBE7E1', '#E3EEF6', '#F8E7DD', '#EAF0DE'];
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-planes]').forEach((root) => {
-    // Tabs (WAI-ARIA tabs pattern, automatic activation).
-    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
-    const select = (i: number, focus = true) => {
-      tabs.forEach((t, k) => {
-        const on = k === i;
-        t.setAttribute('aria-selected', String(on));
-        t.tabIndex = on ? 0 : -1;
-        const panel = document.getElementById(t.getAttribute('aria-controls')!);
-        if (panel) panel.hidden = !on;
-      });
-      if (focus) tabs[i].focus();
-    };
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => select(i, false));
-      t.addEventListener('keydown', (e) => {
-        const n = tabs.length;
-        const map: Record<string, number> = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 };
-        if (e.key in map) { e.preventDefault(); select(map[e.key]); }
-      });
-    });
+  import { onPageLoad } from '../scripts/lifecycle';
 
-    // Table column highlight on hover / focus.
-    const table = root.querySelector('table');
-    if (!table) return;
-    const hl = (col: string | null) => table.querySelectorAll<HTMLElement>('[data-col]').forEach((c) => c.classList.toggle('is-hl', c.dataset.col === col));
-    table.addEventListener('pointerover', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null));
-    table.addEventListener('pointerleave', () => hl(null));
-    table.addEventListener('focusin', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null));
-    table.addEventListener('focusout', () => hl(null));
+  onPageLoad(() => {
+    const ac = new AbortController();
+    const signal = ac.signal;
+    document.querySelectorAll<HTMLElement>('[data-planes]').forEach((root) => {
+      // Tabs (WAI-ARIA tabs pattern, automatic activation).
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      const select = (i: number, focus = true) => {
+        tabs.forEach((t, k) => {
+          const on = k === i;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          const panel = document.getElementById(t.getAttribute('aria-controls')!);
+          if (panel) panel.hidden = !on;
+        });
+        if (focus) tabs[i].focus();
+      };
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => select(i, false), { signal });
+        t.addEventListener('keydown', (e) => {
+          const n = tabs.length;
+          const map: Record<string, number> = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 };
+          if (e.key in map) { e.preventDefault(); select(map[e.key]); }
+        }, { signal });
+      });
+
+      // Table column highlight on hover / focus.
+      const table = root.querySelector('table');
+      if (!table) return;
+      const hl = (col: string | null) => table.querySelectorAll<HTMLElement>('[data-col]').forEach((c) => c.classList.toggle('is-hl', c.dataset.col === col));
+      table.addEventListener('pointerover', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null), { signal });
+      table.addEventListener('pointerleave', () => hl(null), { signal });
+      table.addEventListener('focusin', (e) => hl((e.target as HTMLElement).closest<HTMLElement>('[data-col]')?.dataset.col ?? null), { signal });
+      table.addEventListener('focusout', () => hl(null), { signal });
+    });
+    return () => ac.abort();
   });
 </script>

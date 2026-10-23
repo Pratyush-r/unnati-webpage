@@ -62,7 +62,13 @@ const items = ids ? ids.map((id) => didYouKnow.find((d) => d.id === id)!) : didY
 </style>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((btn) =>
-    btn.addEventListener('click', () => btn.setAttribute('aria-pressed', String(btn.getAttribute('aria-pressed') !== 'true'))),
-  );
+  import { onPageLoad } from '../scripts/lifecycle';
+
+  onPageLoad(() => {
+    const ac = new AbortController();
+    document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((btn) =>
+      btn.addEventListener('click', () => btn.setAttribute('aria-pressed', String(btn.getAttribute('aria-pressed') !== 'true')), { signal: ac.signal }),
+    );
+    return () => ac.abort();
+  });
 </script>

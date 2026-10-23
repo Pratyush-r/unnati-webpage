@@ -116,15 +116,20 @@ const tiers = [materials.slice(0, 3), materials.slice(3)];
 <script>
   import { animate, settle, EASE_POP } from '../lib/motion';
   import { play, initBlink } from './ankur';
+  import { onPageLoad } from '../scripts/lifecycle';
 
-  const root = document.querySelector<HTMLElement>('[data-shelf]');
-  if (root) {
+  onPageLoad(() => {
+    const root = document.querySelector<HTMLElement>('[data-shelf]');
+    if (!root) return;
+    const ac = new AbortController();
+    const signal = ac.signal;
+    let stopBlink = () => {};
     const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('.material'));
     const hint = root.querySelector<HTMLElement>('[data-shelf-hint]');
     const ankur = root.querySelector<HTMLElement>('[data-ankur]');
     if (ankur) {
-      initBlink(ankur);
-      ankur.addEventListener('click', () => play(ankur, 'wave'));
+      stopBlink = initBlink(ankur);
+      ankur.addEventListener('click', () => play(ankur, 'wave'), { signal });
     }
 
     const closeAll = (except?: HTMLButtonElement) => {
@@ -188,14 +193,18 @@ const tiers = [materials.slice(0, 3), materials.slice(3)];
         }
         const svg = btn.querySelector('svg');
         if (svg) run[btn.dataset.material!]?.(svg);
-      });
+      }, { signal });
     });
 
     document.addEventListener('click', (e) => {
       if (!(e.target as Element).closest('.chip-pop')) closeAll();
-    });
+    }, { signal });
     root.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeAll();
-    });
-  }
+    }, { signal });
+    return () => {
+      ac.abort();
+      stopBlink();
+    };
+  });
 </script>

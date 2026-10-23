@@ -113,36 +113,42 @@ const segs = principles.map((p, i) => {
 
 <script>
   import { animate } from '../lib/motion';
+  import { onPageLoad } from '../scripts/lifecycle';
 
-  document.querySelectorAll<HTMLElement>('[data-wheel]').forEach((root) => {
-    const segs = Array.from(root.querySelectorAll<SVGGElement>('.seg'));
-    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
-    let current = 0;
-    const select = (i: number, focus = false) => {
-      if (i === current && !focus) return;
-      current = i;
-      segs.forEach((s, k) => {
-        s.setAttribute('aria-checked', String(k === i));
-        s.setAttribute('tabindex', k === i ? '0' : '-1');
-      });
-      panels.forEach((p, k) => (p.hidden = k !== i));
-      animate(panels[i], [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
-      if (focus) segs[i].focus();
-    };
-    segs.forEach((s, i) => {
-      s.addEventListener('click', () => select(i));
-      s.addEventListener('focus', () => select(i));
-      s.addEventListener('pointerenter', (e) => {
-        if ((e as PointerEvent).pointerType === 'mouse') select(i);
-      });
-      s.addEventListener('keydown', (e) => {
-        const n = segs.length;
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); select((current + 1) % n, true); }
-        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); select((current - 1 + n) % n, true); }
-        else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
-        else if (e.key === 'End') { e.preventDefault(); select(n - 1, true); }
-        else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); select(i); }
+  onPageLoad(() => {
+    const ac = new AbortController();
+    const signal = ac.signal;
+    document.querySelectorAll<HTMLElement>('[data-wheel]').forEach((root) => {
+      const segs = Array.from(root.querySelectorAll<SVGGElement>('.seg'));
+      const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+      let current = 0;
+      const select = (i: number, focus = false) => {
+        if (i === current && !focus) return;
+        current = i;
+        segs.forEach((s, k) => {
+          s.setAttribute('aria-checked', String(k === i));
+          s.setAttribute('tabindex', k === i ? '0' : '-1');
+        });
+        panels.forEach((p, k) => (p.hidden = k !== i));
+        animate(panels[i], [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+        if (focus) segs[i].focus();
+      };
+      segs.forEach((s, i) => {
+        s.addEventListener('click', () => select(i), { signal });
+        s.addEventListener('focus', () => select(i), { signal });
+        s.addEventListener('pointerenter', (e) => {
+          if ((e as PointerEvent).pointerType === 'mouse') select(i);
+        }, { signal });
+        s.addEventListener('keydown', (e) => {
+          const n = segs.length;
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); select((current + 1) % n, true); }
+          else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); select((current - 1 + n) % n, true); }
+          else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+          else if (e.key === 'End') { e.preventDefault(); select(n - 1, true); }
+          else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); select(i); }
+        }, { signal });
       });
     });
+    return () => ac.abort();
   });
 </script>

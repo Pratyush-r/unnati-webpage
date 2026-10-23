@@ -16,8 +16,9 @@ export function setSound(on: boolean): void {
   listeners.forEach((fn) => fn(on));
 }
 
-export function onSoundChange(fn: (on: boolean) => void): void {
+export function onSoundChange(fn: (on: boolean) => void): () => void {
   listeners.add(fn);
+  return () => listeners.delete(fn);
 }
 
 /** Create / resume the AudioContext. Call from a user gesture (iOS). */
@@ -34,6 +35,15 @@ export function unlockAudio(): void {
     if (ctx.state === 'suspended') void ctx.resume();
   } catch {
     ctx = null;
+  }
+}
+
+/** Pause the AudioContext when leaving a game (it resumes on the next tap). */
+export function suspendAudio(): void {
+  try {
+    if (ctx && ctx.state === 'running') void ctx.suspend();
+  } catch {
+    /* ignore */
   }
 }
 

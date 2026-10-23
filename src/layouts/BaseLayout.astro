@@ -7,6 +7,10 @@ import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import AnnouncementBar from '../components/AnnouncementBar.astro';
 import Head from '../components/Head.astro';
+import AnkurGuide from '../components/AnkurGuide.astro';
+import { ClientRouter } from 'astro:transitions';
+import { pageSlide } from '../transitions/animations';
+import '../styles/transitions.css';
 import { site } from '../config/site';
 
 interface Props {
@@ -26,24 +30,26 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 <html lang="en-IN">
   <head>
     <Head title={title} description={description} path={path} jsonLd={jsonLd} noindex={noindex} />
-    {!quiet && (
-      <script is:inline define:vars={{ text: site.announcement }}>
-        try { if (localStorage.getItem('unnati:announce') === text) document.documentElement.classList.add('announce-dismissed'); } catch (e) {}
-      </script>
-    )}
+    <script is:inline define:vars={{ text: site.announcement }}>
+      try { if (localStorage.getItem('unnati:announce') === text) document.documentElement.classList.add('announce-dismissed'); } catch (e) {}
+    </script>
+    <ClientRouter fallback="animate" />
   </head>
   <body class:list={[{ 'no-sticky': quiet }]}>
     <a class="skip-link" href="#main">Skip to content</a>
-    {!quiet && <AnnouncementBar />}
+    <AnnouncementBar hidden={quiet} />
     <Header path={path} phone={phone} />
-    <main id="main" tabindex="-1">
+    <main id="main" tabindex="-1" transition:animate={pageSlide}>
       <slot />
     </main>
     <Footer />
-    {!quiet && <StickyBar phone={phone} />}
+    <StickyBar phone={phone} hidden={quiet} />
+    <AnkurGuide path={path} />
     <script>
       import { initReveal } from '../lib/reveal';
-      initReveal();
+      import { onPageLoad } from '../scripts/lifecycle';
+      import '../scripts/transitions';
+      onPageLoad(initReveal);
     </script>
   </body>
 </html>

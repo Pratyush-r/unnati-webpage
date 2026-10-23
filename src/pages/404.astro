@@ -23,6 +23,12 @@ import Ankur from '../components/Ankur.astro';
 
 <script>
   import { play } from '../components/ankur';
-  const a = document.querySelector('.nf-ankur');
-  if (a) setTimeout(() => play(a, 'look-around'), 400);
+  import { onPageLoad } from '../scripts/lifecycle';
+
+  onPageLoad(() => {
+    const a = document.querySelector('.nf-ankur');
+    if (!a) return;
+    const t = window.setTimeout(() => play(a, 'look-around'), 400);
+    return () => window.clearTimeout(t);
+  });
 </script>

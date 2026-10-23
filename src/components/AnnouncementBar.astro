@@ -1,10 +1,16 @@
 ---
 // One-line, dismissible announcement from site.announcement. Dismissal is remembered in localStorage.
 // An inline head script (BaseLayout) hides it before first paint when already dismissed — no layout shift.
+// Persisted across navigations; hidden on Little Hands Corner.
 import Icon from './Icon.astro';
 import { site } from '../config/site';
+
+interface Props {
+  hidden?: boolean;
+}
+const { hidden = false } = Astro.props;
 ---
-<div class="announce" data-announce>
+<div class="announce" data-announce transition:persist="announcement" hidden={hidden}>
   <div class="container announce-inner">
     <p><span class="dot" aria-hidden="true"></span>{site.announcement}</p>
     <button type="button" class="announce-close" aria-label="Dismiss announcement" data-announce-close>
@@ -15,7 +21,7 @@ import { site } from '../config/site';
 
 <style>
   .announce { background: var(--forest); color: var(--cream); font-size: .9rem; font-weight: 700; }
-  :global(html.announce-dismissed) .announce { display: none; }
+  :global(html.announce-dismissed) .announce, .announce[hidden], .announce.is-dismissed { display: none; }
   .announce-inner { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 48px; }
   .announce p { display: flex; align-items: center; gap: .6rem; line-height: 1.35; padding-block: .4rem; max-width: none; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #8FD19E; flex: none; }
@@ -24,10 +30,19 @@ import { site } from '../config/site';
 </style>
 
 <script>
-  import { setItem } from '../lib/storage';
+  import { getItem, setItem } from '../lib/storage';
   import { site } from '../config/site';
-  document.querySelector('[data-announce-close]')?.addEventListener('click', () => {
-    setItem('unnati:announce', site.announcement);
-    document.documentElement.classList.add('announce-dismissed');
+  import { initOnce, afterSwap } from '../scripts/lifecycle';
+  import { isQuiet } from '../scripts/route';
+
+  initOnce('[data-announce]', (bar) => {
+    // The <html> class set before first paint is replaced on navigation, so the bar remembers too.
+    if (getItem('unnati:announce') === site.announcement) bar.classList.add('is-dismissed');
+    bar.querySelector('[data-announce-close]')?.addEventListener('click', () => {
+      setItem('unnati:announce', site.announcement);
+      bar.classList.add('is-dismissed');
+      document.documentElement.classList.add('announce-dismissed');
+    });
+    afterSwap(() => (bar.hidden = isQuiet()));
   });
 </script>

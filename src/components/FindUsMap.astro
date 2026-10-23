@@ -133,57 +133,67 @@ const trees = [
 
 <script>
   import { onceInView, animate } from '../lib/motion';
+  import { onPageLoad } from '../scripts/lifecycle';
 
-  document.querySelectorAll<HTMLElement>('[data-map]').forEach((card) => {
-    const svg = card.querySelector('svg')!;
-    const tip = svg.querySelector<SVGGElement>('[data-tip]')!;
-    const bg = tip.querySelector('rect')!;
-    const text = tip.querySelector('text')!;
-    const live = card.querySelector('[data-map-live]')!;
-    const lms = Array.from(svg.querySelectorAll<SVGGElement>('.lm'));
+  onPageLoad(() => {
+    const ac = new AbortController();
+    const signal = ac.signal;
+    const stops: (() => void)[] = [];
+    document.querySelectorAll<HTMLElement>('[data-map]').forEach((card) => {
+      const svg = card.querySelector('svg')!;
+      const tip = svg.querySelector<SVGGElement>('[data-tip]')!;
+      const bg = tip.querySelector('rect')!;
+      const text = tip.querySelector('text')!;
+      const live = card.querySelector('[data-map-live]')!;
+      const lms = Array.from(svg.querySelectorAll<SVGGElement>('.lm'));
 
-    const show = (lm: SVGGElement | null) => {
-      lms.forEach((l) => l.setAttribute('aria-pressed', String(l === lm)));
-      if (!lm) {
-        tip.setAttribute('opacity', '0');
-        return;
-      }
-      const name = lm.getAttribute('aria-label')!;
-      const m = /translate\((\d+)\s+(\d+)\)/.exec(lm.getAttribute('transform') || '')!;
-      const x = Math.min(Math.max(+m[1], 110), 490);
-      const y = +m[2] - 64;
-      text.textContent = name;
-      const w = name.length * 11 + 36;
-      bg.setAttribute('x', String(x - w / 2));
-      bg.setAttribute('y', String(y));
-      bg.setAttribute('width', String(w));
-      text.setAttribute('x', String(x));
-      text.setAttribute('y', String(y + 24));
-      tip.setAttribute('opacity', '1');
-      animate(tip, [{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
-      live.textContent = name;
-    };
-
-    lms.forEach((lm) => {
-      lm.setAttribute('aria-pressed', 'false');
-      lm.addEventListener('click', (e) => {
-        e.stopPropagation();
-        show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
-      });
-      lm.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
+      const show = (lm: SVGGElement | null) => {
+        lms.forEach((l) => l.setAttribute('aria-pressed', String(l === lm)));
+        if (!lm) {
+          tip.setAttribute('opacity', '0');
+          return;
         }
-      });
-    });
-    document.addEventListener('click', () => show(null));
+        const name = lm.getAttribute('aria-label')!;
+        const m = /translate\((\d+)\s+(\d+)\)/.exec(lm.getAttribute('transform') || '')!;
+        const x = Math.min(Math.max(+m[1], 110), 490);
+        const y = +m[2] - 64;
+        text.textContent = name;
+        const w = name.length * 11 + 36;
+        bg.setAttribute('x', String(x - w / 2));
+        bg.setAttribute('y', String(y));
+        bg.setAttribute('width', String(w));
+        text.setAttribute('x', String(x));
+        text.setAttribute('y', String(y + 24));
+        tip.setAttribute('opacity', '1');
+        animate(tip, [{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
+        live.textContent = name;
+      };
 
-    onceInView(card, () => {
-      animate(svg.querySelector('.pin'), [
-        { transform: 'translateY(0)' }, { transform: 'translateY(-16px)', offset: 0.35 }, { transform: 'translateY(0)', offset: 0.6 },
-        { transform: 'translateY(-6px)', offset: 0.78 }, { transform: 'translateY(0)' },
-      ], { duration: 700, easing: 'ease-in-out' });
-    }, 0.5);
+      lms.forEach((lm) => {
+        lm.setAttribute('aria-pressed', 'false');
+        lm.addEventListener('click', (e) => {
+          e.stopPropagation();
+          show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
+        }, { signal });
+        lm.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            show(lm.getAttribute('aria-pressed') === 'true' ? null : lm);
+          }
+        }, { signal });
+      });
+      document.addEventListener('click', () => show(null), { signal });
+
+      stops.push(onceInView(card, () => {
+        animate(svg.querySelector('.pin'), [
+          { transform: 'translateY(0)' }, { transform: 'translateY(-16px)', offset: 0.35 }, { transform: 'translateY(0)', offset: 0.6 },
+          { transform: 'translateY(-6px)', offset: 0.78 }, { transform: 'translateY(0)' },
+        ], { duration: 700, easing: 'ease-in-out' });
+      }, 0.5));
+    });
+    return () => {
+      ac.abort();
+      stops.forEach((s) => s());
+    };
   });
 </script>

@@ -15,7 +15,7 @@ const short: Record<string, string> = { primary: 'Primary', daycare: 'Day Care',
 <ul class="programmes" role="list" data-reveal="children">
   {programmes.map((p) => (
     <li class="programme pebble pebble--hover" id={`programme-${p.id}`}>
-      <div class="art" style={`background:${tints[p.id]}`}><ProgrammeArt kind={p.id} size={84} /></div>
+      <div class="art" style={`background:${tints[p.id]}`} transition:name={`programme-${p.id}`}><ProgrammeArt kind={p.id} size={84} /></div>
       <H class="p-title">{p.name}</H>
       {p.ages && <p class="chip p-ages">{p.ages}</p>}
       <p class="p-text">{p.text}</p>

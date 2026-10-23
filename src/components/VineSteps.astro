@@ -48,22 +48,28 @@ const List = ordered ? 'ol' : 'ul';
 
 <script>
   import { onceInView, settle, reducedMotion, EASE_POP } from '../lib/motion';
-  document.querySelectorAll<HTMLElement>('[data-vine-steps]').forEach((list) => {
-    if (reducedMotion()) return;
-    const vh = window.innerHeight;
-    list.querySelectorAll<HTMLElement>('.step').forEach((step) => {
-      if (step.getBoundingClientRect().top < vh * 0.9) {
-        step.classList.add('is-open');
-        return;
-      }
-      const leaf = step.querySelector('.step-leaf');
-      list.classList.add('js-vine');
-      onceInView(step, () => {
-        settle(leaf, [{ transform: 'scale(.25) rotate(-50deg)', opacity: 0 }, { transform: 'scale(1) rotate(0deg)', opacity: 1 }], { duration: 600, easing: EASE_POP }).then(() => {
+  import { onPageLoad } from '../scripts/lifecycle';
+
+  onPageLoad(() => {
+    const cleanups: (() => void)[] = [];
+    document.querySelectorAll<HTMLElement>('[data-vine-steps]').forEach((list) => {
+      if (reducedMotion()) return;
+      const vh = window.innerHeight;
+      list.querySelectorAll<HTMLElement>('.step').forEach((step) => {
+        if (step.getBoundingClientRect().top < vh * 0.9) {
           step.classList.add('is-open');
-          (leaf as HTMLElement | null)?.removeAttribute('style');
-        });
-      }, 0.6);
+          return;
+        }
+        const leaf = step.querySelector('.step-leaf');
+        list.classList.add('js-vine');
+        cleanups.push(onceInView(step, () => {
+          settle(leaf, [{ transform: 'scale(.25) rotate(-50deg)', opacity: 0 }, { transform: 'scale(1) rotate(0deg)', opacity: 1 }], { duration: 600, easing: EASE_POP }).then(() => {
+            step.classList.add('is-open');
+            (leaf as HTMLElement | null)?.removeAttribute('style');
+          });
+        }, 0.6));
+      });
     });
+    return () => cleanups.forEach((c) => c());
   });
 </script>
