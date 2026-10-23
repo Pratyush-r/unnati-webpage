@@ -69,3 +69,11 @@ One line per judgement call made during the build.
 62. **Browser coverage:** Chromium runs every suite; Firefox and WebKit run `transitions.spec.ts`. Firefox has no touch emulation in Playwright, so the phone test is skipped there.
 63. **Scroll-restore test:** clicks the sticky header link with `element.click()`. Playwright's auto-scroll would otherwise move the page before the router records the position, which looked like a scroll-restoration bug.
 64. **No-transition fallback:** browsers without view transitions get Astro's `fallback="animate"` (page slide, no sprout reveal).
+
+## Ankur keeps growing (owner request, 23 Oct 2026)
+
+65. **Growth stages:** six stages: sprout → leaf (lower left) → leaf (right) → bud → marigold flower → small pink second flower. All Ankurs on the site share one stage, because he's one character.
+66. **Points:** ordinary interactions count 1 each (shelf materials, tapping Ankur, comparison toggle, flip cards, principles wheel, planes tabs, map, FAQ or trade-offs opened, opening the guide's bubble). A page's first-ever visit counts 1. Finishing a game or sending an enquiry counts 3. Stages need 0 / 3 / 7 / 12 / 18 / 26 points (`STAGES` in `src/scripts/growth.ts`).
+67. **Storage:** growth is stored in localStorage (`unnati:ankur-growth`, `unnati:pages-seen`). It stays on the device and nothing is sent anywhere, and the privacy note already covers small on-device settings.
+68. **Growth animation:** the new part pops in (700 ms) and he nods, but only for an Ankur on screen, and always in answer to what the visitor just did. Reduced motion shows the part instantly. Screen readers hear a polite message ("Ankur grew a new leaf.").
+69. **Placement:** growth parts sit behind or above the existing leaves, so the game's own "grow" leaf, wave and point still work. The flowers grow upwards into space the dock and shelf already leave free.

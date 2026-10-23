@@ -134,6 +134,7 @@ const trees = [
 <script>
   import { onceInView, animate } from '../lib/motion';
   import { onPageLoad } from '../scripts/lifecycle';
+  import { nurture } from '../scripts/nurture';
 
   onPageLoad(() => {
     const ac = new AbortController();
@@ -167,6 +168,7 @@ const trees = [
         tip.setAttribute('opacity', '1');
         animate(tip, [{ opacity: 0 }, { opacity: 1 }], { duration: 180 });
         live.textContent = name;
+        nurture();
       };
 
       lms.forEach((lm) => {

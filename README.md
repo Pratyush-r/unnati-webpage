@@ -101,6 +101,10 @@ create a webhook (Make, n8n or Google Apps Script) and add the environment varia
   (buttons). Phone and WhatsApp buttons are built from `src/config/site.ts`, so never type a number there.
 - **Turn the guide off:** in `src/config/site.ts`, set `ankurGuide: false` and rebuild. He disappears everywhere.
 - **Visitors can hide him** with the "Hide Ankur" button; a small leaf tab brings him back. The choice is remembered on that device.
+- **Ankur grows as visitors explore:** sprout → new leaf → another leaf → bud → first flower → second flower.
+  Tapping things on the site, opening FAQs and visiting a page for the first time each count 1 point, and finishing a game
+  or sending an enquiry counts 3. To make him grow faster or slower, change the `STAGES` numbers (points needed for each
+  stage) in `src/scripts/growth.ts`. His growth is remembered on the visitor's device only.
 - **Change transition speed:** edit the durations in `src/transitions/animations.ts` (page slide) and the 320 ms / 450 ms
   values in `src/styles/transitions.css` (card morphs and the sprout reveal into Little Hands Corner). Keep each under 500 ms.
 - **Reduced motion:** visitors who turn on "Reduce motion" / "Remove animations" see no transitions at all. Pages change

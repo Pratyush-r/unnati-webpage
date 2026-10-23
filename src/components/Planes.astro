@@ -120,6 +120,7 @@ const tints = ['#FBE7E1', '#E3EEF6', '#F8E7DD', '#EAF0DE'];
 
 <script>
   import { onPageLoad } from '../scripts/lifecycle';
+  import { nurture } from '../scripts/nurture';
 
   onPageLoad(() => {
     const ac = new AbortController();
@@ -138,7 +139,10 @@ const tints = ['#FBE7E1', '#E3EEF6', '#F8E7DD', '#EAF0DE'];
         if (focus) tabs[i].focus();
       };
       tabs.forEach((t, i) => {
-        t.addEventListener('click', () => select(i, false), { signal });
+        t.addEventListener('click', () => {
+          select(i, false);
+          nurture();
+        }, { signal });
         t.addEventListener('keydown', (e) => {
           const n = tabs.length;
           const map: Record<string, number> = { ArrowRight: (i + 1) % n, ArrowDown: (i + 1) % n, ArrowLeft: (i - 1 + n) % n, ArrowUp: (i - 1 + n) % n, Home: 0, End: n - 1 };

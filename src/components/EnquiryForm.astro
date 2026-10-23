@@ -126,6 +126,7 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
   import { animate } from '../lib/motion';
   import { play } from './ankur';
   import { onPageLoad } from '../scripts/lifecycle';
+  import { nurture } from '../scripts/nurture';
 
   const MOBILE = /^(?:\+?91[\s-]?|0)?[6-9]\d{4}[\s-]?\d{5}$/;
 
@@ -208,6 +209,7 @@ const programmes = ['Primary Environment', site.dayCare.name, 'After-school Acti
       success.focus();
       slot.classList.add('is-shown');
       document.dispatchEvent(new Event('unnati:ankurs'));
+      nurture(3);
       play(ankur, 'wave');
       card.querySelectorAll('.drift-leaf').forEach((leaf, i) =>
         animate(leaf, [

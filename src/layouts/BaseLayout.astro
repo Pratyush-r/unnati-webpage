@@ -49,6 +49,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
       import { initReveal } from '../lib/reveal';
       import { onPageLoad } from '../scripts/lifecycle';
       import '../scripts/transitions';
+      import '../scripts/growth';
       onPageLoad(initReveal);
     </script>
   </body>

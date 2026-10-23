@@ -114,6 +114,7 @@ const segs = principles.map((p, i) => {
 <script>
   import { animate } from '../lib/motion';
   import { onPageLoad } from '../scripts/lifecycle';
+  import { nurture } from '../scripts/nurture';
 
   onPageLoad(() => {
     const ac = new AbortController();
@@ -134,7 +135,10 @@ const segs = principles.map((p, i) => {
         if (focus) segs[i].focus();
       };
       segs.forEach((s, i) => {
-        s.addEventListener('click', () => select(i), { signal });
+        s.addEventListener('click', () => {
+          select(i);
+          nurture();
+        }, { signal });
         s.addEventListener('focus', () => select(i), { signal });
         s.addEventListener('pointerenter', (e) => {
           if ((e as PointerEvent).pointerType === 'mouse') select(i);

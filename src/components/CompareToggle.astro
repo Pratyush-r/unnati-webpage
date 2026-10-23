@@ -76,6 +76,7 @@ const { split = false, id = 'compare-toggle' } = Astro.props;
 
 <script>
   import { onPageLoad } from '../scripts/lifecycle';
+  import { nurture } from '../scripts/nurture';
 
   onPageLoad(() => {
     const ac = new AbortController();
@@ -85,6 +86,7 @@ const { split = false, id = 'compare-toggle' } = Astro.props;
         btn.addEventListener('click', () => {
           root.dataset.mode = btn.dataset.modeBtn;
           btns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+          nurture();
         }, { signal: ac.signal }),
       );
     });

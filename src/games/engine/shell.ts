@@ -5,6 +5,7 @@ import { getItem, setItem } from '../../lib/storage';
 import { chime, onSoundChange, setSound, soundOn, suspendAudio, unlockAudio } from './audio';
 import { speak, stopSpeaking } from './speech';
 import { announce } from './announce';
+import { nurture } from '../../scripts/nurture';
 
 export type ShellOptions = {
   slug: string;
@@ -103,6 +104,7 @@ export function initShell(o: ShellOptions): Shell {
     root.classList.add('is-complete');
     chime();
     announce('All done');
+    nurture(3);
     void play(ankurEl, 'hop').then(() => play(ankurEl, 'grow'));
     later(() => void say(o.done), 500);
     later(() => again.focus({ preventScroll: true }), 50);

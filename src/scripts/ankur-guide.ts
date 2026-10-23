@@ -9,6 +9,7 @@ import { getItem, setItem } from '../lib/storage';
 import { animate, EASE_POP } from '../lib/motion';
 import { initOnce, afterSwap } from './lifecycle';
 import { path } from './route';
+import { nurture } from './nurture';
 
 const HIDDEN_KEY = 'unnati:ankur-hidden';
 const GREETED_KEY = 'unnati:ankur-greeted';
@@ -151,8 +152,10 @@ initOnce('[data-ankur-guide]', (guide) => {
   // ——— interactions ———
   btn.addEventListener('click', () => {
     void play(art, 'wave');
-    if (bubble.hidden) open(false);
-    else close(false);
+    if (bubble.hidden) {
+      open(false);
+      nurture();
+    } else close(false);
   });
   bubble.querySelector('[data-close]')!.addEventListener('click', () => close(true));
   bubble.querySelector('[data-hide]')!.addEventListener('click', () => {

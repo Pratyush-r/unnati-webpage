@@ -140,3 +140,16 @@ Filmstrips are in `qa/transitions/` (frames at about 0, 120, 240 and 400 ms, plu
 - **WebKit crash workaround:** Playwright's WebKit crashes when a view transition runs out of the full-screen game shell into a site page. In Safari and other WebKit browsers, a game's "Activities" and "All activities" links therefore do a normal page load, with no slide. Everything else animates, and back/forward from a game still animates. Re-test on a real iPhone; if real Safari is fine, the workaround can be removed in `src/games/engine/shell.ts`.
 - **No-transition fallback:** browsers without view transitions get Astro's fallback animation (slide only, no sprout reveal or morph).
 - **Phone test in Firefox:** skipped, because Playwright can't emulate touch in Firefox.
+
+---
+
+# Ankur keeps growing (23 October 2026)
+
+- `tests/growth.spec.ts` ✅ 3 / 3:
+  - Interactions grow him, and the stage is shared by every Ankur on the page.
+  - Growth survives a reload; revisiting a page adds nothing; new pages and FAQs add points.
+  - The screen-reader message is announced.
+  - A game completion adds 3, and he reaches and stops at the second flower.
+  - Under reduced motion, growing plays no animation.
+- The full suite passes: **247**, plus 1 skipped (Firefox touch).
+- **Manual check:** on a phone, tap around the home page and play a game. Ankur should gain leaves, then a bud, then flowers. His growth should still be there after closing and reopening the browser.
