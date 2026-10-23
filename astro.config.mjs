@@ -11,7 +11,7 @@ export default defineConfig({
   output: 'static',
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   trailingSlash: 'ignore',
-  build: { format: 'directory', inlineStylesheets: 'auto' },
+  build: { format: 'directory', inlineStylesheets: 'always' },
   integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
   image: { responsiveStyles: false },
   vite: { envPrefix: ['PUBLIC_', 'SITE_URL'] },

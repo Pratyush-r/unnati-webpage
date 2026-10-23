@@ -17,7 +17,7 @@ const SPEECH_COUNTER = `
 const OPEN_STUB = `window.__opened = []; window.open = (u) => { window.__opened.push(String(u)); return null; };`;
 
 /** Click a link and wait until the router has swapped and finished loading the new page. */
-async function go(page: Page, click: () => Promise<void>) {
+async function go(page: Page, click: () => Promise<unknown>) {
   const before = await page.evaluate(() => document.title);
   await page.evaluate(() => {
     (window as unknown as { __loaded: boolean }).__loaded = false;

@@ -66,3 +66,77 @@ enquiry button moving under the pointer when a blur error appeared; low-contrast
 - **Automated tests ran in Chromium only.** Safari and Firefox need the manual checks above. Speech was tested with a stub; real voices vary by device (en-IN → en-GB → any English).
 - **Graceful fallbacks:** page cross-fades (`@view-transition`) and smooth FAQ opening (`::details-content`) only run in browsers that support them. Others get instant changes.
 - **Lighthouse** was measured on a local preview, so real-world numbers on Netlify's CDN will differ slightly.
+
+---
+
+# Add-on: Ankur guide + page transitions (23 October 2026)
+
+Before starting, all 215 v1 tests passed, so no test was already failing. Firefox and WebKit were installed for Playwright.
+
+## Automated results
+
+| Check | Result |
+|-------|--------|
+| `npm run build` / `astro check` | ✅ 0 errors |
+| **transitions.spec** | ✅ **20 / 20** + 1 skipped: Chromium 7/7, Firefox 6/6 (the phone test is skipped because Firefox has no touch emulation), WebKit 7/7 |
+| **mascot.spec** (Chromium) | ✅ **9 / 9** |
+| **v1 regression** (responsive, a11y, games, enquiry, motion) | ✅ **215 / 215** |
+| Total | ✅ **244 passed**, 1 skipped, 0 failed |
+
+What the new suites cover:
+
+- **transitions.spec:**
+  - A nav-only tour of 8 pages checking URL, H1, title, focus on `#main`, no console errors, and that the header is the same DOM node.
+  - Shelf, toggle, flip card, wheel arrow keys, planes tabs, map, FAQ and the exact `wa.me` URL, all reached by links rather than a fresh load.
+  - Two whole games played by tap via links.
+  - Scroll restored on history back; `/approach#compare` lands on and focuses its section.
+  - `/play` → game → back ×10 leaves exactly 1 speech call per action and 1 shelf handler per tap.
+  - Zero animations under reduced motion.
+  - Unique view-transition names on every page.
+- **mascot.spec:**
+  - The guide is shown on the right pages and hidden on the others.
+  - At most one Ankur on screen at any of 10 scroll positions on every page.
+  - The guide never overlaps the action bar, the Enquire button or the submit button, checked at 4 viewports.
+  - The bubble opens by tap and Enter, closes by Esc (focus returns) and by tapping outside; tips and chips match `site.ts`.
+  - Hide → reload → leaf tab → Ankur returns.
+  - Form fields hide him.
+  - The greeting appears once per session.
+  - axe finds 0 serious or critical issues on every page with the bubble open.
+
+## Lighthouse (mobile) — `qa/lighthouse/*.report.html`
+
+| Page | Perf | A11y | BP | SEO | LCP | CLS |
+|------|-----:|-----:|---:|----:|----:|----:|
+| `/` | 96 | 100 | 100 | 100 | 2.4 s | 0 |
+| `/approach` | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+| `/admissions` | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+| `/play` | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+| `/play/knobbed-cylinders` | 100 | 100 | 100 | 100 | 1.8 s | 0 |
+| `/day-care` (extra) | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+
+JavaScript, gzipped and including the router: content pages 11.4–13.4 KB (budget 45 KB), games 15.3–16.2 KB (budget 60 KB). The guide script is 2.4 KB (budget 6 KB). CLS stays 0 because the dock is `position: fixed`.
+
+## Visual review (5.2)
+
+Filmstrips are in `qa/transitions/` (frames at about 0, 120, 240 and 400 ms, plus `*-sheet.png` contact sheets). Dock and bubble screenshots are in `qa/screenshots/ankur-*.png`.
+
+- **Home → Approach (slide):** the old content drifts left and fades, then the new content arrives from the right. No white flash. The header stays put. If you navigate from far down a page, the new page starts at the top, so the announcement bar reappears above the header.
+- **/play → Knobbed Cylinders:** the sprout reveal grows from the tapped card. Its picture morphs into the game's top-bar icon, and the other cards' pictures fade out within about 240 ms.
+- **History back:** the page slides in and the scroll position is restored.
+- **Ankur's states:** travel, land, point, hide and return checked; he looks friendly in each.
+- **Fixed during review:** the sprout reveal never played, because Astro fires `astro:page-load` before the transition animates and the reveal state was being cleared there. It's now cleared when the transition finishes.
+
+## Manual checks for you (add-on 5.3)
+
+1. **Android Chrome:** tap through every menu link. Pages should slide smoothly and the header should stay still. The shelf, toggle, cards and form should all still work after navigating.
+2. **Little Hands Corner:** open it from the menu; the page should grow open from where you tapped. Open a game card; its picture should fly into the game's top bar.
+3. **iPhone Safari:** repeat checks 1 and 2, and confirm Ankur stays clear of the Call/WhatsApp bar. Leaving a game (Activities / All activities) does a normal page load on Safari; see the known gaps.
+4. **Reduce motion:** turn on "Remove animations" (Android) or "Reduce Motion" (iOS). Pages should change instantly and Ankur should stay still.
+5. **Hide Ankur:** hide him, close the browser and reopen the site. He should stay hidden until you tap the leaf tab.
+6. **Day Care tip:** read Ankur's tip on `/day-care` ("Extended Day Care welcomes children aged 1–6. Ask us about timings."). It's new copy, not from the approved list.
+
+## Known gaps (add-on)
+
+- **WebKit crash workaround:** Playwright's WebKit crashes when a view transition runs out of the full-screen game shell into a site page. In Safari and other WebKit browsers, a game's "Activities" and "All activities" links therefore do a normal page load, with no slide. Everything else animates, and back/forward from a game still animates. Re-test on a real iPhone; if real Safari is fine, the workaround can be removed in `src/games/engine/shell.ts`.
+- **No-transition fallback:** browsers without view transitions get Astro's fallback animation (slide only, no sprout reveal or morph).
+- **Phone test in Firefox:** skipped, because Playwright can't emulate touch in Firefox.

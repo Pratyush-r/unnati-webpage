@@ -95,7 +95,18 @@ create a webhook (Make, n8n or Google Apps Script) and add the environment varia
 1. **Google Search Console** (search.google.com/search-console): add your domain, then submit `https://your-domain/sitemap-index.xml`.
 2. **Google Business Profile** (business.google.com): create a profile for "Unnati Montessori" at Chanakyan Cross Road, Annamalai Avenue, Mogappair West, with the school number. This is the single most useful step for local search.
 
-## 8. For developers
+## 8. Ankur the guide and page transitions
+
+- **Edit Ankur's tips:** open `src/config/ankur-tips.ts`. Each page has one short `text` and up to two `actions`
+  (buttons). Phone and WhatsApp buttons are built from `src/config/site.ts`, so never type a number there.
+- **Turn the guide off:** in `src/config/site.ts`, set `ankurGuide: false` and rebuild. He disappears everywhere.
+- **Visitors can hide him** with the "Hide Ankur" button; a small leaf tab brings him back. The choice is remembered on that device.
+- **Change transition speed:** edit the durations in `src/transitions/animations.ts` (page slide) and the 320 ms / 450 ms
+  values in `src/styles/transitions.css` (card morphs and the sprout reveal into Little Hands Corner). Keep each under 500 ms.
+- **Reduced motion:** visitors who turn on "Reduce motion" / "Remove animations" see no transitions at all. Pages change
+  instantly and Ankur stays still.
+
+## 9. For developers
 
 - Astro (static), TypeScript, plain CSS tokens (`src/styles/`). No UI framework, no Tailwind.
 - `npm run check` (type check) · `npm run build` · `npm run preview`
@@ -103,4 +114,7 @@ create a webhook (Make, n8n or Google Apps Script) and add the environment varia
 - `npm run logos` re-creates transparent logos and favicons from `brand-assets/`.
 - `npm run og` re-creates the social share image.
 - Games live in `src/games/` with a shared engine in `src/games/engine/`.
+- Navigation uses Astro's client router. Component scripts must initialise with `onPageLoad` (or `initOnce` for persisted
+  elements) from `src/scripts/lifecycle.ts`, and return a cleanup. Plain top-level code runs only once per visit.
+- `node scripts/filmstrip.mjs` captures navigation filmstrips into `qa/transitions/` (preview server running).
 - Judgement calls are listed in `DECISIONS.md`; QA results are in `qa/REPORT.md`.

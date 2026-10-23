@@ -4,7 +4,7 @@
 import { reducedMotion } from '../lib/motion';
 
 type Prep = Event & { to: URL; sourceElement?: Element };
-type Swap = Event & { newDocument: Document };
+type Swap = Event & { newDocument: Document; viewTransition?: { finished: Promise<void> } };
 
 const root = document.documentElement;
 const supportsVT = typeof document.startViewTransition === 'function';
@@ -92,14 +92,24 @@ document.addEventListener('astro:before-preparation', (e) => {
 });
 
 // The router replaces <html> attributes on swap, so carry the sprout state onto the new document.
+// Clear it when the view transition has finished (astro:page-load fires before it starts animating).
+let vtRunning = false;
 document.addEventListener('astro:before-swap', (e) => {
-  applySprout((e as Swap).newDocument.documentElement);
+  const ev = e as Swap;
+  applySprout(ev.newDocument.documentElement);
+  if (sprout && ev.viewTransition) {
+    vtRunning = true;
+    ev.viewTransition.finished.finally(() => {
+      vtRunning = false;
+      clearSprout();
+    });
+  }
 });
 
 document.addEventListener('astro:after-swap', finishBar);
 
 document.addEventListener('astro:page-load', () => {
-  clearSprout();
+  if (!vtRunning) clearSprout();
   if (!clientNav) return;
   // Move focus to the new content (or the #hash target) without a jump.
   const hash = decodeURIComponent(location.hash.slice(1));
