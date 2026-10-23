@@ -37,6 +37,10 @@ export function initShell(o: ShellOptions): Shell {
   const timers: number[] = [];
   const later = (fn: () => void, ms: number) => timers.push(window.setTimeout(fn, ms));
 
+  // WebKit (Safari) crashes running a view transition out of the full-screen game shell, so there
+  // the links that leave a game do a normal page load. Back/forward and all other navigations animate.
+  if (/Apple/.test(navigator.vendor)) root.querySelectorAll('a[href]').forEach((a) => a.setAttribute('data-astro-reload', ''));
+
   const syncSound = (on: boolean) => {
     soundBtn.setAttribute('aria-pressed', String(on));
     soundBtn.querySelector('[data-label]')!.textContent = on ? 'Sound on' : 'Sound off';
