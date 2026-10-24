@@ -3,7 +3,7 @@
 // Loaded once (from both layouts); everything here listens to router events.
 import { reducedMotion } from '../lib/motion';
 
-type Prep = Event & { to: URL; sourceElement?: Element };
+type Prep = Event & { from: URL; to: URL; sourceElement?: Element };
 type Swap = Event & { newDocument: Document; viewTransition?: { finished: Promise<void> } };
 
 const root = document.documentElement;
@@ -70,9 +70,11 @@ document.addEventListener('astro:before-preparation', (e) => {
   window.clearTimeout(barTimer);
   barTimer = window.setTimeout(showBar, 300);
 
-  // Sprout reveal: only into Montessori at Home, only with real view transitions, never under reduced motion.
+  // Sprout reveal: only on arriving at Montessori at Home from elsewhere (between its own pages the
+  // card illustration morphs into the scene instead), only with real view transitions, never under
+  // reduced motion.
   clearSprout();
-  if (supportsVT && !reducedMotion() && toAtHome(ev.to)) {
+  if (supportsVT && !reducedMotion() && toAtHome(ev.to) && !toAtHome(ev.from)) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     let x = vw / 2;

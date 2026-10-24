@@ -5,6 +5,17 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# The games were replaced by Montessori at Home (round 2). Keep old links working.
+[[redirects]]
+  from = "/play"
+  to = "/at-home"
+  status = 301
+
+[[redirects]]
+  from = "/play/*"
+  to = "/at-home"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

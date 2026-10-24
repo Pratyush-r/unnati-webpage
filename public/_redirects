@@ -1,0 +1,3 @@
+# Netlify drag-and-drop deploys skip netlify.toml rules, so the redirects are repeated here.
+/play     /at-home  301
+/play/*   /at-home  301
