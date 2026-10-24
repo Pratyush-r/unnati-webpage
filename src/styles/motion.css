@@ -7,15 +7,6 @@
 .will-reveal { opacity: 0; transform: translateY(12px); }
 .revealed { opacity: 1; transform: none; transition: opacity 300ms var(--ease-move), transform 300ms var(--ease-move); transition-delay: var(--reveal-delay, 0ms); }
 
-/* Nav link: thin vine underline draws in, one leaf at its end (250 ms). */
-.vine-link { position: relative; }
-.vine-link .vine-u {
-  position: absolute; left: 12px; right: 12px; bottom: 8px; height: 8px; pointer-events: none; overflow: visible;
-}
-.vine-link .vine-u path { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 250ms var(--ease-move); }
-.vine-link:hover .vine-u path,
-.vine-link:focus-visible .vine-u path,
-.vine-link[aria-current='page'] .vine-u path { stroke-dashoffset: 0; }
 
 @keyframes pin-bounce {
   0%, 100% { transform: translateY(0); }

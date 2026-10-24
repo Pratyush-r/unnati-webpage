@@ -49,8 +49,9 @@ img, svg, picture { display: block; max-width: 100%; }
 img { height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-a { color: var(--brown); text-underline-offset: .18em; text-decoration-thickness: 1px; touch-action: manipulation; }
-a:hover { text-decoration-thickness: 2px; }
+/* Inline links: brown text, a thin brown underline at 40% (never green). */
+a { color: var(--brown); text-decoration-color: rgb(118 61 13 / .4); text-decoration-thickness: 1px; text-underline-offset: 3px; touch-action: manipulation; }
+a:hover { text-decoration-color: rgb(118 61 13 / .75); }
 p { max-width: 68ch; text-wrap: pretty; }
 ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 
@@ -67,7 +68,7 @@ h2 { font-size: var(--fs-h2); letter-spacing: -0.01em; }
 h3 { font-size: var(--fs-h3); }
 h4 { font-size: 1.0625rem; font-family: var(--font-body); font-weight: 800; }
 
-:focus-visible { outline: 3px solid var(--leaf); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 3px solid var(--brown); outline-offset: 3px; border-radius: 6px; }
 
 .skip-link {
   position: absolute; left: 12px; top: -100px; z-index: 100;
@@ -150,7 +151,7 @@ h4 { font-size: 1.0625rem; font-family: var(--font-body); font-weight: 800; }
 
 .text-link {
   display: inline-flex; align-items: center; min-height: 48px; font-weight: 700; color: var(--brown);
-  text-decoration: underline; text-decoration-color: rgb(118 61 13 / .35);
+  text-decoration: underline; text-decoration-color: rgb(118 61 13 / .4);
 }
 
 .chip {
@@ -201,11 +202,10 @@ h4 { font-size: 1.0625rem; font-family: var(--font-body); font-weight: 800; }
   border: 1.5px solid var(--line-strong); background: #fff; color: var(--ink); font-size: 1rem;
 }
 .textarea { min-height: 120px; resize: vertical; }
-.input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline-offset: 1px; border-color: var(--leaf); }
+.input:focus-visible, .select:focus-visible, .textarea:focus-visible { outline-offset: 1px; border-color: var(--brown); }
 .field[data-invalid] .input, .field[data-invalid] .select { border-color: #A3361A; }
 .error { color: #A3361A; font-weight: 700; font-size: var(--fs-small); min-height: 1.4em; line-height: 1.4; }
 
-.vine-divider { display: block; width: min(320px, 70%); height: 28px; margin: 0 auto; color: var(--brown); }
 
 .prose p + p { margin-top: 1rem; }
 .prose { font-size: var(--fs-body); }

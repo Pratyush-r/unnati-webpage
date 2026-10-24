@@ -36,15 +36,15 @@ const { split = false, id = 'compare-toggle' } = Astro.props;
   .compare { max-width: 860px; margin-inline: auto; }
   .seg {
     display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; width: min(100%, 420px); margin: 0 auto 1.25rem;
-    background: var(--paper); border: 1px solid var(--line-strong); border-radius: 999px;
+    background: rgb(118 61 13 / .07); border: 1px solid var(--line); border-radius: 999px;
   }
   .seg-btn {
     min-height: 48px; border-radius: 999px; font-weight: 800; color: var(--brown);
     transition: background-color 200ms ease, color 200ms ease, transform 180ms var(--ease-pop);
   }
   .seg-btn:active { transform: scale(.96); }
-  .seg-btn[aria-pressed='true'][data-mode-btn='m'] { background: var(--leaf); color: #fff; }
-  .seg-btn[aria-pressed='true'][data-mode-btn='t'] { background: var(--brown); color: #fff; }
+  .seg-btn[aria-pressed='true'] { background: var(--paper); color: var(--brown); box-shadow: 0 4px 12px -4px rgb(118 61 13 / .35); }
+  .seg-btn[aria-pressed='false'] { color: rgb(59 36 20 / .78); }
   .cols-head { display: none; }
   .rows { display: grid; gap: .75rem; }
   .row {

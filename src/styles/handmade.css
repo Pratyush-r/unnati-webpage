@@ -8,8 +8,6 @@
   --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .46  0 0 0 0 .24  0 0 0 0 .05  0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   /* Wobbly torn-paper edge used as a mask on section tops and bottoms. */
   --edge-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 18' preserveAspectRatio='none'%3E%3Cpath d='M0 11 C14 7 26 13 41 10 S66 5 83 9 S112 15 128 10 S152 4 170 8 S203 14 218 9 S234 7 240 10 V18 H0Z' fill='black'/%3E%3C/svg%3E");
-  /* Pencil underline (leaf green). */
-  --scribble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9 C40 4 74 11 108 7 S170 3 197 6 M12 12 C60 9 120 12 186 9' fill='none' stroke='%230F692F' stroke-width='2.6' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E");
   /* Pencil circle drawn around a word or chip. */
   --circle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' preserveAspectRatio='none'%3E%3Cpath d='M22 12 C70 0 160 2 188 18 C204 30 186 52 120 56 C60 60 8 50 6 32 C4 18 30 8 70 6' fill='none' stroke='%23763D0D' stroke-width='1.8' stroke-linecap='round' opacity='.75'/%3E%3C/svg%3E");
   /* Washi tape with torn ends. */
@@ -39,11 +37,7 @@ body { background-image: var(--paper-grain); }
   -webkit-mask: var(--edge-wave) 60px 0 / 360px 18px repeat-x; mask: var(--edge-wave) 60px 0 / 360px 18px repeat-x;
 }
 
-/* ——— Pencil marks on words ——— */
-.scribble {
-  background: var(--scribble) left bottom / 100% .34em no-repeat;
-  padding-bottom: .1em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
-}
+/* ——— Pencil circle around a chip ——— */
 .circled { position: relative; isolation: isolate; }
 .circled::after {
   content: ''; position: absolute; inset: -9px -14px -8px -12px; z-index: -1; pointer-events: none;

@@ -30,7 +30,7 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="services">
     <div class="container">
-      <SectionHead title="Our consultancy services" mark="consultancy" id="services" />
+      <SectionHead title="Our consultancy services" id="services" />
       <ol class="services" role="list" data-reveal="children">
         {consultancy.services.map((s, i) => (
           <li class="service">
@@ -49,7 +49,7 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
   <section class="section" aria-labelledby="c-approach">
     <div class="container two-col">
       <div>
-        <SectionHead title="How we work with you" mark="with you" id="c-approach" />
+        <SectionHead title="How we work with you" id="c-approach" />
         <ul class="approach" role="list" data-reveal="children">
           {consultancy.approach.map((a) => (
             <li><span class="icon-badge"><Icon name={a.icon} /></span><div><h3>{a.title}</h3><p>{a.text}</p></div></li>
@@ -68,7 +68,7 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="cvf">
     <div class="container">
-      <SectionHead title="Build your own school, your way" mark="your way" offset id="cvf" />
+      <SectionHead title="Build your own school, your way" offset id="cvf" />
       <ConsultancyVsFranchise />
     </div>
   </section>
@@ -76,7 +76,7 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
   <section class="section" aria-labelledby="why-fail">
     <div class="container two-col">
       <div>
-        <SectionHead title="Why preschools fail or shut down" mark="fail" id="why-fail" />
+        <SectionHead title="Why preschools fail or shut down" id="why-fail" />
         <div class="help pebble" data-reveal>
           <p><strong>We help you</strong> {consultancy.whyFailClose}</p>
         </div>

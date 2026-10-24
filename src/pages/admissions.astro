@@ -27,14 +27,14 @@ import { parentFaq } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="programmes-title">
     <div class="container">
-      <SectionHead title="Our programmes" mark="programmes" id="programmes-title" />
+      <SectionHead title="Our programmes" id="programmes-title" />
       <ProgrammeCards />
     </div>
   </section>
 
   <section class="section" aria-labelledby="register-title">
     <div class="container">
-      <SectionHead title="Three simple steps" mark="simple" offset id="register-title" />
+      <SectionHead title="Three simple steps" offset id="register-title" />
       <ol class="steps scatter stagger" role="list" data-reveal="children">
         {registerSteps.map((s, i) => (
           <li class:list={['pebble', 'step', 'tape', ['', 'tape--sage', 'tape--blush'][i]]}>
@@ -49,7 +49,7 @@ import { parentFaq } from '../content/faq';
 
   <section class="section bg-paper" aria-labelledby="faq-title">
     <div class="container-narrow">
-      <SectionHead title="Questions parents ask" mark="parents" id="faq-title" />
+      <SectionHead title="Questions parents ask" id="faq-title" />
       <Faq items={parentFaq} />
     </div>
   </section>

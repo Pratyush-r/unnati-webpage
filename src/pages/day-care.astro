@@ -43,7 +43,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section bg-paper" aria-labelledby="dc-why">
     <div class="container">
-      <SectionHead title="More than minding — a day that helps children grow" mark="helps children grow" id="dc-why" />
+      <SectionHead title="More than minding — a day that helps children grow" id="dc-why" />
       <ul class="ideas scatter stagger" role="list" data-reveal="children">
         {dayCare.ideas.map((idea, i) => (
           <li class="pebble pebble--hover idea">
@@ -58,7 +58,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section" aria-labelledby="dc-rhythm">
     <div class="container rhythm-grid">
-      <SectionHead title="A familiar rhythm" mark="rhythm" id="dc-rhythm"
+      <SectionHead title="A familiar rhythm" id="dc-rhythm"
         intro="Young children feel safe when they know what comes next. The day follows a gentle, predictable order — the rhythm, not a rush." />
       <VineSteps steps={dayCare.rhythm} ordered={false} />
     </div>
@@ -66,7 +66,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
 
   <section class="section bg-sage" aria-labelledby="dc-parents">
     <div class="container">
-      <SectionHead title="Rest, and an update every day" mark="every day" offset id="dc-parents" />
+      <SectionHead title="Rest, and an update every day" offset id="dc-parents" />
       <div class="parents scatter" data-reveal="children">
         {dayCare.forParents.map((p) => (
           <article class="pebble parent-card tape tape--left">

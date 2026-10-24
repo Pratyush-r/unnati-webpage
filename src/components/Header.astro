@@ -36,23 +36,15 @@ const educatorsCurrent = educators.some((l) => current(l.href));
       <ul role="list">
         {links.map((l) => (
           <li>
-            <a class="nav-link vine-link" href={l.href} aria-current={current(l.href)}>
-              {l.label}
-              <svg class="vine-u" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 5 C18 2 32 8 50 5 S82 2 96 4.5" pathLength="100" fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke" />
-              </svg>
-              <span class="vine-leaf" aria-hidden="true"></span>
+            <a class="nav-link" href={l.href} aria-current={current(l.href)}>
+              <span class="nl-text">{l.label}</span>
             </a>
           </li>
         ))}
         <li class="disclosure" data-disclosure>
-          <button class="nav-link vine-link" type="button" aria-expanded="false" aria-controls="educators-menu" data-current={educatorsCurrent ? '' : undefined}>
-            For Educators
+          <button class="nav-link" type="button" aria-expanded="false" aria-controls="educators-menu" data-current={educatorsCurrent ? '' : undefined}>
+            <span class="nl-text">For Educators</span>
             <Icon name="chevron-down" size={18} class="chev" />
-            <svg class="vine-u" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M0 5 C18 2 32 8 50 5 S82 2 96 4.5" pathLength="100" fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke" />
-            </svg>
-            <span class="vine-leaf" aria-hidden="true"></span>
           </button>
           <ul class="dropdown" id="educators-menu" role="list" hidden>
             {educators.map((l) => (
@@ -61,12 +53,8 @@ const educatorsCurrent = educators.some((l) => current(l.href));
           </ul>
         </li>
         <li>
-          <a class="nav-link vine-link" href="/contact" aria-current={current('/contact')}>
-            Contact
-            <svg class="vine-u" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M0 5 C18 2 32 8 50 5 S82 2 96 4.5" pathLength="100" fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke" />
-            </svg>
-            <span class="vine-leaf" aria-hidden="true"></span>
+          <a class="nav-link" href="/contact" aria-current={current('/contact')}>
+            <span class="nl-text">Contact</span>
           </a>
         </li>
       </ul>
@@ -119,9 +107,9 @@ const educatorsCurrent = educators.some((l) => current(l.href));
   .header-inner { display: flex; align-items: center; gap: 1rem; min-height: 72px; padding-block: 10px; }
   .nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; pointer-events: none; opacity: 0; }
   .nav-progress.is-on { opacity: 1; }
-  .np-bar { position: absolute; inset: 0; background: #0F692F; transform-origin: 0 50%; transform: scaleX(0); }
+  .np-bar { position: absolute; inset: 0; background: var(--brown); transform-origin: 0 50%; transform: scaleX(0); }
   .np-leaf {
-    position: absolute; top: -4px; left: 0; width: 10px; height: 8px; background: #0F692F; border-radius: 0 100% 0 100%;
+    position: absolute; top: -4px; left: 0; width: 10px; height: 8px; background: var(--brown); border-radius: 0 100% 0 100%;
     transform: translateX(0) rotate(-20deg);
   }
   .brand { display: flex; align-items: center; flex: none; border-radius: 8px; }
@@ -129,23 +117,17 @@ const educatorsCurrent = educators.some((l) => current(l.href));
   .desktop-nav { display: none; margin-left: auto; }
   .desktop-nav > ul { display: flex; align-items: center; gap: 0; }
   .nav-link {
-    display: inline-flex; align-items: center; gap: .2rem; min-height: 48px; padding: 0 12px;
+    display: inline-flex; align-items: center; gap: .2rem; min-height: 48px; padding: 0 2px;
     color: var(--ink); font-weight: 700; font-size: .975rem; text-decoration: none; white-space: nowrap;
     border-radius: 10px;
   }
-  .nav-link[aria-current='page'], .nav-link[data-current] { color: var(--brown); }
   .nav-link :global(.chev) { transition: transform 200ms var(--ease-move); }
   .nav-link[aria-expanded='true'] :global(.chev) { transform: rotate(180deg); }
-  .vine-link { color: var(--ink); }
-  .vine-u { color: var(--brown); }
-  .vine-leaf {
-    position: absolute; right: 6px; bottom: 7px; width: 9px; height: 6px; pointer-events: none;
-    background: var(--leaf); border-radius: 0 100% 0 100%; transform: rotate(-20deg) scale(.4); opacity: 0;
-    transition: opacity 120ms ease 130ms, transform 200ms var(--ease-pop) 130ms;
-  }
-  .vine-link:hover .vine-leaf, .vine-link:focus-visible .vine-leaf, .vine-link[aria-current='page'] .vine-leaf, .vine-link[data-current] .vine-leaf,
-  .vine-link[aria-expanded='true'] .vine-leaf { opacity: 1; transform: rotate(-20deg); }
-  .vine-link[data-current] :global(.vine-u path), .vine-link[aria-expanded='true'] :global(.vine-u path) { stroke-dashoffset: 0; }
+  /* Hover/focus: text turns brown. Active page: brown text on a soft blush pill. No underlines. */
+  .nav-link:hover, .nav-link:focus-visible, .nav-link[aria-expanded='true'] { color: var(--brown); }
+  .nl-text { padding: 6px 12px; border-radius: 999px; transition: background-color 150ms ease; }
+  .nav-link[aria-current='page'], .nav-link[data-current] { color: var(--brown); }
+  .nav-link[aria-current='page'] .nl-text, .nav-link[data-current] .nl-text { background: var(--blush); }
   .disclosure { position: relative; }
   .dropdown {
     position: absolute; top: calc(100% + 6px); left: 0; min-width: 210px; padding: .5rem;
@@ -179,7 +161,7 @@ const educatorsCurrent = educators.some((l) => current(l.href));
     display: flex; align-items: center; min-height: 56px; padding: 0 .5rem; border-bottom: 1px solid var(--line);
     font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; color: var(--brown); text-decoration: none;
   }
-  .sheet-links a[aria-current='page'] { color: var(--leaf); }
+  .sheet-links a[aria-current='page'] { color: var(--brown); background: var(--blush); border-radius: 14px; }
   .sheet-enquire { margin-top: .5rem; }
   .sheet-actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
   .sheet-actions .btn { min-height: 56px; }
@@ -192,7 +174,8 @@ const educatorsCurrent = educators.some((l) => current(l.href));
     .menu-btn:not(.menu-btn--close) { display: none; }
   }
   @media (min-width: 1024px) and (max-width: 1180px) {
-    .nav-link { padding: 0 8px; font-size: .925rem; }
+    .nav-link { font-size: .925rem; }
+    .nl-text { padding: 6px 9px; }
     .header-inner { gap: .5rem; }
   }
 </style>

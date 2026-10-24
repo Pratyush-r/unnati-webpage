@@ -1,6 +1,6 @@
 ---
 // Section heading. The heading carries its own weight (no label above it).
-// `mark` underlines one word or phrase in pencil; `offset` nudges the head in from the left edge.
+// `offset` nudges the head in from the left edge.
 interface Props {
   eyebrow?: string; // kept for call-site compatibility; not shown
   title: string;
@@ -8,16 +8,13 @@ interface Props {
   center?: boolean;
   level?: 1 | 2;
   id?: string;
-  mark?: string;
   offset?: boolean;
 }
-const { title, intro, center = false, level = 2, id, mark, offset = false } = Astro.props;
+const { title, intro, center = false, level = 2, id, offset = false } = Astro.props;
 const H = level === 1 ? 'h1' : 'h2';
-const at = mark ? title.indexOf(mark) : -1;
-const parts = at >= 0 ? [title.slice(0, at), title.slice(at, at + mark!.length), title.slice(at + mark!.length)] : null;
 ---
 <div class:list={['section-head', { 'section-head--center': center, 'section-head--offset': offset && !center }]} data-reveal>
-  <H id={id}>{parts ? <>{parts[0]}<span class="scribble">{parts[1]}</span>{parts[2]}</> : title}</H>
+  <H id={id}>{title}</H>
   {intro && <p>{intro}</p>}
   <slot />
 </div>

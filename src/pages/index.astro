@@ -8,7 +8,6 @@ import AreaCards from '../components/AreaCards.astro';
 import CompareToggle from '../components/CompareToggle.astro';
 import FindUsMap from '../components/FindUsMap.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
-import VineDivider from '../components/VineDivider.astro';
 import Doodle from '../components/Doodle.astro';
 import PhotoStrip from '../components/PhotoStrip.astro';
 import { site, statusLabel, siteUrl, wa, waText } from '../config/site';
@@ -43,7 +42,7 @@ const jsonLd = {
     <div class="container hero-grid">
       <div class="hero-text">
         <p class="eyebrow">Montessori Primary Environment · Ages {site.primary.ages} · {site.address.area}, {site.address.city}</p>
-        <h1>Help me do it <span class="scribble">myself.</span></h1>
+        <h1>Help me do it myself.</h1>
         <p class="lead">
           Unnati Montessori is an authentic Montessori environment where children grow into independent, confident and compassionate learners — at their own pace.
         </p>
@@ -64,7 +63,7 @@ const jsonLd = {
   <section class="section bg-paper" aria-labelledby="programmes-title">
     <div class="container">
       <Doodle kind="sprout" size={56} class="d-sprout" wideOnly />
-      <SectionHead title="A Montessori preschool in Mogappair West" mark="preschool" offset id="programmes-title"
+      <SectionHead title="A Montessori preschool in Mogappair West" offset id="programmes-title"
         intro={`A Primary Environment for ages ${site.primary.ages}, ${site.dayCare.name} from age 1, and after-school activities — all guided by the same Montessori values.`} />
       <ProgrammeCards />
     </div>
@@ -72,9 +71,10 @@ const jsonLd = {
 
   <section class="section" aria-labelledby="areas-title">
     <div class="container">
-      <SectionHead title="Five areas, one prepared environment" mark="prepared environment" id="areas-title"
+      <SectionHead title="Five areas, one prepared environment" id="areas-title"
         intro="Every material on a Montessori shelf belongs to one of five areas. Each has a simple activity you can try at home, inspired by a real classroom material." />
       <AreaCards />
+      <p class="plane-link"><a href="/approach#first-plane">Why 2½ to 6? Read about {site.firstPlaneTitle} <span aria-hidden="true">→</span></a></p>
       <p class="more-link"><a class="btn btn--primary" href="/at-home">See all home activities <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
@@ -90,7 +90,6 @@ const jsonLd = {
 
   <section class="section--tight founder-band" aria-labelledby="founder-title">
     <div class="container-narrow">
-      <VineDivider />
       <figure class="founder pebble tape tape--sage" data-reveal>
         <Doodle kind="heart" size={34} class="d-heart" />
         <h2 id="founder-title" class="sr-only">From our founder</h2>
@@ -108,7 +107,7 @@ const jsonLd = {
 
   <section class="section bg-paper" aria-labelledby="find-us">
     <div class="container">
-      <SectionHead title="Visit us in Mogappair West" mark="Mogappair West" id="find-us" />
+      <SectionHead title="Visit us in Mogappair West" id="find-us" />
       <FindUsMap headingId="home-map" />
     </div>
   </section>
@@ -132,6 +131,8 @@ const jsonLd = {
   :global(.d-swirl) { right: 6%; top: 0; }
   .founder :global(.d-heart) { right: 18px; bottom: 16px; color: var(--leaf); }
   .more-link { margin-top: 1.75rem; }
+  .plane-link { margin-top: 1.5rem; font-weight: 700; }
+  .plane-link a { display: inline-flex; min-height: 48px; align-items: center; }
   .founder-band { background: var(--cream); }
   .founder {
     position: relative; margin: 2.25rem auto 0; max-width: 680px; text-align: center; display: grid; gap: 1rem; justify-items: center;

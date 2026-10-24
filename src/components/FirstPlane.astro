@@ -1,0 +1,135 @@
+---
+// The first plane of development (birth to 6). The title lives only in site.firstPlaneTitle;
+// the anchor stays #first-plane whatever the title becomes. Static tiles — no flips, tabs or toggles.
+import Icon from './Icon.astro';
+import { site } from '../config/site';
+
+const tiles = [
+  { icon: 'question', label: 'Key question', text: '"What is that?"' },
+  { icon: 'people', label: 'Independence', text: 'Physiological and biological. Walking, talking, feeding and dressing on their own.' },
+  { icon: 'search', label: 'Exploration', text: 'Explores the world with all the senses.' },
+  { icon: 'growth', label: 'Growth', text: 'Great physical and psychological change.' },
+  { icon: 'heart', label: 'Health', text: 'A delicate stage that needs care and rhythm.' },
+  { icon: 'star', label: 'Sensitive to', text: 'Movement, language and order.' },
+];
+---
+<section class="section bg-paper first-plane" id="first-plane" aria-labelledby="first-plane-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <h2 id="first-plane-title">{site.firstPlaneTitle}</h2>
+      <p>Dr. Maria Montessori described four planes of development, from birth to adulthood. Our Primary Environment serves the first: the years in which children build themselves.</p>
+    </div>
+
+    <div class="timeline" data-timeline>
+      <div class="tl-halves">
+        <div class="tl-half">
+          <p class="tl-years">0–3</p>
+          <p class="tl-mind">The unconscious absorbent mind</p>
+        </div>
+        <div class="tl-half">
+          <p class="tl-years">3–6</p>
+          <p class="tl-mind">The conscious absorbent mind</p>
+        </div>
+      </div>
+      <div class="tl-rail" aria-hidden="true">
+        <span class="tl-track" data-track></span>
+        <span class="tl-band"><span>Our Primary Environment · 2½–6</span></span>
+        <ol class="tl-ticks" role="list">
+          {[0, 1, 2, 3, 4, 5, 6].map((n) => <li style={`--at:${(n / 6) * 100}%`}>{n}</li>)}
+        </ol>
+      </div>
+      <p class="sr-only">Our Primary Environment serves children aged 2½ to 6.</p>
+    </div>
+
+    <figure class="guiding">
+      <figcaption>Guiding question</figcaption>
+      <blockquote>“Help me do it myself.”</blockquote>
+    </figure>
+
+    <ul class="fp-tiles" role="list" data-reveal="children">
+      {tiles.map((t, i) => (
+        <li class="pebble fp-tile">
+          <span class:list={['icon-badge', { 'icon-badge--blush': i % 2 === 1 }]}><Icon name={t.icon} /></span>
+          <div>
+            <h3>{t.label}</h3>
+            <p>{t.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="fp-close">Everything in our Primary Environment, from the child-sized shelves to the long uninterrupted work cycle, is prepared for this plane.</p>
+  </div>
+</section>
+
+<style>
+  .first-plane { scroll-margin-top: 96px; }
+  .timeline { position: relative; display: grid; gap: 1rem; margin-top: .5rem; }
+  .tl-halves { display: grid; grid-template-columns: 1fr 1fr; }
+  .tl-half { padding: 0 .75rem .75rem; border-left: 1px solid var(--line-strong); }
+  .tl-years { font-family: var(--font-head); font-weight: 600; font-size: var(--fs-h3); color: var(--brown); }
+  .tl-mind { font-weight: 700; }
+  .tl-rail { position: relative; height: 92px; }
+  .tl-track {
+    position: absolute; left: 0; right: 0; top: 0; height: 12px; border-radius: 999px;
+    background: var(--peach); transform-origin: 0 50%;
+  }
+  .tl-band {
+    position: absolute; top: 20px; left: calc(2.5 / 6 * 100%); right: 0; min-height: 40px; display: grid; place-items: center;
+    padding: .4rem .9rem; border-radius: 14px; background: var(--forest); color: var(--cream); font-weight: 800; text-align: center; line-height: 1.25;
+  }
+  .tl-band::before { /* ties the band to the track at 2½ */
+    content: ''; position: absolute; left: 0; top: -14px; width: 2px; height: 14px; background: var(--forest);
+  }
+  .tl-ticks { position: absolute; left: 0; right: 0; top: 70px; height: 22px; }
+  .tl-ticks li { position: absolute; left: var(--at); translate: -50% 0; font-weight: 800; font-size: .875rem; color: var(--brown); }
+  .tl-ticks li:first-child { translate: 0 0; }
+  .tl-ticks li:last-child { translate: -100% 0; }
+
+  .guiding { margin: clamp(2rem, 1.5rem + 2vw, 3rem) auto; text-align: center; }
+  .guiding figcaption { font-weight: 800; color: var(--brown); }
+  .guiding blockquote { margin: .25rem 0 0; font-family: var(--font-head); font-weight: 600; font-size: clamp(2rem, 1.4rem + 2.6vw, 3.5rem); line-height: 1.1; color: var(--brown); }
+
+  .fp-tiles { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+  .fp-tile { display: grid; gap: .6rem; align-content: start; padding: 1.1rem; }
+  .fp-tile h3 { font-size: 1.125rem; margin-bottom: .2rem; }
+  .fp-tile p { font-size: .975rem; }
+  .fp-close { margin: 2rem auto 0; max-width: 52ch; text-align: center; font-family: var(--font-head); font-size: var(--fs-h3); color: var(--brown); line-height: 1.35; }
+  @media (min-width: 1024px) { .fp-tiles { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Phones: the timeline stands upright. */
+  @media (max-width: 767.98px) {
+    .timeline { grid-template-columns: 68px 1fr; gap: 0 1rem; }
+    .tl-halves { grid-column: 2; grid-row: 1; grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+    .tl-half { border-left: 0; border-top: 1px solid var(--line-strong); padding: .5rem 0 1.25rem; }
+    .tl-rail { grid-column: 1; grid-row: 1; height: auto; min-height: 300px; }
+    .tl-track { left: 0; right: auto; top: 0; bottom: 0; width: 12px; height: auto; transform-origin: 50% 0; }
+    .tl-band { left: 20px; right: auto; top: calc(2.5 / 6 * 100%); bottom: 0; width: 20px; min-height: 0; padding: 0; border-radius: 10px; }
+    .tl-band span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .tl-band::before { left: -8px; top: 0; width: 8px; height: 2px; }
+    .tl-ticks { left: auto; right: 0; top: 0; bottom: 0; width: 16px; height: auto; text-align: right; }
+    .tl-ticks li { left: auto; top: var(--at); translate: 0 -50%; }
+    .tl-ticks li:first-child { translate: 0 0; }
+    .tl-ticks li:last-child { translate: 0 -100%; }
+    .timeline::after {
+      content: 'Our Primary Environment · 2½–6'; grid-column: 1 / -1; justify-self: start; margin-top: .75rem;
+      padding: .4rem .9rem; border-radius: 14px; background: var(--forest); color: var(--cream); font-weight: 800;
+    }
+  }
+</style>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  import { animate, onceInView } from '../lib/motion';
+
+  // The track draws once (600 ms) when the timeline first comes into view; static under reduced motion.
+  onPageLoad(() => {
+    const tl = document.querySelector<HTMLElement>('[data-timeline]');
+    const track = tl?.querySelector<HTMLElement>('[data-track]');
+    if (!tl || !track) return;
+    const upright = window.matchMedia('(max-width: 767.98px)').matches;
+    return onceInView(tl, () => {
+      animate(track, [{ transform: upright ? 'scaleY(0)' : 'scaleX(0)' }, { transform: 'none' }], { duration: 600 });
+    }, 0.4);
+  });
+</script>

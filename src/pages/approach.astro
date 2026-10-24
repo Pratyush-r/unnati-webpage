@@ -5,11 +5,13 @@ import PrinciplesWheel from '../components/PrinciplesWheel.astro';
 import AreaCards from '../components/AreaCards.astro';
 import CompareToggle from '../components/CompareToggle.astro';
 import CtaBand from '../components/CtaBand.astro';
+import FirstPlane from '../components/FirstPlane.astro';
+import { site } from '../config/site';
 import { freedomQuote } from '../content/copy';
 ---
 <BaseLayout
   title="Our Montessori Approach | Unnati Montessori, Chennai"
-  description="Freedom within limits, the eight Montessori principles, the five curriculum areas and the four planes of development — how children learn at Unnati."
+  description={`The eight Montessori principles, the five curriculum areas and ${site.firstPlaneTitle}: how children learn at Unnati Montessori.`}
 >
   <section class="page-hero">
     <div class="container">
@@ -25,7 +27,7 @@ import { freedomQuote } from '../content/copy';
 
   <section class="section bg-paper" aria-labelledby="principles">
     <div class="container">
-      <SectionHead title="Eight ideas that shape every day" mark="every day" id="principles" center
+      <SectionHead title="Eight ideas that shape every day" id="principles" center
         intro="Tap, hover or focus a part of the wheel to read about it." />
       <PrinciplesWheel />
     </div>
@@ -33,13 +35,13 @@ import { freedomQuote } from '../content/copy';
 
   <section class="section" aria-labelledby="five-areas">
     <div class="container">
-      <SectionHead title="The five areas of a Montessori curriculum" mark="five areas" offset id="five-areas"
+      <SectionHead title="The five areas of a Montessori curriculum" offset id="five-areas"
         intro="Each area has its own shelf of real, beautiful materials — and a simple activity you can try at home." />
       <AreaCards detail />
     </div>
   </section>
 
-  <!-- FIRST-PLANE -->
+  <FirstPlane />
 
   <section class="section bg-blush" id="compare" aria-labelledby="compare-title">
     <div class="container">

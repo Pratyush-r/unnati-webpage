@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHead from '../components/SectionHead.astro';
 import VineSteps from '../components/VineSteps.astro';
-import VineDivider from '../components/VineDivider.astro';
 import CtaBand from '../components/CtaBand.astro';
 import PhotoStrip from '../components/PhotoStrip.astro';
 import { Image } from 'astro:assets';
@@ -55,7 +54,6 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
         {founderNote.map((p) => <p>{p}</p>)}
         <p class="signature">— {site.contactPerson}, Founder</p>
       </div>
-      <VineDivider />
     </div>
   </section>
 
