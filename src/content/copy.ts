@@ -85,38 +85,21 @@ export type Area = {
   id: string;
   name: string;
   text: string;
-  game: string;
+  /** The Montessori at Home activity for this area. */
+  activity: string;
   href: string;
   material: string;
   tint: string;
 };
 
 export const areas: Area[] = [
-  { id: 'practical', name: 'Practical Life', text: 'Develops independence, coordination and care for self and the environment.', game: 'Set the Table', href: '/play/set-the-table', material: 'Jug and glass on a tray', tint: 'var(--sage)' },
-  { id: 'sensorial', name: 'Sensorial', text: 'Refines the senses and helps children explore, compare and classify the world around them.', game: 'Knobbed Cylinders', href: '/play/knobbed-cylinders', material: 'Knobbed cylinder block', tint: 'var(--blush)' },
-  { id: 'language', name: 'Language', text: 'Builds strong communication skills through listening, speaking, reading and writing experiences.', game: 'Sandpaper Letters', href: '/play/sandpaper-letters', material: 'Pink sandpaper letter "s"', tint: '#FBE3E8' },
-  { id: 'maths', name: 'Mathematics', text: 'Introduces number concepts, operations and problem-solving through concrete experiences.', game: 'Spindle Box', href: '/play/spindle-box', material: 'Spindle box', tint: '#F5E6CF' },
-  { id: 'cultural', name: 'Cultural Studies', text: 'Explores geography, science, history, art and music to understand the world and our place in it.', game: 'Land, Air & Water', href: '/play/land-air-water', material: 'Land-and-water globe', tint: '#E3EEF6' },
+  { id: 'practical', name: 'Practical Life', text: 'Develops independence, coordination and care for self and the environment.', activity: 'Pouring Water', href: '/at-home/pouring-water', material: 'Jug and glass on a tray', tint: 'var(--sage)' },
+  { id: 'sensorial', name: 'Sensorial', text: 'Refines the senses and helps children explore, compare and classify the world around them.', activity: 'Sound Boxes', href: '/at-home/sound-boxes', material: 'Knobbed cylinder block', tint: 'var(--blush)' },
+  { id: 'language', name: 'Language', text: 'Builds strong communication skills through listening, speaking, reading and writing experiences.', activity: 'I Spy Sounds', href: '/at-home/i-spy-sounds', material: 'Pink sandpaper letter "s"', tint: '#FBE3E8' },
+  { id: 'maths', name: 'Mathematics', text: 'Introduces number concepts, operations and problem-solving through concrete experiences.', activity: 'Peg Counting', href: '/at-home/peg-counting', material: 'Spindle box', tint: '#F5E6CF' },
+  { id: 'cultural', name: 'Cultural Studies', text: 'Explores geography, science, history, art and music to understand the world and our place in it.', activity: 'Sprouting Moong', href: '/at-home/sprouting-moong', material: 'Land-and-water globe', tint: '#E3EEF6' },
 ];
 
-export const planes = {
-  columns: [
-    { id: 'infancy', name: 'Infancy', ages: '0–6', sub: '0–3, 3–6' },
-    { id: 'childhood', name: 'Childhood', ages: '6–12' },
-    { id: 'adolescence', name: 'Adolescence', ages: '12–18' },
-    { id: 'maturity', name: 'Maturity', ages: '18–24' },
-  ],
-  rows: [
-    { label: 'The mind', icon: 'brain', cells: ['The absorbent mind (0–3 unconscious, 3–6 conscious)', 'The reasoning mind', 'The humanist mind', 'The specialist mind'] },
-    { label: 'Guiding question', icon: 'hands', cells: ['"Help me do it myself."', '"Help me to think."', '"Help me to think with you."', '"How can I help?"'] },
-    { label: 'Key question', icon: 'question', cells: ['"What is that?"', '"Why? How?"', '"Who am I?"', '"What will I do?"'] },
-    { label: 'Independence', icon: 'people', cells: ['Physiological and biological', 'Intellectual', 'Social and emotional', 'Moral and spiritual'] },
-    { label: 'Exploration', icon: 'search', cells: ['Explores with all the senses', 'Explores ideas and information', 'Moves from family life to life in society', 'Explores self-knowledge and self-realisation'] },
-    { label: 'Health', icon: 'heart', cells: ['Delicate', 'Robust', 'Delicate', 'Robust'] },
-    { label: 'Growth', icon: 'growth', cells: ['Great physical and psychological change', 'Steady, uniform growth', 'Great physical and psychological change', 'End of uniform growth'] },
-    { label: 'Sensitivity & focus', icon: 'star', cells: ['Movement, language and order', 'Belonging to the group, and what is right and wrong in society', "Finding one's place in society; a drive for heroic, idealistic action", "Preparing for one's own place in society"] },
-  ],
-};
 
 export const compare = [
   { icon: 'choose', m: 'The child chooses their activities.', t: 'The teacher decides what and when to learn.' },
@@ -127,19 +110,6 @@ export const compare = [
 ];
 export const compareClose = 'Different paths, same goal: happy, confident children who love to learn.';
 
-export const didYouKnow = [
-  { id: 'mixed-age', icon: 'people', title: 'Mixed-Age Community', text: 'Children aged 2½–6 years learn together, creating opportunities for younger children to observe and older children to lead.' },
-  { id: 'prepared', icon: 'shelf', title: 'Prepared Environment', text: "Everything is thoughtfully arranged at the child's level to encourage independence and purposeful movement." },
-  { id: 'choice', icon: 'choose', title: 'Freedom of Choice', text: 'Children can choose their work, within clear limits that nurture responsibility and respect.' },
-  { id: 'work-cycle', icon: 'clock', title: 'Uninterrupted Work Cycle', text: 'A long, uninterrupted period allows children to develop deep concentration and focus.' },
-  { id: 'control-of-error', icon: 'check', title: 'Control of Error', text: 'Many Montessori materials allow children to recognise and correct their own mistakes.' },
-  { id: 'observes', icon: 'eye', title: 'The Guide Observes', text: 'The Montessori guide carefully observes each child to understand when and how to introduce a lesson.' },
-  { id: 'hands', icon: 'hand', title: 'Learning Through Hands', text: 'Children move from concrete experiences to abstract understanding, especially in Mathematics and Language.' },
-  { id: 'grace', icon: 'heart', title: 'Grace & Courtesy', text: 'Respect, kindness, patience and social skills are intentionally taught as part of everyday classroom life.' },
-  { id: 'real-life', icon: 'jug', title: 'Real-Life Activities', text: 'Pouring, sweeping, washing and dressing are not just chores — they build coordination, concentration and independence.' },
-  { id: 'builds-adult', icon: 'sprout', title: 'The Child Builds the Adult', text: 'Montessori education focuses not only on what a child knows, but on who the child is becoming.' },
-];
-export const homeDidYouKnow = ['mixed-age', 'work-cycle', 'control-of-error', 'grace'];
 
 export const registerSteps = [
   { title: 'Reach out', text: (phone: string) => `Call or WhatsApp ${site.contactPerson.split(' ')[0]} on ${phone}, or send the form.` },

@@ -4,13 +4,13 @@
 // Turn off with site.ankurGuide = false. Tips live in src/config/ankur-tips.ts.
 import Ankur from './Ankur.astro';
 import { site } from '../config/site';
-import { GUIDE_PAGES } from '../config/ankur-tips';
+import { guideAllowed } from '../config/ankur-tips';
 
 interface Props {
   path: string;
 }
 const { path } = Astro.props;
-const hidden = !GUIDE_PAGES.includes(path);
+const hidden = !guideAllowed(path);
 ---
 {site.ankurGuide && (
   <div class="ankur-guide" data-ankur-guide data-hidden={hidden ? '' : undefined} transition:persist="ankur-guide">
@@ -81,7 +81,11 @@ const hidden = !GUIDE_PAGES.includes(path);
     display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 999px;
     background: var(--forest); color: var(--cream); font-weight: 800; font-size: .9375rem; text-decoration: none;
   }
-  .ag-chips :global(a + a) { background: transparent; color: var(--brown); border: 2px solid var(--brown); }
+  .ag-chips :global(.ag-chip-btn) {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 999px;
+    background: var(--forest); color: var(--cream); font-weight: 800; font-size: .9375rem;
+  }
+  .ag-chips :global(:is(a, .ag-chip-btn) + :is(a, .ag-chip-btn)) { background: transparent; color: var(--brown); border: 2px solid var(--brown); }
   .ag-hide {
     display: inline-flex; align-items: center; min-height: 48px; margin-top: 4px; padding: 0 4px;
     font-weight: 700; font-size: .875rem; color: rgb(59 36 20 / .82); text-decoration: underline; text-underline-offset: .18em;

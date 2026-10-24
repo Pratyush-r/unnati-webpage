@@ -1,4 +1,4 @@
-// Navigation extras for the client router: the "sprout reveal" into Little Hands Corner,
+// Navigation extras for the client router: the "sprout reveal" into Montessori at Home,
 // a loading bar for slow navigations only, and focus handling after each swap.
 // Loaded once (from both layouts); everything here listens to router events.
 import { reducedMotion } from '../lib/motion';
@@ -8,7 +8,7 @@ type Swap = Event & { newDocument: Document; viewTransition?: { finished: Promis
 
 const root = document.documentElement;
 const supportsVT = typeof document.startViewTransition === 'function';
-const toPlay = (url: URL) => url.pathname === '/play' || url.pathname.startsWith('/play/');
+const toAtHome = (url: URL) => url.pathname === '/at-home' || url.pathname.startsWith('/at-home/');
 
 let sprout: { x: number; y: number; r: number } | null = null;
 let clientNav = false;
@@ -70,9 +70,9 @@ document.addEventListener('astro:before-preparation', (e) => {
   window.clearTimeout(barTimer);
   barTimer = window.setTimeout(showBar, 300);
 
-  // Sprout reveal: only into /play or a game, only with real view transitions, never under reduced motion.
+  // Sprout reveal: only into Montessori at Home, only with real view transitions, never under reduced motion.
   clearSprout();
-  if (supportsVT && !reducedMotion() && toPlay(ev.to)) {
+  if (supportsVT && !reducedMotion() && toAtHome(ev.to)) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     let x = vw / 2;

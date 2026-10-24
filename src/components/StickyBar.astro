@@ -33,13 +33,10 @@ const text = phone === 'consultancy' ? waText.consultancy : waText.general;
 
 <script>
   import { initOnce, afterSwap } from '../scripts/lifecycle';
-  import { applyContact, isQuiet } from '../scripts/route';
+  import { applyContact } from '../scripts/route';
 
-  // Persisted: the number switches on /consultancy and the bar hides on Little Hands Corner.
+  // Persisted: refresh its links after every swap.
   initOnce('[data-action-bar]', (bar) => {
-    afterSwap(() => {
-      bar.hidden = isQuiet();
-      applyContact(bar);
-    });
+    afterSwap(() => applyContact(bar));
   });
 </script>

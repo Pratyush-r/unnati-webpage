@@ -1,7 +1,7 @@
 ---
 // One-line, dismissible announcement from site.announcement. Dismissal is remembered in localStorage.
 // An inline head script (BaseLayout) hides it before first paint when already dismissed — no layout shift.
-// Persisted across navigations; hidden on Little Hands Corner.
+// Persisted across navigations.
 import Icon from './Icon.astro';
 import { site } from '../config/site';
 
@@ -32,8 +32,7 @@ const { hidden = false } = Astro.props;
 <script>
   import { getItem, setItem } from '../lib/storage';
   import { site } from '../config/site';
-  import { initOnce, afterSwap } from '../scripts/lifecycle';
-  import { isQuiet } from '../scripts/route';
+  import { initOnce } from '../scripts/lifecycle';
 
   initOnce('[data-announce]', (bar) => {
     // The <html> class set before first paint is replaced on navigation, so the bar remembers too.
@@ -43,6 +42,5 @@ const { hidden = false } = Astro.props;
       bar.classList.add('is-dismissed');
       document.documentElement.classList.add('announce-dismissed');
     });
-    afterSwap(() => (bar.hidden = isQuiet()));
   });
 </script>

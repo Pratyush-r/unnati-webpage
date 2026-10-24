@@ -34,8 +34,8 @@ const tiers = [materials.slice(0, 3), materials.slice(3)];
                 <MaterialArt kind={m.kind} size={120} />
               </button>
               <div class="chip-pop" id={`chip-${m.id}`} hidden>
-                <span class="chip-area">{m.name} · {m.chipMaterial}</span>
-                <a href={m.href} class="chip-link">Try it <span aria-hidden="true">→</span><span class="sr-only">: {m.game}</span></a>
+                <span class="chip-area">{m.name} · {m.chipMaterial}:</span>
+                <a href={m.href} class="chip-link">Try this at home <span aria-hidden="true">→</span><span class="sr-only">: {m.activity}</span></a>
               </div>
             </div>
           ))}

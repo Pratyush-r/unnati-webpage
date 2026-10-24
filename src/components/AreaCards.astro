@@ -1,5 +1,5 @@
 ---
-// The five areas of the Montessori curriculum, each linking to its Little Hands Corner game.
+// The five areas of the Montessori curriculum, each linking to an activity to try at home.
 import MaterialArt from './illustrations/MaterialArt.astro';
 import { areas } from '../content/copy';
 
@@ -18,7 +18,7 @@ type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
       <div class="area-body">
         <h3>{a.name}</h3>
         <p>{a.text}</p>
-        <a class="btn btn--secondary area-try" href={a.href}>Try it: {a.game}<span aria-hidden="true">&nbsp;→</span></a>
+        <a class="btn btn--secondary area-try" href={a.href}>Try at home<span aria-hidden="true">&nbsp;→</span><span class="sr-only">: {a.activity}</span></a>
       </div>
     </li>
   ))}

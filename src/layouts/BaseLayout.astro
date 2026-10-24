@@ -17,14 +17,10 @@ import { site } from '../config/site';
 interface Props {
   title: string;
   description: string;
-  /** Contact number used by the header sheet and sticky bar. */
-  phone?: 'school' | 'consultancy';
-  /** Hide the announcement and sticky bars (Little Hands Corner). */
-  quiet?: boolean;
   jsonLd?: Record<string, unknown>;
   noindex?: boolean;
 }
-const { title, description, phone = 'school', quiet = false, jsonLd, noindex = false } = Astro.props;
+const { title, description, jsonLd, noindex = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <!doctype html>
@@ -36,15 +32,15 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     </script>
     <ClientRouter fallback="animate" />
   </head>
-  <body class:list={[{ 'no-sticky': quiet }]}>
+  <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <AnnouncementBar hidden={quiet} />
-    <Header path={path} phone={phone} />
+    <AnnouncementBar />
+    <Header path={path} />
     <main id="main" tabindex="-1" transition:animate={pageSlide}>
       <slot />
     </main>
     <Footer />
-    <StickyBar phone={phone} hidden={quiet} />
+    <StickyBar />
     <AnkurGuide path={path} />
     <script>
       import { initReveal } from '../lib/reveal';

@@ -22,5 +22,5 @@ export const pageSlide: TransitionDirectionalAnimations = {
 export const MORPH_MS = 320;
 export const MORPH_EASE = IN_EASE;
 
-/** Sprout reveal into Little Hands Corner. */
+/** Sprout reveal into Montessori at Home. */
 export const SPROUT_MS = 450;

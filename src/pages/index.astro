@@ -6,14 +6,13 @@ import SectionHead from '../components/SectionHead.astro';
 import ProgrammeCards from '../components/ProgrammeCards.astro';
 import AreaCards from '../components/AreaCards.astro';
 import CompareToggle from '../components/CompareToggle.astro';
-import FlipCards from '../components/FlipCards.astro';
 import FindUsMap from '../components/FindUsMap.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import VineDivider from '../components/VineDivider.astro';
 import Doodle from '../components/Doodle.astro';
 import PhotoStrip from '../components/PhotoStrip.astro';
 import { site, statusLabel, siteUrl, wa, waText } from '../config/site';
-import { founderExcerpt, homeDidYouKnow } from '../content/copy';
+import { founderExcerpt } from '../content/copy';
 
 const description =
   'Authentic Montessori House for Children (ages 2½–6) in Mogappair West, Chennai. Primary Environment, Day Care & After-school. Admissions open all year.';
@@ -75,9 +74,9 @@ const jsonLd = {
   <section class="section" aria-labelledby="areas-title">
     <div class="container">
       <SectionHead title="Five areas, one prepared environment" mark="prepared environment" id="areas-title"
-        intro="Every material on a Montessori shelf belongs to one of five areas. Each has a short activity in Little Hands Corner, built on a real classroom material." />
+        intro="Every material on a Montessori shelf belongs to one of five areas. Each has a simple activity you can try at home, inspired by a real classroom material." />
       <AreaCards />
-      <p class="more-link"><a class="btn btn--primary" href="/play">Visit Little Hands Corner <span aria-hidden="true">→</span></a></p>
+      <p class="more-link"><a class="btn btn--primary" href="/at-home">See all home activities <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
 
@@ -88,15 +87,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <section class="section" aria-labelledby="dyk-title">
-    <div class="container">
-      <Doodle kind="swirl" size={52} class="d-swirl" wideOnly />
-      <SectionHead title="Small things that make a Montessori classroom" mark="Small things" offset id="dyk-title"
-        intro="Tap a card to turn it over." />
-      <FlipCards ids={homeDidYouKnow} />
-      <p class="more-link"><a class="text-link" href="/approach#did-you-know">See all 10 <span aria-hidden="true">&nbsp;→</span></a></p>
-    </div>
-  </section>
+  <!-- AT-HOME-TEASER -->
 
   <section class="section--tight founder-band" aria-labelledby="founder-title">
     <div class="container-narrow">

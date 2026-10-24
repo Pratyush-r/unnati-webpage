@@ -2,7 +2,8 @@
 // Edit the text here. Phone and WhatsApp links are always built from src/config/site.ts.
 import { site, telHref, wa, waText } from './site';
 
-export type TipAction = { label: string; href: string; external?: boolean };
+/** A chip is a link, or (action: 'stepmode') a button that opens the activity's step-by-step mode. */
+export type TipAction = { label: string; href?: string; external?: boolean; action?: 'stepmode' };
 export type Tip = { text: string; actions: TipAction[] };
 
 const call = (number: typeof site.school): TipAction => ({ label: 'Call', href: telHref(number) });
@@ -11,7 +12,7 @@ const whatsapp = (label: string, number: typeof site.school, text: string): TipA
 export const tips: Record<string, Tip> = {
   '/': {
     text: "Hello, I'm Ankur! Tap anything on the shelf to see it move.",
-    actions: [{ label: 'Play a game', href: '/play' }, { label: 'Enquire', href: '#enquire' }],
+    actions: [{ label: 'Montessori at Home', href: '/at-home' }, { label: 'Enquire', href: '#enquire' }],
   },
   '/about': {
     text: "Unnati means growth. That's why I'm a little sprout!",
@@ -19,7 +20,7 @@ export const tips: Record<string, Tip> = {
   },
   '/approach': {
     text: 'Tap a principle on the wheel to read about it.',
-    actions: [{ label: 'Montessori vs traditional', href: '#compare' }, { label: 'Play a game', href: '/play' }],
+    actions: [{ label: 'Montessori vs traditional', href: '#compare' }, { label: 'Montessori at Home', href: '/at-home' }],
   },
   '/admissions': {
     text: 'Good news: children can join any time of the year.',
@@ -31,9 +32,9 @@ export const tips: Record<string, Tip> = {
     text: `${site.dayCare.name} welcomes children aged ${site.dayCare.ages}. Ask us about timings.`,
     actions: [whatsapp('WhatsApp us', site.school, waText.programme(site.dayCare.name)), call(site.school)],
   },
-  '/play': {
-    text: "Pick an activity. They're best enjoyed together with a grown-up.",
-    actions: [],
+  '/at-home': {
+    text: 'Try one activity this week. Slow and simple is best.',
+    actions: [{ label: 'Pouring Water', href: '/at-home/pouring-water' }, { label: 'Enquire', href: '/admissions#enquire' }],
   },
   '/teach': {
     text: `Our Primary Montessori Teacher Training starts in ${site.teacherTraining.startLabel}.`,
@@ -49,10 +50,16 @@ export const tips: Record<string, Tip> = {
   },
 };
 
-/** Pages where the floating guide appears. Games, /404 and /privacy have none. */
-export const GUIDE_PAGES = Object.keys(tips);
+/** Every Montessori at Home activity page shares one tip. */
+const activityTip: Tip = {
+  text: 'Show it slowly, say very little, then let your child try.',
+  actions: [{ label: 'Step-by-step mode', action: 'stepmode' }, { label: 'All activities', href: '/at-home' }],
+};
 
-export const tipFor = (path: string): Tip | undefined => tips[path];
+export const tipFor = (path: string): Tip | undefined => tips[path] ?? (path.startsWith('/at-home/') ? activityTip : undefined);
+
+/** Where the floating guide appears. /404 and /privacy have none. */
+export const guideAllowed = (path: string) => tipFor(path) !== undefined;
 
 /** Time greeting for the first bubble of a session, from the visitor's clock. */
 export function greeting(now = new Date()): string {

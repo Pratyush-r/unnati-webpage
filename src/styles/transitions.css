@@ -1,6 +1,6 @@
 /* Page transitions for the client router (Ankur guide + transitions add-on).
    Picture-book page turns: content slides, the header stays still, cards morph into the page they
-   open, and Little Hands Corner opens with a sprout reveal. Nothing lasts longer than 500 ms.
+   open, and Montessori at Home opens with a sprout reveal. Nothing lasts longer than 500 ms.
    Astro also disables every view-transition animation under prefers-reduced-motion. */
 
 @keyframes unnati-out-left { to { opacity: 0; transform: translateX(-24px); } }
@@ -25,13 +25,13 @@
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
 
-  /* Card morphs (transition:name="game-…" / "programme-…"). */
+  /* Card morphs (transition:name="activity-…" / "programme-…"). */
   ::view-transition-group(*) {
     animation-duration: 320ms;
     animation-timing-function: cubic-bezier(.2, .8, .2, 1);
   }
 
-  /* Sprout reveal into /play and the games: one transition style per navigation. */
+  /* Sprout reveal into Montessori at Home: one transition style per navigation. */
   html[data-vt='sprout'] main { view-transition-name: none !important; }
   html[data-vt='sprout']::view-transition-new(root) {
     animation: unnati-sprout 450ms cubic-bezier(.2, .8, .2, 1) both;

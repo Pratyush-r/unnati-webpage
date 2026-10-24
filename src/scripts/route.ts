@@ -17,6 +17,3 @@ export function applyContact(root: ParentNode = document): void {
   root.querySelectorAll<HTMLAnchorElement>('[data-contact="tel"]').forEach((a) => (a.href = c.tel));
   root.querySelectorAll<HTMLAnchorElement>('[data-contact="wa"]').forEach((a) => (a.href = c.wa));
 }
-
-/** Pages without the announcement and sticky bar (Little Hands Corner and its games). */
-export const isQuiet = (p = path()) => p === '/play' || p.startsWith('/play/');

@@ -4,7 +4,7 @@
 //   navigation starts → travel · new page → land (tip updates) · #enquire in view → point at it ·
 //   another Ankur in view → hide / peek back · every 6–9 s while visible → blink.
 import { play, initBlink } from '../components/ankur';
-import { tipFor, greeting, GUIDE_PAGES } from '../config/ankur-tips';
+import { tipFor, greeting, guideAllowed } from '../config/ankur-tips';
 import { getItem, setItem } from '../lib/storage';
 import { animate, EASE_POP } from '../lib/motion';
 import { initOnce, afterSwap } from './lifecycle';
@@ -29,13 +29,14 @@ initOnce('[data-ankur-guide]', (guide) => {
   let yielding = false; // another Ankur is on screen
   let typing = false; // a form field has focus (the on-screen keyboard would push him over the form)
   let menuOpen = false;
+  let stepMode = false;
   let shown = false;
   let autoClose = 0;
   let typingTimer = 0;
   let pageCleanup: () => void = () => {};
 
-  const routeAllowed = () => GUIDE_PAGES.includes(path());
-  const wanted = () => routeAllowed() && !userHidden && !yielding && !typing && !menuOpen;
+  const routeAllowed = () => guideAllowed(path());
+  const wanted = () => routeAllowed() && !userHidden && !yielding && !typing && !menuOpen && !stepMode;
 
   function fillTip(withGreeting: boolean): void {
     const tip = tipFor(path());
@@ -44,8 +45,19 @@ initOnce('[data-ankur-guide]', (guide) => {
     tipEl.textContent = tip?.text ?? '';
     chips.replaceChildren(
       ...(tip?.actions ?? []).slice(0, 2).map((a) => {
+        if (a.action === 'stepmode') {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ag-chip-btn';
+          b.textContent = a.label;
+          b.addEventListener('click', () => {
+            close(false);
+            document.dispatchEvent(new Event('unnati:open-stepmode'));
+          });
+          return b;
+        }
         const link = document.createElement('a');
-        link.href = a.href;
+        link.href = a.href!;
         link.textContent = a.label;
         if (a.external) {
           link.target = '_blank';
@@ -196,6 +208,11 @@ initOnce('[data-ankur-guide]', (guide) => {
     menuOpen = (e as CustomEvent<boolean>).detail;
     render('none');
   });
+  // Hidden while an activity's step-by-step mode is open.
+  document.addEventListener('unnati:stepmode', (e) => {
+    stepMode = (e as CustomEvent<boolean>).detail;
+    render('none');
+  });
 
   // ——— navigation ———
   document.addEventListener('astro:before-preparation', () => {
@@ -204,6 +221,7 @@ initOnce('[data-ankur-guide]', (guide) => {
   });
   afterSwap(() => {
     typing = false;
+    stepMode = false;
     fillTip(false);
     watchPage();
     const wasShown = shown;
