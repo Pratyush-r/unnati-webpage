@@ -15,14 +15,13 @@ import { site, statusLabel, siteUrl, wa, waText } from '../config/site';
 import { founderExcerpt } from '../content/copy';
 
 const description =
-  'Authentic Montessori House for Children (ages 2½–6) in Mogappair West, Chennai. Primary Environment, Day Care & After-school. Admissions open all year.';
+  'Authentic Montessori preschool for ages 2½–6 in Mogappair West, Chennai. Primary Environment, Day Care & After-school. Admissions open all year.';
 
 const sameAs = Object.values(site.social).filter(Boolean);
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Preschool',
   name: site.name,
-  alternateName: `${site.name} — ${site.tagline}`,
   description,
   url: `${siteUrl}/`,
   logo: `${siteUrl}/brand/logo-wide-lg@2x.png`,
@@ -30,7 +29,7 @@ const jsonLd = {
   telephone: site.school.tel,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: `${site.address.street}, ${site.address.area}`,
+    streetAddress: `${site.address.plot}, ${site.address.street}`,
     addressLocality: site.address.city,
     addressRegion: site.address.region,
     addressCountry: site.address.country,
@@ -43,7 +42,7 @@ const jsonLd = {
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-text">
-        <p class="eyebrow">{site.tagline} · Ages {site.primary.ages} · {site.address.area}, {site.address.city}</p>
+        <p class="eyebrow">Montessori Primary Environment · Ages {site.primary.ages} · {site.address.area}, {site.address.city}</p>
         <h1>Help me do it <span class="scribble">myself.</span></h1>
         <p class="lead">
           Unnati Montessori is an authentic Montessori environment where children grow into independent, confident and compassionate learners — at their own pace.

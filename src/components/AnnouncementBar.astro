@@ -5,12 +5,8 @@
 import Icon from './Icon.astro';
 import { site } from '../config/site';
 
-interface Props {
-  hidden?: boolean;
-}
-const { hidden = false } = Astro.props;
 ---
-<div class="announce" data-announce transition:persist="announcement" hidden={hidden}>
+<div class="announce" data-announce transition:persist="announcement">
   <div class="container announce-inner">
     <p><span class="dot" aria-hidden="true"></span>{site.announcement}</p>
     <button type="button" class="announce-close" aria-label="Dismiss announcement" data-announce-close>

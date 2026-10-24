@@ -11,18 +11,17 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
 <BaseLayout
   title="Montessori School Consultancy | Unnati, Chennai"
   description="Montessori school consultancy from Unnati: school setup, environment and materials, teacher training, policy, curriculum, licensing and ongoing mentorship."
-  phone="consultancy"
 >
   <section class="page-hero c-hero">
     <div class="container c-hero-grid">
       <div class="c-hero-text">
-        <p class="eyebrow">Unnati — The Montessori House for Children</p>
+        <p class="eyebrow">Unnati Montessori</p>
         <h1>Montessori Consultancy</h1>
         <p class="subhead">Empowering spaces. Inspiring lifelong learning.</p>
         <p class="lead">We partner with passionate educators and entrepreneurs to build authentic Montessori environments that nurture independence, confidence and joy.</p>
         <div class="btn-row">
-          <a class="btn btn--primary" href={consultancyWa} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp {site.consultancy.display}</a>
-          <a class="btn btn--secondary" href={telHref(site.consultancy)}><Icon name="phone" />Call</a>
+          <a class="btn btn--primary" href={consultancyWa} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp {site.school.display}</a>
+          <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call</a>
         </div>
       </div>
       <p class="badge-round"><span>Rooted in Montessori. Designed for your vision.</span></p>
@@ -97,7 +96,7 @@ import { consultancy, consultancyFaq, consultancyWa } from '../content/faq';
     </div>
   </section>
 
-  <CtaBand title="Your vision. Our expertise. A brighter future for children." phone="consultancy" />
+  <CtaBand title="Your vision. Our expertise. A brighter future for children." topic="consultancy" />
 </BaseLayout>
 
 <style>

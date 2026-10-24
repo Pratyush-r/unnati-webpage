@@ -42,7 +42,7 @@ export const tips: Record<string, Tip> = {
   },
   '/consultancy': {
     text: "Building your own Montessori school? Let's talk.",
-    actions: [whatsapp('WhatsApp us', site.consultancy, waText.consultancy), call(site.consultancy)],
+    actions: [whatsapp('WhatsApp us', site.school, waText.consultancy), call(site.school)],
   },
   '/contact': {
     text: 'We\'re near Casagrand Millenia. Tap Get directions for the way.',

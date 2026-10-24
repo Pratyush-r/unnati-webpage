@@ -4,11 +4,9 @@ import { site, telHref, wa, waText } from '../config/site';
 
 export const path = () => location.pathname.replace(/\/$/, '') || '/';
 
-/** The consultancy page uses the consultancy number; every other page uses the school number. */
+/** One number everywhere; on /consultancy the WhatsApp message asks about consultancy. */
 export function contactFor(p = path()) {
-  const consult = p === '/consultancy';
-  const number = consult ? site.consultancy : site.school;
-  return { tel: telHref(number), wa: wa(number, consult ? waText.consultancy : waText.general) };
+  return { tel: telHref(site.school), wa: wa(site.school, p === '/consultancy' ? waText.consultancy : waText.general) };
 }
 
 /** Update every [data-contact="tel" | "wa"] link inside root. */

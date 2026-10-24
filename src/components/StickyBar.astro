@@ -3,15 +3,11 @@
 import Icon from './Icon.astro';
 import { site, telHref, wa, waText } from '../config/site';
 
-interface Props {
-  phone?: 'school' | 'consultancy';
-  hidden?: boolean;
-}
-const { phone = 'school', hidden = false } = Astro.props;
-const number = site[phone];
-const text = phone === 'consultancy' ? waText.consultancy : waText.general;
+const number = site.school;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const text = path === '/consultancy' ? waText.consultancy : waText.general;
 ---
-<div class="sticky-bar" role="region" aria-label="Quick contact" data-action-bar transition:persist="action-bar" hidden={hidden}>
+<div class="sticky-bar" role="region" aria-label="Quick contact" data-action-bar transition:persist="action-bar">
   <a class="btn btn--secondary" href={telHref(number)} data-contact="tel"><Icon name="phone" />Call</a>
   <a class="btn btn--primary" href={wa(number, text)} target="_blank" rel="noopener" data-contact="wa"><Icon name="whatsapp" />WhatsApp</a>
 </div>
@@ -37,6 +33,7 @@ const text = phone === 'consultancy' ? waText.consultancy : waText.general;
 
   // Persisted: refresh its links after every swap.
   initOnce('[data-action-bar]', (bar) => {
+    applyContact(bar);
     afterSwap(() => applyContact(bar));
   });
 </script>

@@ -20,7 +20,7 @@ p { margin: 0; font-family: Nunito, sans-serif; font-weight: 800; font-size: 22p
 <div class="band"></div>
 <div class="card">
   <img src="data:image/png;base64,${b64('public/brand/logo-wide-lg@2x.png')}" alt="">
-  <h1>A House for Children · Mogappair West, Chennai</h1>
+  <h1>Montessori Primary Environment · Mogappair West, Chennai</h1>
   <p>Authentic Montessori · Ages 2½–6 · Admissions open all year</p>
 </div>
 <div class="vine"><svg width="320" height="28" viewBox="0 0 320 28"><path d="M4 16 C40 6 70 24 108 15 S170 6 204 15 S270 24 316 12" fill="none" stroke="#763D0D" stroke-width="1.8" opacity=".6"/><path d="M160 11 C164 2 176 0 184 3 C180 12 168 15 160 11 Z" fill="#0F692F"/></svg></div>

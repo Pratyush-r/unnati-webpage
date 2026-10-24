@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { site, fullAddress, telHref, wa, waText } from '../config/site';
+import { site, formatAddress, telHref, wa, waText } from '../config/site';
 
 const year = new Date().getFullYear();
 const socials = Object.entries(site.social).filter(([, url]) => url);
@@ -20,10 +20,9 @@ const quick = [
   <div class="container footer-grid">
     <div class="footer-brand">
       <Logo loading="lazy" class="footer-logo" />
-      <p class="tagline">{site.tagline}</p>
       <address>
         <Icon name="pin" size={20} />
-        <span>{fullAddress}</span>
+        <span>{formatAddress()}</span>
       </address>
       {socials.length > 0 && (
         <ul class="socials" role="list">
@@ -37,14 +36,9 @@ const quick = [
     <div class="footer-contact">
       <h2 class="footer-h">Talk to us</h2>
       <div class="contact-row">
-        <p class="label">School &amp; admissions</p>
+        <p class="label">Call or WhatsApp</p>
         <a class="phone" href={telHref(site.school)}>{site.school.display}</a>
-        <a class="wa-link" href={wa(site.school, waText.general)} target="_blank" rel="noopener">WhatsApp the school</a>
-      </div>
-      <div class="contact-row">
-        <p class="label">Montessori consultancy</p>
-        <a class="phone" href={telHref(site.consultancy)}>{site.consultancy.display}</a>
-        <a class="wa-link" href={wa(site.consultancy, waText.consultancy)} target="_blank" rel="noopener">WhatsApp consultancy</a>
+        <a class="wa-link" href={wa(site.school, waText.general)} target="_blank" rel="noopener">WhatsApp us</a>
       </div>
     </div>
 
@@ -65,8 +59,7 @@ const quick = [
   .site-footer { background: var(--paper); border-top: 1px solid var(--line); padding-top: clamp(2.5rem, 2rem + 2vw, 4rem); }
   .footer-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
   .footer-brand :global(.footer-logo), .footer-brand :global(.footer-logo img) { height: 64px; width: auto; }
-  .tagline { font-family: var(--font-head); font-size: 1.25rem; color: var(--brown); margin-top: .5rem; }
-  address { display: flex; gap: .5rem; font-style: normal; margin-top: .75rem; color: var(--ink); max-width: 34ch; }
+  address { display: flex; gap: .5rem; font-style: normal; margin-top: 1rem; color: var(--ink); max-width: 34ch; }
   address :global(svg) { color: var(--brown); margin-top: .2rem; }
   .footer-h { font-family: var(--font-body); font-weight: 800; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; color: var(--leaf); margin-bottom: .75rem; }
   .contact-row + .contact-row { margin-top: 1rem; }

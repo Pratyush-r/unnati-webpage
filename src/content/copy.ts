@@ -26,7 +26,7 @@ export const founderExcerpt =
 export const journey = [
   { title: 'Unnati – After School for Children', text: 'Where it began: after-school time with children, guided by Montessori values.' },
   { title: 'Unnati – Homeschooling', text: 'Supporting families who chose to learn at home, reaching many more children.' },
-  { title: 'Unnati Montessori — A House for Children', text: 'The dream of our own school, taking shape in Mogappair West.' },
+  { title: 'Unnati Montessori', text: 'The dream of our own school, taking shape in Mogappair West.' },
 ];
 
 export type Programme = {

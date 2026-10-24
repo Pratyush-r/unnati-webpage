@@ -7,8 +7,7 @@ import Icon from '../components/Icon.astro';
 import { site, telHref, wa, waText } from '../config/site';
 
 const cards = [
-  { title: 'School & admissions', text: `Admissions, ${site.dayCare.name}, teacher training and hiring.`, phone: site.school, msg: waText.general, tint: 'var(--sage)' },
-  { title: 'Montessori consultancy', text: 'Setting up or strengthening a Montessori school.', phone: site.consultancy, msg: waText.consultancy, tint: 'var(--blush)' },
+  { title: 'Call or WhatsApp', text: `Admissions, ${site.dayCare.name}, teacher training, hiring and Montessori consultancy: one number for everything.`, phone: site.school, msg: waText.general, tint: 'var(--sage)' },
 ];
 ---
 <BaseLayout
@@ -33,6 +32,7 @@ const cards = [
             <a class="btn btn--primary" href={wa(c.phone, c.msg)} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp</a>
             <a class="btn btn--secondary" href={telHref(c.phone)}><Icon name="phone" />Call</a>
           </div>
+          <p class="consult-line">Asking about Montessori consultancy? <a href={wa(c.phone, waText.consultancy)} target="_blank" rel="noopener">WhatsApp us about consultancy</a>.</p>
         </article>
       ))}
     </div>
@@ -50,7 +50,8 @@ const cards = [
 
 <style>
   .cards { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
-  .contact-card { display: grid; gap: .6rem; background: var(--tint); }
+  .contact-card { display: grid; gap: .6rem; background: var(--tint); max-width: 640px; }
+  .consult-line { font-size: var(--fs-small); }
   .contact-card h2 { font-size: var(--fs-h3); }
   .number { display: inline-flex; align-items: center; min-height: 48px; font-family: var(--font-head); font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem); font-weight: 600; color: var(--brown); text-decoration: none; width: fit-content; }
 </style>

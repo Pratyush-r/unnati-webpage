@@ -1,6 +1,6 @@
 // FAQ and consultancy copy (brief 6.9, 6.13, 6.14) plus the Day Care FAQ.
 // Answers are HTML strings so they can carry links; facts are interpolated from site.ts.
-import { site, fullAddress, telHref, wa, waText } from '../config/site';
+import { site, formatAddress, telHref, wa, waText } from '../config/site';
 
 export type QA = { q: string; a: string };
 
@@ -13,7 +13,7 @@ export const parentFaq: QA[] = [
   { q: 'Who will guide my child?', a: 'Our founder, Manisha Aashish, is an AMI-trained Montessori educator with over 10 years of experience, and we are building our team with AMI/IMTC Primary-trained educators.' },
   { q: 'How is Montessori different from a regular preschool?', a: 'Children choose purposeful work with hands-on materials, learn at their own pace and grow independent. <a href="/approach#compare">See the differences →</a>' },
   { q: 'What are the fees and timings?', a: `Call or WhatsApp us on ${schoolPhone} and we'll share the details for your child's programme.` },
-  { q: 'Where are you?', a: `${fullAddress} — near Casagrand Millenia. <a href="${site.mapsUrl}" target="_blank" rel="noopener">Get directions →</a>` },
+  { q: 'Where are you?', a: `${formatAddress()} — near Casagrand Millenia. <a href="${site.mapsUrl}" target="_blank" rel="noopener">Get directions →</a>` },
 ];
 
 export const dayCareFaq: QA[] = [
@@ -109,4 +109,4 @@ export const consultancyFaq: QA[] = [
   { q: 'Is Montessori consultancy only for new schools?', a: 'No. We also work with existing schools, educators, training institutes, and organisations and NGOs in education.' },
 ];
 
-export const consultancyWa = wa(site.consultancy, waText.consultancy);
+export const consultancyWa = wa(site.school, waText.consultancy);

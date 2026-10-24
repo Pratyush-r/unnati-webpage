@@ -5,11 +5,10 @@ import { site, telHref, wa, waText } from '../config/site';
 
 interface Props {
   path: string;
-  phone?: 'school' | 'consultancy';
 }
-const { path, phone = 'school' } = Astro.props;
-const number = site[phone];
-const waHref = wa(number, phone === 'consultancy' ? waText.consultancy : waText.general);
+const { path } = Astro.props;
+const number = site.school;
+const waHref = wa(number, path === '/consultancy' ? waText.consultancy : waText.general);
 const isHome = path === '/';
 const enquireHref = isHome ? '#enquire' : '/admissions#enquire';
 

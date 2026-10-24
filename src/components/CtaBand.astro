@@ -6,13 +6,14 @@ import { site, telHref, wa, waText } from '../config/site';
 interface Props {
   title: string;
   text?: string;
-  phone?: 'school' | 'consultancy';
+  /** Which WhatsApp message to open (the number is always the school's). */
+  topic?: 'school' | 'consultancy';
   waMessage?: string;
   waLabel?: string;
 }
-const { title, text, phone = 'school', waMessage, waLabel } = Astro.props;
-const number = site[phone];
-const message = waMessage ?? (phone === 'consultancy' ? waText.consultancy : waText.general);
+const { title, text, topic = 'school', waMessage, waLabel } = Astro.props;
+const number = site.school;
+const message = waMessage ?? (topic === 'consultancy' ? waText.consultancy : waText.general);
 ---
 <section class="cta bg-forest section--tight">
   <div class="container cta-inner">

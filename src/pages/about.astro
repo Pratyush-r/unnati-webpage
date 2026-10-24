@@ -20,7 +20,7 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
     <div class="container about-hero">
       <div>
         <h1>Growth that begins from within</h1>
-        <p class="lead">{site.name} — {site.tagline}. An authentic Montessori environment in {site.address.area}, {site.address.city}.</p>
+        <p class="lead">{site.name}: an authentic Montessori environment in {site.address.area}, {site.address.city}.</p>
       </div>
       <Image src={emblem} alt="" width={200} height={264} class="about-emblem" loading="eager" />
     </div>
@@ -61,7 +61,7 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
 
   <section class="section bg-paper" aria-labelledby="journey">
     <div class="container">
-      <SectionHead title="From after-school to a House for Children" mark="House for Children" offset id="journey" />
+      <SectionHead title="From after-school to our own school" offset id="journey" />
       <VineSteps steps={steps} ordered={false} />
     </div>
   </section>

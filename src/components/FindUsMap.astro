@@ -1,7 +1,7 @@
 ---
 // 4.4.6 Find us — illustrated street map recreating the poster. No map embed, no third-party requests.
 import Icon from './Icon.astro';
-import { site, fullAddress, telHref } from '../config/site';
+import { site, formatAddress, telHref } from '../config/site';
 
 interface Props {
   headingId?: string;
@@ -16,7 +16,7 @@ const trees = [
 <div class="findus">
   <figure class="map-card" data-map>
     <svg viewBox="0 0 600 470" role="group" aria-labelledby={`${headingId}-map-title`} class="map">
-      <title id={`${headingId}-map-title`}>Illustrated map: Unnati Montessori is on Chanakyan Cross Road, just east of Annamalai Avenue, near Casagrand Millenia</title>
+      <title id={`${headingId}-map-title`}>Illustrated map: Unnati Montessori, Plot No. 5, is on Chanakyan Cross Road, just east of Annamalai Avenue, near Casagrand Millenia</title>
       <rect width="600" height="470" rx="24" fill="#F6EEDC" />
       <g fill="#EADFC6" aria-hidden="true">
         <rect x="236" y="214" width="150" height="10" rx="5" opacity=".7" /><rect x="420" y="214" width="70" height="10" rx="5" opacity=".7" />
@@ -79,7 +79,7 @@ const trees = [
         </g>
       </g>
       <g aria-hidden="true">
-        <text class="unnati-label" x="238" y="222" text-anchor="start">Unnati Montessori</text>
+        <text class="unnati-label" x="385" y="224" text-anchor="middle">Unnati Montessori · {site.address.plot}</text>
       </g>
       <!-- North arrow + not-to-scale -->
       <g aria-hidden="true" transform="translate(560 40)">
@@ -100,7 +100,7 @@ const trees = [
   <div class="findus-info">
     <address>
       <Icon name="pin" size={24} />
-      <span><strong>{site.name}</strong><br />{fullAddress}<br /><span class="muted">Near Casagrand Millenia</span></span>
+      <span><strong>{site.name}</strong><br />{formatAddress()}<br /><span class="muted">Near Casagrand Millenia</span></span>
     </address>
     <div class="btn-row">
       <a class="btn btn--primary" href={site.mapsUrl} target="_blank" rel="noopener"><Icon name="directions" />Get directions</a>
@@ -115,7 +115,7 @@ const trees = [
   .map-card { margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 10px; box-shadow: var(--shadow); }
   .map { width: 100%; height: auto; }
   .road-label { font: 700 23px var(--font-body); fill: #5B4636; letter-spacing: .02em; }
-  .unnati-label { font: 600 27px var(--font-head); fill: var(--brown); }
+  .unnati-label { font: 600 21px var(--font-head); fill: var(--brown); }
   .n-label { font: 800 16px var(--font-body); fill: var(--brown); }
   .scale-note { font: italic 600 17px var(--font-body); fill: #6B5444; }
   .tip-text { font: 800 19px var(--font-body); }

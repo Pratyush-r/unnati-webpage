@@ -3,12 +3,12 @@
 
 export const site = {
   name: 'Unnati Montessori',
-  tagline: 'A House for Children',
   status: 'opening-shortly' as 'opening-shortly' | 'open',
   contactPerson: 'Manisha Aashish',
-  school: { display: '+91 75500 22403', tel: '+917550022403', wa: '917550022403' }, // admissions, day care, teacher training, hiring
-  consultancy: { display: '+91 90035 84303', tel: '+919003584303', wa: '919003584303' },
+  // The one number for everything: admissions, day care, teacher training, hiring and consultancy.
+  school: { display: '+91 75500 22403', tel: '+917550022403', wa: '917550022403' },
   address: {
+    plot: 'Plot No. 5',
     street: 'Chanakyan Cross Road, Annamalai Avenue',
     area: 'Mogappair West',
     city: 'Chennai',
@@ -16,7 +16,9 @@ export const site = {
     country: 'IN',
   },
   mapsUrl:
-    'https://www.google.com/maps/search/?api=1&query=Chanakyan+Cross+Road%2C+Annamalai+Avenue%2C+Mogappair+West%2C+Chennai',
+    'https://www.google.com/maps/search/?api=1&query=Plot+No.+5%2C+Chanakyan+Cross+Road%2C+Annamalai+Avenue%2C+Mogappair+West%2C+Chennai',
+  // Rename the first-plane section here; this is the only place the title is typed.
+  firstPlaneTitle: 'The First Plane of Development · Birth to 6',
   primary: { ages: '2½–6' },
   dayCare: {
     name: 'Extended Day Care',
@@ -37,7 +39,11 @@ export type Phone = typeof site.school;
 
 export const statusLabel = site.status === 'open' ? 'Now open' : 'Opening shortly';
 
-export const fullAddress = `${site.address.street}, ${site.address.area}, ${site.address.city}`;
+/** "Plot No. 5, Chanakyan Cross Road, Annamalai Avenue, Mogappair West, Chennai" */
+export function formatAddress(): string {
+  const a = site.address;
+  return `${a.plot}, ${a.street}, ${a.area}, ${a.city}`;
+}
 
 export const siteUrl = (import.meta.env.SITE_URL || 'https://unnati-montessori.netlify.app').replace(/\/$/, '');
 
