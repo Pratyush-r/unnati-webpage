@@ -56,5 +56,6 @@ export const icons: Record<string, string> = {
   showme: '<path d="M9 12.5V6a1.5 1.5 0 0 1 3 0v5"/><path d="M12 10.5V9a1.5 1.5 0 0 1 3 0v2.5"/><path d="M15 11V10a1.5 1.5 0 0 1 3 0v4a6.5 6.5 0 0 1-6.5 6.5 6 6 0 0 1-5-2.7L4.2 14.3a1.5 1.5 0 0 1 2.4-1.8L9 15"/><path d="M4.5 4.5L6 6M3 8.5h2M8.5 2.5v2"/>',
   again: '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.5 4v4h-4"/>',
   play: '<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".7" fill="currentColor"/>',
   leaf: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l8-8"/>',
 };

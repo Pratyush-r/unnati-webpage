@@ -1,0 +1,170 @@
+---
+// Montessori at Home (round 2, change 8): replaces the games. Original activities with things from an
+// Indian kitchen, filters by area and age (state in the URL), and the Prepared Home explorer.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ActivityCard from '../../components/ActivityCard.astro';
+import HomeExplorer from '../../components/HomeExplorer.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { activities, AGE_FILTERS, FILTER_NAMES, ageLabel, type AreaId } from '../../content/at-home';
+import { atHome, preparedHome } from '../../content/copy';
+
+const areaIds = Object.keys(FILTER_NAMES) as AreaId[];
+---
+<BaseLayout
+  title="Montessori at Home: 8 Simple Activities | Unnati Montessori"
+  description="Eight simple Montessori activities for ages 2½–6 using things from your kitchen: pouring, spooning, folding, slicing, sound boxes, I Spy, peg counting and sprouting moong."
+>
+  <section class="page-hero ah-hero">
+    <div class="container ah-hero-grid">
+      <div>
+        <h1>{atHome.title}</h1>
+        <p class="lead">{atHome.lead}</p>
+        <p class="ah-small hand">{atHome.small}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight ah-list" aria-labelledby="ah-activities">
+    <div class="container">
+      <h2 id="ah-activities" class="sr-only">Activities</h2>
+      <div class="filters" data-filters hidden>
+        <div class="chip-row" role="group" aria-label="Filter by area">
+          <span class="chip-label" aria-hidden="true">Area</span>
+          <button type="button" class="f-chip" data-f="area" data-v="" aria-pressed="true">All</button>
+          {areaIds.map((id) => (
+            <button type="button" class="f-chip" data-f="area" data-v={id} aria-pressed="false">{FILTER_NAMES[id]}</button>
+          ))}
+        </div>
+        <div class="chip-row" role="group" aria-label="Filter by age">
+          <span class="chip-label" aria-hidden="true">Age</span>
+          <button type="button" class="f-chip" data-f="age" data-v="" aria-pressed="true">Any age</button>
+          {AGE_FILTERS.map((age) => (
+            <button type="button" class="f-chip" data-f="age" data-v={String(age)} aria-pressed="false">{ageLabel(age)}</button>
+          ))}
+        </div>
+      </div>
+      <p class="sr-only" aria-live="polite" data-f-live></p>
+
+      <ul class="act-grid" role="list" data-act-grid>
+        {activities.map((a) => <ActivityCard activity={a} />)}
+      </ul>
+
+      <div class="empty pebble" data-f-empty hidden>
+        <p>No activities match. Try another age.</p>
+        <button type="button" class="btn btn--secondary" data-f-reset>Show all</button>
+      </div>
+
+      <p class="tried-count" data-tried-count hidden></p>
+    </div>
+  </section>
+
+  <section class="section bg-paper" aria-labelledby="ah-home">
+    <div class="container">
+      <SectionHead title={preparedHome.title} intro={preparedHome.line} id="ah-home" />
+      <HomeExplorer />
+    </div>
+  </section>
+
+  <CtaBand title={atHome.ctaTitle} text={atHome.ctaLine} enquire />
+</BaseLayout>
+
+<script>
+  import { onPageLoad } from '../../scripts/lifecycle';
+  import { markTriedCards } from '../../scripts/at-home-store';
+
+  onPageLoad(() => {
+    const filters = document.querySelector<HTMLElement>('[data-filters]');
+    const grid = document.querySelector<HTMLElement>('[data-act-grid]');
+    if (!filters || !grid) return;
+    const cards = [...grid.querySelectorAll<HTMLElement>('[data-activity]')];
+    const chips = [...filters.querySelectorAll<HTMLButtonElement>('[data-f]')];
+    const live = document.querySelector<HTMLElement>('[data-f-live]')!;
+    const empty = document.querySelector<HTMLElement>('[data-f-empty]')!;
+    const triedLine = document.querySelector<HTMLElement>('[data-tried-count]')!;
+    filters.hidden = false;
+
+    const validAreas = new Set(chips.filter((c) => c.dataset.f === 'area').map((c) => c.dataset.v));
+    const validAges = new Set(chips.filter((c) => c.dataset.f === 'age').map((c) => c.dataset.v));
+    const params = new URL(location.href).searchParams;
+    const state = {
+      area: validAreas.has(params.get('area') ?? '') ? params.get('area')! : '',
+      age: validAges.has(params.get('age') ?? '') ? params.get('age')! : '',
+    };
+
+    const apply = (announce: boolean) => {
+      let shown = 0;
+      cards.forEach((card) => {
+        const ok = (!state.area || card.dataset.area === state.area) && (!state.age || Number(card.dataset.age) <= Number(state.age));
+        card.hidden = !ok;
+        if (ok) shown++;
+      });
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === state[c.dataset.f as 'area' | 'age'])));
+      empty.hidden = shown > 0;
+      if (announce) live.textContent = `Showing ${shown} ${shown === 1 ? 'activity' : 'activities'}`;
+    };
+
+    const syncUrl = () => {
+      const url = new URL(location.href);
+      for (const k of ['area', 'age'] as const) {
+        if (state[k]) url.searchParams.set(k, state[k]);
+        else url.searchParams.delete(k);
+      }
+      history.replaceState(history.state, '', url);
+    };
+
+    const onChip = (e: Event) => {
+      const chip = (e.target as Element).closest<HTMLButtonElement>('[data-f]');
+      if (!chip) return;
+      state[chip.dataset.f as 'area' | 'age'] = chip.dataset.v ?? '';
+      apply(true);
+      syncUrl();
+    };
+    const onReset = () => {
+      state.area = '';
+      state.age = '';
+      apply(true);
+      syncUrl();
+    };
+    filters.addEventListener('click', onChip);
+    empty.querySelector('[data-f-reset]')!.addEventListener('click', onReset);
+    apply(false);
+
+    const n = markTriedCards(grid);
+    triedLine.hidden = n < 1;
+    triedLine.textContent = `You've tried ${n} of ${cards.length} activities`;
+  });
+</script>
+
+<style>
+  .ah-hero h1 { max-width: 14ch; }
+  .ah-hero .lead { max-width: 60ch; }
+  .ah-small { margin-top: 1.1rem; font-size: 1.5rem; color: var(--brown); max-width: 40ch; line-height: 1.25; }
+  .ah-list { padding-top: 0; }
+
+  .filters { display: grid; gap: .75rem; margin-bottom: clamp(1.5rem, 1.2rem + 1vw, 2.25rem); }
+  .filters[hidden] { display: none; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+  .chip-label { font-weight: 800; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: rgb(59 36 20 / .75); min-width: 3.2rem; }
+  .f-chip {
+    min-height: 44px; padding: .45rem 1rem; border-radius: 999px; cursor: pointer;
+    font: inherit; font-weight: 700; font-size: .9375rem; color: var(--brown);
+    background: transparent; border: 2px solid var(--line-strong);
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms var(--ease-pop);
+  }
+  .f-chip:hover { border-color: var(--brown); }
+  .f-chip:active { transform: scale(.96); }
+  .f-chip[aria-pressed='true'] { background: var(--paper); border-color: var(--brown); box-shadow: 0 4px 12px -6px rgb(118 61 13 / .45); }
+
+  .act-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .8rem + 1vw, 1.5rem); grid-template-columns: 1fr; }
+  .act-grid > :global([hidden]) { display: none; }
+  @media (min-width: 640px) { .act-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1280px) { .act-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .empty { display: grid; gap: 1rem; justify-items: start; padding: 1.5rem; }
+  .empty[hidden] { display: none; }
+  .empty p { margin: 0; font-weight: 700; }
+  .tried-count { margin: 1.5rem 0 0; text-align: center; color: rgb(59 36 20 / .8); font-weight: 700; }
+  .tried-count[hidden] { display: none; }
+
+</style>

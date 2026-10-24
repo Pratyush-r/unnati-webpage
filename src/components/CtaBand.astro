@@ -10,8 +10,10 @@ interface Props {
   topic?: 'school' | 'consultancy';
   waMessage?: string;
   waLabel?: string;
+  /** [Enquire] → /admissions#enquire and [WhatsApp us] instead of WhatsApp + Call. */
+  enquire?: boolean;
 }
-const { title, text, topic = 'school', waMessage, waLabel } = Astro.props;
+const { title, text, topic = 'school', waMessage, waLabel, enquire = false } = Astro.props;
 const number = site.school;
 const message = waMessage ?? (topic === 'consultancy' ? waText.consultancy : waText.general);
 ---
@@ -22,10 +24,17 @@ const message = waMessage ?? (topic === 'consultancy' ? waText.consultancy : waT
       <h2>{title}</h2>
       {text && <p class="cta-text">{text}</p>}
     </div>
-    <div class="btn-row">
-      <a class="btn btn--light" href={wa(number, message)} target="_blank" rel="noopener"><Icon name="whatsapp" />{waLabel ?? `WhatsApp ${number.display}`}</a>
-      <a class="btn btn--ghost-light" href={telHref(number)}><Icon name="phone" />Call</a>
-    </div>
+    {enquire ? (
+      <div class="btn-row">
+        <a class="btn btn--light" href="/admissions#enquire">Enquire</a>
+        <a class="btn btn--ghost-light" href={wa(number, message)} target="_blank" rel="noopener"><Icon name="whatsapp" />{waLabel ?? 'WhatsApp us'}</a>
+      </div>
+    ) : (
+      <div class="btn-row">
+        <a class="btn btn--light" href={wa(number, message)} target="_blank" rel="noopener"><Icon name="whatsapp" />{waLabel ?? `WhatsApp ${number.display}`}</a>
+        <a class="btn btn--ghost-light" href={telHref(number)}><Icon name="phone" />Call</a>
+      </div>
+    )}
   </div>
 </section>
 

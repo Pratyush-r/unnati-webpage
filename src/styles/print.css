@@ -1,0 +1,43 @@
+/* Activity pages printed as one A4 page: logo, title, age, materials, steps, safety note and the
+   school's address. Navigation, buttons and decoration are hidden. */
+@media print {
+  @page { size: A4; margin: 14mm 14mm 12mm; }
+
+  html, body { background: #fff !important; color: #000; font-size: 10.5pt; }
+  body::before, body::after { display: none !important; }
+  * { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+
+  .announce, .sticky-bar, .site-footer, .ankur-guide, .skip-link, .nav-progress,
+  .site-header nav, .site-header button, .site-header .header-cta, .site-header .header-actions,
+  .act-scene, .crumb, .actions, .step-open, .stepmode, .cta, .pager, .builds, .tip, .tape::before, .tape::after { display: none !important; }
+
+  .site-header { position: static !important; border: 0 !important; background: none !important; }
+  .site-header .header-inner { padding: 0 0 4mm !important; min-height: 0 !important; }
+  .site-header .brand img { width: 40mm; height: auto; }
+
+  main { padding: 0 !important; }
+  .container { max-width: none !important; padding: 0 !important; }
+  .page-hero, .act-hero { padding: 0 0 4mm !important; background: none !important; }
+  .act-hero-grid { display: block !important; }
+  .act-head { gap: 1.5mm !important; }
+  .act-head h1 { font-size: 22pt; margin: 0 !important; }
+  .act-head .lead { font-size: 11pt; }
+  .area-chip { border: 1px solid #999; background: none !important; padding: .5mm 2.5mm; }
+
+  .act-body { display: grid !important; grid-template-columns: 60mm 1fr !important; gap: 6mm !important; padding: 0 !important; }
+  .materials { position: static !important; padding: 0 !important; border: 0 !important; background: none !important; }
+  .pebble { -webkit-mask: none !important; mask: none !important; background: none !important; border: 0 !important; transform: none !important; }
+  .act-main { gap: 4mm !important; }
+  .block h2 { font-size: 13pt; margin: 0 0 2mm !important; }
+  .need { min-height: 0 !important; padding-block: 1mm !important; }
+  .need input { width: 4mm; height: 4mm; }
+  .need input:checked + span { text-decoration: none; color: #000; }
+  .steps { gap: 2mm !important; }
+  .step-n { width: 6mm; height: 6mm; font-size: 9pt; background: none !important; color: #000 !important; border: 1px solid #000; }
+  .steps li > span:last-child { padding-top: .5mm !important; }
+  .safety { background: none !important; border: 1px solid #999; padding: 2mm 3mm !important; }
+
+  .print-only { display: block !important; }
+  .print-foot { margin-top: 4mm; padding-top: 2mm; border-top: 1px solid #999; font-size: 9pt; }
+  a { color: #000 !important; text-decoration: none !important; }
+}

@@ -1,0 +1,199 @@
+---
+// Step-by-step mode: one step at a time, large type, for a phone propped up beside the child.
+// Back/Next (48 px+), swipe, arrow keys; Esc or Close exits and focus returns to the opener.
+// Keeps the screen on (Screen Wake Lock) where supported. Tells the Ankur guide to hide while open.
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  steps: string[];
+}
+const { title, steps } = Astro.props;
+---
+<button class="btn btn--primary step-open" type="button" data-step-open hidden>
+  <Icon name="showme" />Step-by-step mode
+</button>
+
+<dialog class="stepmode" data-stepmode aria-labelledby="sm-title">
+  <div class="sm-inner">
+    <header class="sm-head">
+      <p class="sm-title" id="sm-title">{title}</p>
+      <button class="sm-close" type="button" data-step-close><Icon name="close" /><span>Close</span></button>
+    </header>
+    <div class="sm-body" data-sm-body>
+      {steps.map((s, i) => (
+        <section class="sm-step" data-sm-step hidden={i > 0} aria-label={`Step ${i + 1} of ${steps.length}`}>
+          <p class="sm-num"><span>Step {i + 1}</span> of {steps.length}</p>
+          <p class="sm-text">{s}</p>
+        </section>
+      ))}
+    </div>
+    <ol class="sm-dots" aria-hidden="true">
+      {steps.map((_, i) => <li class:list={{ on: i === 0 }} />)}
+    </ol>
+    <p class="sr-only" aria-live="polite" data-sm-live></p>
+    <footer class="sm-nav">
+      <button class="btn btn--secondary sm-btn" type="button" data-sm-prev><Icon name="chevron-left" />Back</button>
+      <button class="btn btn--primary sm-btn" type="button" data-sm-next>Next<Icon name="chevron-right" /></button>
+    </footer>
+  </div>
+</dialog>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+
+  type WakeLockLike = { release: () => Promise<void> };
+
+  onPageLoad(() => {
+    const dlg = document.querySelector<HTMLDialogElement>('[data-stepmode]');
+    const opener = document.querySelector<HTMLButtonElement>('[data-step-open]');
+    if (!dlg || !opener || typeof dlg.showModal !== 'function') return;
+    opener.hidden = false;
+
+    const steps = [...dlg.querySelectorAll<HTMLElement>('[data-sm-step]')];
+    const dots = [...dlg.querySelectorAll<HTMLElement>('.sm-dots li')];
+    const prev = dlg.querySelector<HTMLButtonElement>('[data-sm-prev]')!;
+    const next = dlg.querySelector<HTMLButtonElement>('[data-sm-next]')!;
+    const live = dlg.querySelector<HTMLElement>('[data-sm-live]')!;
+    const nextLabel = next.firstChild!;
+    let i = 0;
+    let lock: WakeLockLike | null = null;
+    let returnTo: HTMLElement | null = null;
+
+    const show = (n: number, announce = true) => {
+      i = Math.max(0, Math.min(steps.length - 1, n));
+      steps.forEach((s, k) => (s.hidden = k !== i));
+      dots.forEach((d, k) => d.classList.toggle('on', k === i));
+      prev.disabled = i === 0;
+      nextLabel.textContent = i === steps.length - 1 ? 'Done' : 'Next';
+      if (announce) live.textContent = `Step ${i + 1} of ${steps.length}. ${steps[i].querySelector('.sm-text')?.textContent ?? ''}`;
+    };
+
+    const requestLock = async () => {
+      try {
+        const wl = (navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<WakeLockLike> } }).wakeLock;
+        if (wl) lock = await wl.request('screen');
+      } catch {
+        lock = null; // unsupported or refused: carry on without it
+      }
+    };
+    const releaseLock = () => {
+      void lock?.release().catch(() => undefined);
+      lock = null;
+    };
+
+    const open = () => {
+      if (dlg.open) return;
+      returnTo = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : opener;
+      show(0, false);
+      dlg.showModal();
+      document.dispatchEvent(new CustomEvent('unnati:stepmode', { detail: true }));
+      void requestLock();
+      next.focus();
+    };
+    const close = () => {
+      if (dlg.open) dlg.close();
+    };
+
+    const onClose = () => {
+      releaseLock();
+      document.dispatchEvent(new CustomEvent('unnati:stepmode', { detail: false }));
+      // The guide's chip may have opened step mode; focus goes back to the page's own button then.
+      const target = returnTo && returnTo.isConnected && !returnTo.closest('[data-ankur-guide]') ? returnTo : opener;
+      target.focus();
+    };
+    // Re-acquire the wake lock if the visitor switches away and comes back while step mode is open.
+    const onVisible = () => {
+      if (dlg.open && document.visibilityState === 'visible' && !lock) void requestLock();
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
+    };
+    const onNext = () => (i === steps.length - 1 ? close() : show(i + 1));
+    const onPrev = () => show(i - 1);
+
+    // Swipe: a mostly horizontal touch drag of 50 px or more.
+    let sx = 0;
+    let sy = 0;
+    let tracking = false;
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return;
+      tracking = true;
+      sx = e.clientX;
+      sy = e.clientY;
+    };
+    const onUp = (e: PointerEvent) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.clientX - sx;
+      const dy = e.clientY - sy;
+      if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(dx < 0 ? i + 1 : i - 1);
+    };
+    const onCancel = () => (tracking = false);
+    // A click on the backdrop (outside the panel) closes too.
+    const onDialogClick = (e: MouseEvent) => {
+      if (e.target === dlg) close();
+    };
+    const onOpenRequest = () => open();
+
+    opener.addEventListener('click', open);
+    dlg.querySelector('[data-step-close]')!.addEventListener('click', close);
+    next.addEventListener('click', onNext);
+    prev.addEventListener('click', onPrev);
+    dlg.addEventListener('close', onClose);
+    dlg.addEventListener('keydown', onKey);
+    dlg.addEventListener('pointerdown', onDown);
+    dlg.addEventListener('pointerup', onUp);
+    dlg.addEventListener('pointercancel', onCancel);
+    dlg.addEventListener('click', onDialogClick);
+    document.addEventListener('unnati:open-stepmode', onOpenRequest);
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      opener.removeEventListener('click', open);
+      document.removeEventListener('unnati:open-stepmode', onOpenRequest);
+      document.removeEventListener('visibilitychange', onVisible);
+      dlg.removeEventListener('close', onClose);
+      if (dlg.open) {
+        dlg.close();
+        releaseLock();
+        document.dispatchEvent(new CustomEvent('unnati:stepmode', { detail: false }));
+      }
+    };
+  });
+</script>
+
+<style>
+  .step-open[hidden] { display: none; }
+  .stepmode {
+    width: min(100vw, 760px); max-width: 100vw; height: min(100dvh, 640px); max-height: 100dvh;
+    padding: 0; border: 0; border-radius: var(--r-lg); background: var(--paper); color: var(--ink);
+    box-shadow: var(--shadow-lift);
+  }
+  .stepmode::backdrop { background: rgb(59 36 20 / .55); }
+  @media (max-width: 639.98px) {
+    .stepmode { width: 100vw; height: 100dvh; border-radius: 0; }
+  }
+  .sm-inner { display: flex; flex-direction: column; height: 100%; padding: clamp(1rem, .6rem + 2vw, 2rem); gap: 1rem; }
+  .sm-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .sm-title { margin: 0; font-family: var(--font-head); font-size: 1.25rem; color: var(--brown); }
+  .sm-close {
+    display: inline-flex; align-items: center; gap: .4rem; min-height: 48px; min-width: 48px; padding: 0 1rem;
+    border: 2px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--brown);
+    font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .sm-body { flex: 1; display: grid; align-items: center; overflow-y: auto; touch-action: pan-y; }
+  .sm-step { display: grid; gap: 1rem; }
+  .sm-step[hidden] { display: none; }
+  .sm-num { margin: 0; font-weight: 800; color: rgb(59 36 20 / .75); font-size: 1.125rem; }
+  .sm-num span { color: var(--forest); font-size: 1.5rem; font-family: var(--font-head); }
+  .sm-text { margin: 0; font-size: clamp(1.375rem, 1.1rem + 1.6vw, 2.125rem); line-height: 1.4; font-weight: 600; }
+  .sm-dots { list-style: none; display: flex; justify-content: center; gap: .5rem; margin: 0; padding: 0; }
+  .sm-dots li { width: 10px; height: 10px; border-radius: 50%; background: var(--line-strong); transition: background-color 200ms ease, transform 200ms var(--ease-pop); }
+  .sm-dots li.on { background: var(--forest); transform: scale(1.3); }
+  .sm-nav { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .sm-btn { min-height: 56px; font-size: 1.125rem; }
+  .sm-btn[disabled] { opacity: .4; cursor: default; }
+</style>

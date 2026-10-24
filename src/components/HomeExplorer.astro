@@ -1,0 +1,298 @@
+---
+// Prepared Home explorer: an illustrated room with 6 leaf hotspots (48 px, no pulsing). Tapping or
+// focusing one opens its card (popover beside it on desktop, bottom sheet on mobile; Esc closes).
+// Each card sits right after its hotspot in the DOM, so Tab moves hotspot → card → next hotspot.
+// Ticks live only in this browser (unnati:home-ready) and grow one leaf on the progress sprout.
+import Icon from './Icon.astro';
+import { preparedHome } from '../content/copy';
+
+const { spots } = preparedHome;
+---
+<div class="explorer" data-explorer>
+  <div class="room-wrap" data-room-scroll>
+    <p class="room-hint" aria-hidden="true">Swipe to see the whole room →</p>
+    <div class="room">
+      <svg class="room-art" viewBox="0 0 720 380" aria-hidden="true" focusable="false">
+        <rect x="0" y="0" width="720" height="332" fill="#F8E7CF" />
+        <path d="M0 322 H720" stroke="var(--wood-grain)" stroke-width="6" />
+        <rect x="0" y="330" width="720" height="50" fill="var(--wood)" />
+        <path class="grain" d="M10 346 C160 342 320 350 710 344" /><path class="grain" d="M20 364 C200 360 420 368 700 362" />
+        <!-- doorway -->
+        <rect class="o" x="12" y="100" width="80" height="230" fill="var(--sage)" />
+        <path d="M24 300 C40 280 60 286 80 270" stroke="var(--felt)" stroke-width="10" stroke-linecap="round" fill="none" opacity=".7" />
+        <path class="o" d="M12 100 L48 112 L48 318 L12 330 Z" fill="var(--wood-grain)" />
+        <circle cx="42" cy="220" r="3" fill="var(--brown)" />
+        <!-- low hooks, bag, footwear basket -->
+        <rect class="o" x="102" y="192" width="62" height="7" rx="3" fill="var(--wood-grain)" />
+        <path d="M118 199 v8 a4 4 0 0 0 8 0 M148 199 v8 a4 4 0 0 0 8 0" stroke="rgb(118 61 13 / .7)" stroke-width="2.5" fill="none" stroke-linecap="round" />
+        <path class="o" d="M110 214 C110 204 132 204 132 214 L136 252 H106 Z" fill="var(--terracotta)" />
+        <path d="M114 208 C116 198 126 198 128 208" stroke="rgb(118 61 13 / .7)" stroke-width="2" fill="none" />
+        <path class="o" d="M104 304 H162 L158 330 H108 Z" fill="var(--wood-grain)" />
+        <ellipse class="o" cx="120" cy="302" rx="11" ry="5" fill="var(--blue-board)" /><ellipse class="o" cx="144" cy="302" rx="11" ry="5" fill="var(--blue-board)" />
+        <!-- window -->
+        <rect class="o" x="192" y="66" width="100" height="100" rx="6" fill="var(--air)" />
+        <path d="M242 66 V166 M192 116 H292" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <!-- low open shelf -->
+        <rect class="o" x="180" y="236" width="122" height="94" rx="4" fill="var(--wood)" />
+        <rect x="188" y="244" width="106" height="34" fill="#E9CBA2" /><rect x="188" y="286" width="106" height="36" fill="#E9CBA2" />
+        <path d="M184 282 H298" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path class="o" d="M194 262 H226 L223 278 H197 Z" fill="var(--wood-grain)" />
+        <circle class="o" cx="210" cy="257" r="6" fill="var(--pink-board)" />
+        <path class="o" d="M234 266 H286 V278 H234 Z" fill="var(--blush)" />
+        <path class="o" d="M246 266 V256 H256 L258 266" fill="#E3E8EB" />
+        <path class="o" d="M196 304 H240 L237 322 H199 Z" fill="var(--felt)" />
+        <circle class="o" cx="262" cy="312" r="9" fill="var(--blue-board)" /><circle class="o" cx="282" cy="314" r="7" fill="var(--pink-board)" />
+        <!-- book corner -->
+        <path class="o" d="M318 252 H400 V330 H318 Z" fill="var(--wood-grain)" />
+        <rect class="o" x="324" y="258" width="22" height="30" rx="2" fill="var(--blue-board)" />
+        <rect class="o" x="349" y="256" width="22" height="32" rx="2" fill="var(--pink-board)" />
+        <rect class="o" x="374" y="259" width="20" height="29" rx="2" fill="var(--felt)" />
+        <path d="M322 290 H396" stroke="rgb(118 61 13 / .7)" stroke-width="3" />
+        <rect class="o" x="326" y="296" width="20" height="26" rx="2" fill="#F5E6CF" />
+        <rect class="o" x="352" y="295" width="22" height="27" rx="2" fill="var(--terracotta)" />
+        <ellipse class="o" cx="370" cy="334" rx="40" ry="10" fill="var(--blush)" />
+        <!-- child-sized table and chair -->
+        <rect class="o" x="418" y="266" width="86" height="10" rx="3" fill="var(--wood)" />
+        <path d="M426 276 V330 M496 276 V330" stroke="rgb(118 61 13 / .7)" stroke-width="5" stroke-linecap="round" />
+        <rect class="o" x="440" y="254" width="26" height="12" rx="2" fill="var(--paper)" />
+        <path d="M444 260 H460" stroke="var(--terracotta)" stroke-width="2" />
+        <path class="o" d="M512 252 H520 V292 H546 V300 H512 Z" fill="var(--wood-grain)" />
+        <path d="M516 300 V330 M542 300 V330" stroke="rgb(118 61 13 / .7)" stroke-width="4" stroke-linecap="round" />
+        <!-- self-serve water corner -->
+        <rect class="o" x="556" y="294" width="46" height="36" rx="3" fill="var(--wood)" />
+        <rect class="o" x="552" y="286" width="54" height="8" rx="3" fill="#EED3AE" />
+        <path class="o" d="M562 262 H578 L581 259 L582 263 C579 266 578 268 578 271 L579 284 Q579 286 577 286 H563 Q561 286 561 284 L562 271 C562 268 561 266 560 262 Z" fill="#E3E8EB" />
+        <path class="o" d="M586 268 H598 L596 286 H588 Z" fill="#E3E8EB" />
+        <!-- kitchen counter, basin, step stool -->
+        <rect class="o" x="612" y="222" width="112" height="108" fill="#E9D2B4" />
+        <rect class="o" x="608" y="212" width="116" height="12" rx="3" fill="var(--wood-grain)" />
+        <path class="o" d="M640 212 V204 H676 V212" fill="#E3E8EB" />
+        <path d="M658 204 V188 H668 V194" stroke="rgb(118 61 13 / .7)" stroke-width="3.5" fill="none" stroke-linecap="round" />
+        <path d="M620 244 H716 M668 222 V330" stroke="rgb(118 61 13 / .35)" stroke-width="2" />
+        <rect class="o" x="636" y="298" width="48" height="10" rx="3" fill="var(--terracotta)" />
+        <path d="M642 308 L638 330 M678 308 L682 330" stroke="rgb(118 61 13 / .7)" stroke-width="4" stroke-linecap="round" />
+      </svg>
+
+      {spots.map((s) => (
+        <div class="spot" style={`--x:${s.x}%;--y:${s.y}%`} data-spot={s.id} data-side={s.x > 55 ? 'left' : 'right'}>
+          <button class="spot-btn" type="button" aria-expanded="false" aria-controls={`spot-card-${s.id}`} data-spot-btn>
+            <Icon name="leaf" size={22} />
+            <span class="sr-only">{s.title}</span>
+          </button>
+          <div class="spot-card pebble" id={`spot-card-${s.id}`} role="group" aria-labelledby={`spot-title-${s.id}`} data-spot-card hidden>
+            <div class="spot-card-head">
+              <h3 id={`spot-title-${s.id}`}>{s.title}</h3>
+              <button class="spot-close" type="button" data-spot-close><Icon name="close" size={20} /><span class="sr-only">Close</span></button>
+            </div>
+            <p>{s.text}</p>
+            <label class="have">
+              <input type="checkbox" data-have={s.id} />
+              <span>We have this</span>
+            </label>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <aside class="checklist pebble" aria-labelledby="home-checklist-title">
+    <div class="progress">
+      <svg class="sprout" viewBox="0 0 80 110" aria-hidden="true" focusable="false">
+        <path d="M18 92 H62 L58 108 H22 Z" fill="var(--terracotta)" stroke="rgb(118 61 13 / .7)" stroke-width="2" stroke-linejoin="round" />
+        <rect x="14" y="86" width="52" height="8" rx="3" fill="#C97F4F" stroke="rgb(118 61 13 / .7)" stroke-width="2" />
+        <path d="M40 86 V14" stroke="#5E8A3F" stroke-width="3" stroke-linecap="round" />
+        {[
+          ['M40 74 C30 66 20 68 16 72 C22 80 32 80 40 74 Z', '40px 74px'],
+          ['M40 64 C50 56 60 58 64 62 C58 70 48 70 40 64 Z', '40px 64px'],
+          ['M40 52 C30 44 20 46 16 50 C22 58 32 58 40 52 Z', '40px 52px'],
+          ['M40 42 C50 34 60 36 64 40 C58 48 48 48 40 42 Z', '40px 42px'],
+          ['M40 30 C31 22 22 24 19 28 C24 36 33 36 40 30 Z', '40px 30px'],
+          ['M40 18 C49 10 58 12 61 16 C56 24 47 24 40 18 Z', '40px 18px'],
+        ].map(([d, o]) => <path class="sprout-leaf" d={d} style={`transform-origin:${o}`} />)}
+      </svg>
+      <div>
+        <h3 id="home-checklist-title" class="progress-count" aria-live="polite" data-home-count>Your home has 0 of 6</h3>
+        <p class="progress-note" data-home-note>{preparedHome.zero}</p>
+      </div>
+    </div>
+    <ul class="check-list" role="list">
+      {spots.map((s) => (
+        <li>
+          <label class="have">
+            <input type="checkbox" data-have={s.id} />
+            <span>{s.title}</span>
+          </label>
+        </li>
+      ))}
+    </ul>
+  </aside>
+</div>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  import { HOME_READY, getList, toggleIn } from '../scripts/at-home-store';
+  import { nurture } from '../scripts/nurture';
+
+  const ZERO = 'Tap a leaf in the room to explore.';
+  const ALL = 'Your home is ready for independent work.';
+
+  onPageLoad(() => {
+    const root = document.querySelector<HTMLElement>('[data-explorer]');
+    if (!root) return;
+    const spots = [...root.querySelectorAll<HTMLElement>('[data-spot]')];
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('[data-have]')];
+    const leaves = [...root.querySelectorAll<SVGPathElement>('.sprout-leaf')];
+    const count = root.querySelector<HTMLElement>('[data-home-count]')!;
+    const note = root.querySelector<HTMLElement>('[data-home-note]')!;
+    const total = spots.length;
+
+    const render = (ticked: string[]) => {
+      const n = ticked.filter((id) => spots.some((s) => s.dataset.spot === id)).length;
+      boxes.forEach((b) => (b.checked = ticked.includes(b.dataset.have!)));
+      spots.forEach((s) => s.classList.toggle('is-ticked', ticked.includes(s.dataset.spot!)));
+      leaves.forEach((l, i) => l.classList.toggle('on', i < n));
+      count.textContent = `Your home has ${n} of ${total}`;
+      note.textContent = n === 0 ? ZERO : n === total ? ALL : '';
+      note.hidden = n > 0 && n < total;
+    };
+    render(getList(HOME_READY));
+
+    let openSpot: HTMLElement | null = null;
+    // Focus handed back to a hotspot after closing its card must not reopen the card.
+    let returning = false;
+    const close = (returnFocus = false) => {
+      if (!openSpot) return;
+      const btn = openSpot.querySelector<HTMLButtonElement>('[data-spot-btn]')!;
+      openSpot.querySelector<HTMLElement>('[data-spot-card]')!.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      openSpot.classList.remove('is-open');
+      openSpot = null;
+      if (returnFocus) {
+        returning = true;
+        btn.focus();
+        returning = false;
+      }
+    };
+    const open = (spot: HTMLElement) => {
+      if (openSpot === spot) return;
+      close();
+      spot.querySelector<HTMLElement>('[data-spot-card]')!.hidden = false;
+      spot.querySelector('[data-spot-btn]')!.setAttribute('aria-expanded', 'true');
+      spot.classList.add('is-open');
+      openSpot = spot;
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as Element;
+      const btn = target.closest<HTMLElement>('[data-spot-btn]');
+      if (btn) return open(btn.closest<HTMLElement>('[data-spot]')!);
+      if (target.closest('[data-spot-close]')) return close(true);
+    };
+    const onFocusIn = (e: FocusEvent) => {
+      const btn = (e.target as Element).closest?.('[data-spot-btn]');
+      if (btn && !returning) open(btn.closest<HTMLElement>('[data-spot]')!);
+    };
+    // Close when focus or a tap lands outside the open hotspot and its card.
+    const onFocusOut = (e: FocusEvent) => {
+      if (!openSpot) return;
+      const next = e.relatedTarget as Node | null;
+      if (next && openSpot.contains(next)) return;
+      if (next) close();
+    };
+    const onDocPointer = (e: PointerEvent) => {
+      if (openSpot && !openSpot.contains(e.target as Node)) close();
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && openSpot) {
+        e.preventDefault();
+        close(true);
+      }
+    };
+    const onChange = (e: Event) => {
+      const box = (e.target as Element).closest<HTMLInputElement>('[data-have]');
+      if (!box) return;
+      if (box.checked) nurture(1);
+      render(toggleIn(HOME_READY, box.dataset.have!, box.checked));
+    };
+
+    root.addEventListener('click', onClick);
+    root.addEventListener('focusin', onFocusIn);
+    root.addEventListener('focusout', onFocusOut);
+    root.addEventListener('change', onChange);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDocPointer);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDocPointer);
+    };
+  });
+</script>
+
+<style>
+  .explorer { display: grid; gap: clamp(1.25rem, 1rem + 1vw, 2rem); align-items: start; }
+  @media (min-width: 1024px) { .explorer { grid-template-columns: minmax(0, 1fr) 320px; } }
+  .room-wrap { border-radius: var(--r-lg); background: var(--paper); padding: clamp(.5rem, .3rem + 1vw, 1rem); box-shadow: var(--shadow); }
+  .room { position: relative; }
+  .room-hint { display: none; }
+  /* Small screens: the room keeps a readable size (leaves never overlap) and scrolls sideways
+     inside its frame; the page itself never scrolls horizontally. */
+  @media (max-width: 767.98px) {
+    .room-wrap { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
+    .room { min-width: 620px; }
+    .room-hint { display: block; margin: 0 0 .5rem .25rem; font-size: var(--fs-small); font-weight: 700; color: rgb(59 36 20 / .75); position: sticky; left: .25rem; }
+  }
+  .room-art { display: block; width: 100%; height: auto; border-radius: 22px; }
+  .room-art :global(.o) { stroke: rgb(118 61 13 / .7); stroke-width: 2; stroke-linejoin: round; }
+  .room-art :global(.grain) { fill: none; stroke: var(--wood-grain); stroke-width: 1.6; stroke-linecap: round; }
+
+  .spot { position: absolute; left: var(--x); top: var(--y); width: 0; height: 0; }
+  .spot.is-open { z-index: 5; }
+  .spot-btn {
+    position: absolute; left: -24px; top: -24px; width: 48px; height: 48px; border-radius: 50% 50% 50% 8px;
+    display: grid; place-items: center; cursor: pointer; padding: 0;
+    background: var(--paper); color: var(--forest); border: 2px solid var(--brown);
+    box-shadow: 0 6px 14px -6px rgb(118 61 13 / .5);
+    transition: transform 180ms var(--ease-pop), background-color 180ms ease;
+  }
+  .spot-btn:hover { transform: scale(1.08); }
+  .spot.is-open .spot-btn { background: var(--blush); }
+  .spot.is-ticked .spot-btn { background: var(--sage); }
+  .spot.is-ticked .spot-btn :global(svg) { fill: #8DBA62; }
+
+  .spot-card {
+    position: absolute; top: -40px; width: min(300px, 80vw); padding: 1.1rem 1.15rem 1rem; z-index: 2;
+    display: grid; gap: .6rem; background: var(--paper);
+  }
+  .spot[data-side='right'] .spot-card { left: 36px; }
+  .spot[data-side='left'] .spot-card { right: 36px; }
+  .spot-card[hidden] { display: none; }
+  .spot-card-head { display: flex; justify-content: space-between; align-items: start; gap: .5rem; }
+  .spot-card h3 { margin: 0; font-size: 1.125rem; }
+  .spot-card p { margin: 0; font-size: var(--fs-small); }
+  .spot-close {
+    flex: none; width: 44px; height: 44px; margin: -.5rem -.5rem 0 0; border-radius: 50%; border: 0;
+    background: transparent; color: var(--brown); display: grid; place-items: center; cursor: pointer;
+  }
+  /* Mobile: the card becomes a bottom sheet. */
+  @media (max-width: 767.98px) {
+    .spot-card {
+      position: fixed; left: 0; right: 0; top: auto; bottom: 0; width: auto; z-index: 60;
+      border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 1.25rem var(--gutter) calc(1.25rem + env(safe-area-inset-bottom));
+      box-shadow: 0 -16px 40px -12px rgb(59 36 20 / .35);
+    }
+    .spot[data-side] .spot-card { left: 0; right: 0; }
+  }
+
+  .have { display: flex; align-items: center; gap: .7rem; min-height: 44px; font-weight: 700; cursor: pointer; }
+  .have input { width: 22px; height: 22px; accent-color: var(--forest); flex: none; margin: 0; }
+
+  .checklist { padding: 1.25rem; display: grid; gap: 1rem; }
+  .progress { display: flex; gap: 1rem; align-items: center; }
+  .sprout { width: 72px; height: auto; flex: none; overflow: visible; }
+  .sprout-leaf { fill: #8DBA62; stroke: rgb(118 61 13 / .6); stroke-width: 1.5; transform-box: view-box; transform: scale(0); transition: transform 300ms var(--ease-pop); }
+  .sprout-leaf.on { transform: scale(1); }
+  .progress-count { margin: 0; font-size: 1.25rem; }
+  .progress-note { margin: .25rem 0 0; font-size: var(--fs-small); }
+  .progress-note[hidden] { display: none; }
+  .check-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
+</style>

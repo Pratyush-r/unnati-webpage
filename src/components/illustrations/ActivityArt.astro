@@ -1,0 +1,238 @@
+---
+// Flat picture-book scenes for the Montessori at Home activities (viewBox 0 0 320 200).
+// Same rules as MaterialArt: flat fills, 2 px brown outlines at 70%, no gradients.
+// The markup is the START of each "Watch how" presentation. Parts marked data-p are moved by
+// src/scripts/scenes.ts; their transform-origin is set in viewBox units (transform-box: view-box).
+import Hand from './Hand.astro';
+
+interface Props {
+  slug: string;
+  class?: string;
+}
+const { slug, class: cls } = Astro.props;
+const uid = `a${Math.random().toString(36).slice(2, 7)}`;
+const steel = '#E3E8EB';
+const steelDark = '#C3CCD2';
+const chana = '#E9C98F';
+const moong = '#6E9B4C';
+---
+<svg class:list={['act-art', cls]} viewBox="0 0 320 200" aria-hidden="true" focusable="false" data-art={slug}>
+  {slug === 'pouring-water' && (
+    <g>
+      <defs><clipPath id={`${uid}-t`}><path d="M190 100 H226 L222 146 H194 Z" /></clipPath></defs>
+      <rect class="o" x="-4" y="150" width="328" height="54" fill="var(--wood)" />
+      <path class="grain" d="M10 170 C80 166 160 174 310 168" /><path class="grain" d="M20 186 C110 182 200 190 300 185" />
+      <rect class="o" x="56" y="142" width="208" height="10" rx="4" fill="#EED3AE" />
+      <g clip-path={`url(#${uid}-t)`}>
+        <rect data-p="tw" x="186" y="104" width="44" height="44" fill="var(--water)" style="transform-origin:208px 146px;transform:scaleY(0)" />
+      </g>
+      <path class="o" d="M190 100 H226 L222 146 H194 Z" fill="rgb(227 232 235 / .55)" />
+      <path d="M196 106 L198 138" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85" />
+      <path data-p="stream" d="M201 58 C205 70 207 92 207 134" stroke="var(--water)" stroke-width="4" stroke-linecap="round" fill="none" style="transform-origin:201px 58px;opacity:0;transform:scaleY(0)" />
+      <g data-p="jug" style="transform-origin:150px 84px">
+        <path d="M104 96 C88 96 86 126 104 128" fill="none" stroke="rgb(118 61 13 / .7)" stroke-width="7" stroke-linecap="round" />
+        <path d="M104 96 C88 96 86 126 104 128" fill="none" stroke={steelDark} stroke-width="3.5" stroke-linecap="round" />
+        <path class="o" d="M104 84 H146 L152 79 L153 85 C149 90 147 94 147 100 L149 140 Q149 146 143 146 H109 Q103 146 103 140 L105 100 C105 94 103 90 101 84 Z" fill={steel} />
+        <path d="M112 94 L113 136" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85" />
+        <Hand x={98} y={112} rotate={-8} />
+      </g>
+    </g>
+  )}
+
+  {slug === 'spooning-chana' && (
+    <g>
+      <rect class="o" x="-4" y="150" width="328" height="54" fill="var(--wood)" />
+      <path class="grain" d="M10 170 C80 166 160 174 310 168" /><path class="grain" d="M20 186 C110 182 200 190 300 185" />
+      <rect class="o" x="40" y="142" width="240" height="10" rx="4" fill="#EED3AE" />
+      <g data-p="pileL" style="transform-origin:100px 124px" fill={chana} class="o-thin">
+        <circle cx="88" cy="118" r="6" /><circle cx="100" cy="116" r="6" /><circle cx="112" cy="118" r="6" />
+        <circle cx="94" cy="110" r="6" /><circle cx="106" cy="110" r="6" /><circle cx="100" cy="104" r="6" />
+      </g>
+      <path class="o" d="M70 120 H130 C128 138 116 146 100 146 C84 146 72 138 70 120 Z" fill={steel} />
+      <path d="M78 126 C82 136 90 140 98 141" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".85" />
+      <g data-p="pileR" style="transform-origin:220px 124px;transform:scale(0)" fill={chana} class="o-thin">
+        <circle cx="213" cy="118" r="6" /><circle cx="226" cy="118" r="6" /><circle cx="219" cy="111" r="6" />
+      </g>
+      <path class="o" d="M190 120 H250 C248 138 236 146 220 146 C204 146 192 138 190 120 Z" fill={steel} />
+      <path d="M198 126 C202 136 210 140 218 141" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".85" />
+      <g data-p="spoon" style="transform-origin:100px 108px">
+        <path d="M110 105 L156 80" stroke="rgb(118 61 13 / .7)" stroke-width="6" stroke-linecap="round" />
+        <path d="M110 105 L156 80" stroke={steelDark} stroke-width="3" stroke-linecap="round" />
+        <ellipse class="o" cx="100" cy="108" rx="12" ry="6.5" fill={steel} />
+        <g data-p="sc" style="opacity:0" fill={chana} class="o-thin"><circle cx="96" cy="104" r="4.5" /><circle cx="104" cy="104" r="4.5" /></g>
+        <Hand x={162} y={80} rotate={-28} flip sleeve="var(--blush)" />
+      </g>
+    </g>
+  )}
+
+  {slug === 'folding-napkins' && (
+    <g>
+      <rect x="-4" y="40" width="328" height="164" fill="var(--wood)" />
+      <path class="grain" d="M10 60 C80 56 160 64 310 58" /><path class="grain" d="M14 176 C110 172 200 180 304 175" />
+      <g class="o">
+        <path d="M244 112 H296 L290 150 H250 Z" fill="var(--wood-grain)" />
+        <path d="M250 124 H290 M252 137 H288" stroke="rgb(118 61 13 / .45)" fill="none" />
+      </g>
+      <rect class="o" x="251" y="104" width="38" height="10" rx="3" fill="var(--blush)" />
+      <rect class="o" x="110" y="70" width="50" height="40" fill="var(--blush)" />
+      <rect data-p="bfl" class="o" x="110" y="70" width="50" height="40" fill="#EFCDB8" style="transform-origin:160px 110px;transform:scaleY(0)" />
+      <g data-p="tr" style="transform-origin:160px 90px">
+        <rect class="o" x="160" y="70" width="50" height="40" fill="var(--blush)" />
+        <rect data-p="bfr" class="o" x="160" y="70" width="50" height="40" fill="#EFCDB8" style="transform-origin:160px 110px;transform:scaleY(0)" />
+      </g>
+      <g data-p="ff" style="transform-origin:160px 110px">
+        <rect class="o" x="110" y="110" width="100" height="40" fill="var(--blush)" />
+        <rect x="116" y="116" width="88" height="28" fill="none" stroke="var(--pink-board)" stroke-width="2.5" />
+      </g>
+      <rect data-p="back2" class="o" x="110" y="70" width="50" height="40" fill="#EAC2AA" style="transform-origin:160px 90px;transform:scaleX(0)" />
+      <path d="M116 76 H154 M116 104 H154" stroke="var(--pink-board)" stroke-width="2.5" opacity=".9" />
+      <g data-p="handL" style="transform-origin:110px 150px"><Hand x={104} y={160} rotate={-70} /></g>
+      <g data-p="handR" style="transform-origin:210px 150px"><Hand x={216} y={160} rotate={70} flip sleeve="var(--blush)" /></g>
+    </g>
+  )}
+
+  {slug === 'slicing-banana' && (
+    <g>
+      <rect class="o" x="-4" y="146" width="328" height="58" fill="var(--wood)" />
+      <path class="grain" d="M10 170 C80 166 160 174 310 168" />
+      <rect class="o" x="60" y="128" width="200" height="18" rx="7" fill="#E9C9A0" />
+      <path class="grain" d="M72 137 C120 134 180 140 248 136" />
+      <path class="o" d="M92 112 C110 106 150 106 175 108 L175 126 C150 128 112 128 96 124 C86 122 84 115 92 112 Z" fill="#F6E5AE" />
+      <path d="M100 116 C120 113 150 113 170 115" stroke="#E3CB82" stroke-width="2" fill="none" stroke-linecap="round" />
+      <g data-p="s3" style="transform-origin:180px 117px">
+        <rect data-p="s3a" class="o" x="175" y="108" width="10" height="18" fill="#F6E5AE" />
+        <g data-p="s3b" style="opacity:0"><circle class="o" cx="180" cy="117" r="8.5" fill="#F6E5AE" /><circle cx="180" cy="117" r="2" fill="rgb(118 61 13 / .45)" /></g>
+      </g>
+      <g data-p="s2" style="transform-origin:190px 117px">
+        <rect data-p="s2a" class="o" x="185" y="108" width="10" height="18" fill="#F6E5AE" />
+        <g data-p="s2b" style="opacity:0"><circle class="o" cx="190" cy="117" r="8.5" fill="#F6E5AE" /><circle cx="190" cy="117" r="2" fill="rgb(118 61 13 / .45)" /></g>
+      </g>
+      <g data-p="s1" style="transform-origin:200px 117px">
+        <path data-p="s1a" class="o" d="M195 108 C202 108 208 110 210 116 C208 123 202 126 195 126 Z" fill="#F6E5AE" />
+        <g data-p="s1b" style="opacity:0"><circle class="o" cx="200" cy="117" r="8.5" fill="#F6E5AE" /><circle cx="200" cy="117" r="2" fill="rgb(118 61 13 / .45)" /></g>
+      </g>
+      <Hand x={84} y={106} rotate={20} />
+      <g data-p="knife" style="transform:translate(0px,-20px)">
+        <path class="o" d="M195 72 L199 72 L199 104 C199 106 195 106 195 104 Z" fill={steel} />
+        <rect class="o" x="193" y="46" width="8" height="27" rx="3" fill="var(--wood-grain)" />
+        <Hand x={197} y={52} rotate={-90} flip sleeve="var(--blush)" />
+      </g>
+    </g>
+  )}
+
+  {slug === 'sound-boxes' && (
+    <g>
+      <rect x="-4" y="70" width="328" height="134" fill="var(--wood)" />
+      <path class="grain" d="M10 86 C80 82 160 90 310 84" /><path class="grain" d="M14 190 C110 186 200 194 304 189" />
+      <rect class="o" x="30" y="90" width="260" height="46" rx="8" fill="#EED3AE" />
+      {[60, 140, 180, 260].map((x) => (
+        <g>
+          <rect class="o" x={x - 12} y="100" width="24" height="27" rx="3" fill={steel} />
+          <rect class="o" x={x - 13} y="96" width="26" height="7" rx="2.5" fill={steelDark} />
+        </g>
+      ))}
+      <g data-p="b2" style="transform-origin:100px 114px">
+        <rect class="o" x="88" y="100" width="24" height="27" rx="3" fill={steel} />
+        <rect class="o" x="87" y="96" width="26" height="7" rx="2.5" fill={steelDark} />
+        <g data-p="h2" style="opacity:0"><Hand x={78} y={114} rotate={0} /></g>
+      </g>
+      <g data-p="b5" style="transform-origin:220px 114px">
+        <rect class="o" x="208" y="100" width="24" height="27" rx="3" fill={steel} />
+        <rect class="o" x="207" y="96" width="26" height="7" rx="2.5" fill={steelDark} />
+        <g data-p="h5" style="opacity:0"><Hand x={242} y={114} rotate={0} flip sleeve="var(--blush)" /></g>
+      </g>
+      <g data-p="a2" style="opacity:0" fill="none" stroke="var(--brown)" stroke-width="2.2" stroke-linecap="round">
+        <path d="M124 70 C128 76 128 82 124 88" /><path d="M131 66 C137 75 137 83 131 92" />
+      </g>
+      <g data-p="a5" style="opacity:0" fill="none" stroke="var(--brown)" stroke-width="2.2" stroke-linecap="round">
+        <path d="M196 70 C192 76 192 82 196 88" /><path d="M189 66 C183 75 183 83 189 92" />
+      </g>
+    </g>
+  )}
+
+  {slug === 'i-spy-sounds' && (
+    <g>
+      <rect x="-4" y="84" width="328" height="120" fill="var(--wood)" />
+      <path class="grain" d="M10 100 C80 96 160 104 310 98" />
+      <rect class="o" x="34" y="108" width="252" height="70" rx="14" fill="var(--blush)" />
+      <rect x="44" y="116" width="232" height="54" rx="9" fill="none" stroke="var(--terracotta)" stroke-width="2" stroke-dasharray="5 5" />
+      <g data-p="cup" style="transform-origin:80px 140px">
+        <path d="M95 126 C106 126 106 142 95 142" fill="none" stroke="rgb(118 61 13 / .7)" stroke-width="6" stroke-linecap="round" />
+        <path d="M95 126 C106 126 106 142 95 142" fill="none" stroke={steelDark} stroke-width="3" stroke-linecap="round" />
+        <path class="o" d="M66 118 H96 L93 152 H69 Z" fill={steel} />
+        <path d="M72 124 L73 146" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".85" />
+      </g>
+      <g class="o">
+        <ellipse cx="128" cy="146" rx="9" ry="6" fill={steel} />
+        <path d="M136 143 L166 132" stroke-width="2" />
+      </g>
+      <path d="M137 143 L166 132" stroke={steelDark} stroke-width="2.5" stroke-linecap="round" />
+      <path class="o" d="M186 120 H202 V140 C202 146 208 148 216 148 C222 148 224 156 216 157 H196 C189 157 186 152 186 146 Z" fill="var(--sage)" />
+      <path d="M186 127 H202" stroke="var(--leaf)" stroke-width="2" opacity=".5" />
+      <g class="o">
+        <path d="M236 146 V136 C236 132 240 130 244 130 H252 L258 136 H264 C268 136 270 139 270 142 V146 Z" fill="var(--blue-board)" />
+        <circle cx="246" cy="148" r="5" fill="var(--ink)" /><circle cx="263" cy="148" r="5" fill="var(--ink)" />
+      </g>
+      <g data-p="bubble" style="transform-origin:72px 72px;opacity:0;transform:scale(0)">
+        <path class="o" d="M48 22 H118 C126 22 130 26 130 34 V52 C130 60 126 64 118 64 H84 L72 76 L74 64 H48 C40 64 36 60 36 52 V34 C36 26 40 22 48 22 Z" fill="var(--paper)" />
+        <text x="83" y="52" text-anchor="middle" style="font-family:var(--font-body);font-weight:800;font-size:24px" fill="var(--brown)">/k/</text>
+      </g>
+      <g data-p="hand" style="transform:translate(0px,70px)"><Hand x={81} y={166} rotate={-90} /></g>
+    </g>
+  )}
+
+  {slug === 'peg-counting' && (
+    <g>
+      <rect x="-4" y="60" width="328" height="144" fill="var(--wood)" />
+      <path class="grain" d="M10 78 C80 74 160 82 310 76" /><path class="grain" d="M14 190 C110 186 200 194 304 189" />
+      <rect class="o" x="116" y="40" width="88" height="104" rx="8" fill="var(--paper)" />
+      <text x="160" y="94" text-anchor="middle" style="font-family:var(--font-head);font-weight:700;font-size:46px" fill="var(--brown)">3</text>
+      {[140, 160, 180].map((x, i) => (
+        <g>
+          <circle cx={x} cy="116" r="6" fill="var(--terracotta)" />
+          <circle data-p={`ring${i + 1}`} cx={x} cy="116" r="10" fill="none" stroke="var(--leaf)" stroke-width="2.5" style="opacity:0" />
+        </g>
+      ))}
+      {[140, 160, 180].map((x, i) => (
+        <g data-p={`peg${i + 1}`} style={`transform-origin:${x}px 138px;transform:translate(${[122, 104, 86][i]}px,${[-2, 4, -6][i]}px) rotate(80deg)`}>
+          <rect class="o" x={x - 5} y="124" width="5" height="30" rx="2" fill="var(--wood-grain)" />
+          <rect class="o" x={x} y="124" width="5" height="30" rx="2" fill="var(--wood-grain)" />
+          <rect x={x - 6} y="134" width="12" height="4" rx="1.5" fill={steelDark} stroke="rgb(118 61 13 / .7)" stroke-width="1.5" />
+          <g data-p={`ph${i + 1}`} style="opacity:0"><Hand x={x} y={112} rotate={90} /></g>
+        </g>
+      ))}
+      <path class="o" d="M236 120 H296 L288 162 H244 Z" fill="var(--wood-grain)" />
+      <path d="M241 134 H291 M243 148 H289" stroke="rgb(118 61 13 / .45)" stroke-width="1.6" fill="none" />
+    </g>
+  )}
+
+  {slug === 'sprouting-moong' && (
+    <g>
+      <rect x="-4" y="110" width="328" height="94" fill="var(--wood)" />
+      <path class="grain" d="M10 186 C110 182 200 190 310 185" />
+      <ellipse class="o" cx="160" cy="152" rx="122" ry="30" fill={steel} />
+      <ellipse class="o" cx="160" cy="148" rx="100" ry="22" fill="#F7F3EA" />
+      <path d="M84 150 C120 158 200 158 236 150" stroke="#E6DFCF" stroke-width="2" fill="none" />
+      {[[100, 146], [122, 156], [204, 156], [222, 144], [192, 141], [128, 140]].map(([x, y]) => (
+        <ellipse cx={x} cy={y} rx="5" ry="3.5" fill={moong} stroke="rgb(118 61 13 / .5)" stroke-width="1.2" />
+      ))}
+      <path data-p="root" d="M154 146 C150 154 144 158 134 160" stroke="#E7D6AE" stroke-width="3.5" stroke-linecap="round" fill="none" style="transform-origin:154px 146px;transform:scale(0)" />
+      <path data-p="shoot" d="M160 136 C162 120 156 108 160 92" stroke="#7DAA55" stroke-width="4" stroke-linecap="round" fill="none" style="transform-origin:160px 136px;transform:scaleY(0)" />
+      <g data-p="leaves" style="transform-origin:160px 94px;transform:scale(0)">
+        <path class="o" d="M160 94 C150 80 136 82 132 88 C140 96 152 98 160 94 Z" fill="#8DBA62" />
+        <path class="o" d="M160 94 C170 80 184 82 188 88 C180 96 168 98 160 94 Z" fill="#8DBA62" />
+      </g>
+      <path data-p="halfL" class="o" d="M160 128 C150 128 146 134 146 139 C146 144 152 148 160 148 Z" fill={moong} style="transform-origin:160px 148px" />
+      <path data-p="halfR" class="o" d="M160 128 C170 128 174 134 174 139 C174 144 168 148 160 148 Z" fill="#5E8A3F" style="transform-origin:160px 148px" />
+      <g fill="var(--water)" opacity=".8"><circle cx="112" cy="132" r="2" /><circle cx="214" cy="134" r="2" /><circle cx="178" cy="156" r="1.6" /></g>
+    </g>
+  )}
+</svg>
+
+<style>
+  .act-art { display: block; width: 100%; height: auto; overflow: visible; }
+  .act-art :global(.o) { stroke: rgb(118 61 13 / .7); stroke-width: 2; stroke-linejoin: round; }
+  .act-art :global(.o-thin) { stroke: rgb(118 61 13 / .55); stroke-width: 1.4; }
+  .act-art :global(.grain) { fill: none; stroke: var(--wood-grain); stroke-width: 1.4; stroke-linecap: round; opacity: .9; }
+  .act-art :global([data-p]) { transform-box: view-box; }
+</style>

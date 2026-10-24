@@ -1,0 +1,145 @@
+---
+// The activity scene with [▶ Watch how]: one slow presentation of the key movement (4–6 s, once).
+// Reduced motion: the finished state and numbered captions instead of movement.
+// Video override: drop brand-assets/at-home/{slug}.mp4 (and optionally {slug}.jpg as its poster) and
+// the clip replaces the animation. Without a poster image the illustration stands in as the poster.
+import ActivityArt from './illustrations/ActivityArt.astro';
+import Icon from './Icon.astro';
+import { AREA_TINTS, type Activity } from '../content/at-home';
+
+interface Props {
+  activity: Activity;
+}
+const { activity: a } = Astro.props;
+const videos = import.meta.glob<string>('/brand-assets/at-home/*.mp4', { eager: true, query: '?url', import: 'default' });
+const posters = import.meta.glob<string>('/brand-assets/at-home/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' });
+const video = videos[`/brand-assets/at-home/${a.slug}.mp4`];
+const poster = Object.entries(posters).find(([path]) => path.replace(/\.[a-z]+$/, '').endsWith(`/${a.slug}`))?.[1];
+---
+<figure class="scene pebble" data-scene={a.slug} data-video={video ? '' : undefined} style={`--tint:${AREA_TINTS[a.area]}`}>
+  <div class="scene-stage" transition:name={`activity-${a.slug}`}>
+    <ActivityArt slug={a.slug} />
+    {video && <video class="scene-video" src={video} poster={poster} playsinline muted preload="none" hidden />}
+  </div>
+  <figcaption class="scene-caption">
+    <button class="btn btn--secondary scene-play" type="button" data-play hidden>
+      <Icon name="play" class="i-play" /><Icon name="again" class="i-again" /><span data-label>Watch how</span>
+    </button>
+    <p class="scene-now" data-now aria-live="polite"></p>
+    <ol class="scene-steps" role="list">
+      {a.scene.map((s, i) => <li><span class="n" aria-hidden="true">{i + 1}</span>{s}</li>)}
+    </ol>
+  </figcaption>
+</figure>
+
+<script>
+  import { onPageLoad } from '../scripts/lifecycle';
+  import { scenes, play, showEnd } from '../scripts/scenes';
+  import { reducedMotion } from '../lib/motion';
+  import { nurture } from '../scripts/nurture';
+
+  onPageLoad(() => {
+    const cleanups: (() => void)[] = [];
+    document.querySelectorAll<HTMLElement>('[data-scene]').forEach((fig) => {
+      const scene = scenes[fig.dataset.scene!];
+      const btn = fig.querySelector<HTMLButtonElement>('[data-play]');
+      const art = fig.querySelector<SVGElement>('.act-art');
+      const video = fig.querySelector<HTMLVideoElement>('video');
+      const now = fig.querySelector<HTMLElement>('[data-now]');
+      const captions = [...fig.querySelectorAll<HTMLLIElement>('.scene-steps li')].map((li) => li.textContent?.replace(/^\d+/, '').trim() ?? '');
+      if (!btn || !art || (!scene && !video)) return;
+
+      const still = reducedMotion();
+      fig.classList.toggle('has-motion', !still);
+      if (still && scene && !video) showEnd(art, scene);
+      btn.hidden = false;
+
+      const label = btn.querySelector<HTMLElement>('[data-label]')!;
+      const setLabel = (again: boolean) => {
+        label.textContent = again ? 'Watch again' : 'Watch how';
+        btn.toggleAttribute('data-again', again);
+      };
+
+      let running: { cancel: () => void } | null = null;
+      const timers: number[] = [];
+      const clearTimers = () => timers.splice(0).forEach((id) => window.clearTimeout(id));
+      let watched = false;
+
+      const onClick = () => {
+        if (!watched) nurture(1);
+        watched = true;
+
+        if (video) {
+          art.style.visibility = 'hidden';
+          video.hidden = false;
+          video.currentTime = 0;
+          void video.play().catch(() => undefined);
+          btn.disabled = true;
+          video.onended = () => {
+            btn.disabled = false;
+            setLabel(true);
+          };
+          return;
+        }
+
+        if (still) {
+          // No movement: the finished state and the numbered captions are already showing.
+          showEnd(art, scene);
+          setLabel(true);
+          return;
+        }
+
+        running?.cancel();
+        clearTimers();
+        btn.disabled = true;
+        fig.classList.add('is-playing');
+        captions.forEach((c, i) => {
+          timers.push(window.setTimeout(() => now && (now.textContent = `${i + 1}. ${c}`), (scene.duration * i) / captions.length));
+        });
+        const run = play(art, scene);
+        running = run;
+        void run.finished.then(() => {
+          if (running !== run) return;
+          running = null;
+          btn.disabled = false;
+          fig.classList.remove('is-playing');
+          setLabel(true);
+        });
+      };
+      btn.addEventListener('click', onClick);
+      cleanups.push(() => {
+        btn.removeEventListener('click', onClick);
+        running?.cancel();
+        clearTimers();
+        video?.pause();
+      });
+    });
+    return () => cleanups.forEach((fn) => fn());
+  });
+</script>
+
+<style>
+  .scene { margin: 0; padding: clamp(.75rem, .5rem + 1vw, 1.25rem); display: grid; gap: 1rem; }
+  .scene-stage {
+    position: relative; border-radius: 22px; overflow: hidden; background: var(--tint);
+    aspect-ratio: 16 / 10; display: grid; place-items: end center;
+  }
+  .scene-stage :global(.act-art) { grid-area: 1 / 1; }
+  .scene-video { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; }
+  .scene-caption { display: grid; gap: .75rem; justify-items: start; }
+  .scene-play :global(.i-again), .scene-play[data-again] :global(.i-play) { display: none; }
+  .scene-play[data-again] :global(.i-again) { display: block; }
+  .scene-play[disabled] { opacity: .6; cursor: default; }
+  .scene-now:empty { min-height: 0; }
+  .scene-now { min-height: 1.6em; margin: 0; font-weight: 700; color: var(--brown); display: none; }
+  .scene-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .scene-steps li { display: flex; gap: .65rem; align-items: baseline; }
+  .scene-steps .n {
+    flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; display: inline-grid; place-items: center;
+    background: var(--sage); color: var(--forest); font-weight: 800; font-size: .875rem; transform: translateY(-.1rem);
+  }
+  /* With motion the presentation speaks for itself; one caption line follows along. */
+  .scene.has-motion .scene-steps { display: none; }
+  .scene.has-motion .scene-now { display: block; }
+  .scene[data-video] .scene-now { display: none; }
+</style>

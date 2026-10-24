@@ -144,3 +144,31 @@ export const dayCare = {
     text: `Extended Day Care welcomes children aged ${site.dayCare.ages}. From 2½, children can also join our Primary Environment.`,
   },
 };
+
+// Montessori at Home (round 2 brief, 6.1, 6.3, 6.5 and 6.6).
+export const atHome = {
+  title: 'Montessori at Home',
+  lead: "Montessori doesn't stop at the classroom door. These are simple activities you can set up with things already in your kitchen: slow, purposeful work that builds independence and concentration.",
+  small: 'Try one activity a week. Show it slowly, say very little, and then let your child have a go.',
+  teaserLine: 'Simple activities to try at home this week, using things from your kitchen.',
+  teaser: ['pouring-water', 'sound-boxes', 'sprouting-moong'],
+  ctaTitle: 'Want this every day?',
+  ctaLine: 'Our Primary Environment is prepared for exactly this kind of work, every morning.',
+};
+
+// Prepared Home explorer hotspots, in reading order across the room (left to right).
+// x/y place each leaf marker as a percentage of the room illustration.
+export const preparedHome = {
+  title: 'A prepared home',
+  line: 'Small changes help your child do more by themselves. Tap a leaf in the room to explore.',
+  spots: [
+    { id: 'hooks', title: 'Low hooks by the door', x: 18.3, y: 42, text: 'A hook for their bag and a basket for footwear, so coming home and going out become "I can do it myself."' },
+    { id: 'shelf', title: 'A low open shelf', x: 33.3, y: 59.5, text: "A few activities, each in its own basket or tray, at your child's eye level. Change them every week or two. Fewer choices mean deeper concentration." },
+    { id: 'books', title: 'A cosy book corner', x: 49.7, y: 44.5, text: 'A few books facing forward in a low rack, with a cushion. Change them often; children choose by the covers.' },
+    { id: 'table', title: 'A child-sized table and chair', x: 63.9, y: 66, text: 'Feet flat on the floor and elbows at table height. A place to work, eat and draw without help.' },
+    { id: 'water', title: 'A self-serve water corner', x: 79.9, y: 47.5, text: 'A small jug, a tumbler and a cloth on a low tray. Your child pours a drink when thirsty, and wipes up any spills.' },
+    { id: 'stool', title: 'A step stool at the basin', x: 91.5, y: 76, text: 'So your child can wash their hands, rinse vegetables and be part of the kitchen.' },
+  ],
+  zero: 'Tap a leaf in the room to explore.',
+  all: 'Your home is ready for independent work.',
+};

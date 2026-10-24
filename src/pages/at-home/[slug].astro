@@ -1,0 +1,270 @@
+---
+// One Montessori at Home activity (brief 4.7.4). Built from src/content/at-home/{slug}.ts.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ActivityScene from '../../components/ActivityScene.astro';
+import StepMode from '../../components/StepMode.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Ankur from '../../components/Ankur.astro';
+import Icon from '../../components/Icon.astro';
+import { activities, AREA_NAMES, AREA_TINTS, ageLabel, type Activity } from '../../content/at-home';
+import { atHome } from '../../content/copy';
+import { formatAddress, site, siteUrl } from '../../config/site';
+import '../../styles/print.css';
+
+export function getStaticPaths() {
+  return activities.map((activity, i) => ({
+    params: { slug: activity.slug },
+    props: {
+      activity,
+      prev: activities[(i - 1 + activities.length) % activities.length],
+      next: activities[(i + 1) % activities.length],
+    },
+  }));
+}
+
+interface Props {
+  activity: Activity;
+  prev: Activity;
+  next: Activity;
+}
+const { activity: a, prev, next } = Astro.props;
+const age = ageLabel(a.minAge);
+const builds = a.builds.map((b) => b.text.toLowerCase());
+const description = `${a.title}, a Montessori activity to try at home (${age}, ${a.time}). Builds ${builds.slice(0, -1).join(', ')} and ${builds.at(-1)}.`;
+---
+<BaseLayout title={`${a.title}: Montessori at Home | Unnati Montessori`} description={description}>
+  <article class="activity" data-activity-page={a.slug} data-title={a.title} data-summary={a.summary}>
+    <header class="page-hero act-hero">
+      <div class="container act-hero-grid">
+        <div class="act-head">
+          <p class="crumb"><a href="/at-home"><Icon name="chevron-left" size={18} />Montessori at Home</a></p>
+          <span class="area-chip" style={`background:${AREA_TINTS[a.area]}`}>{AREA_NAMES[a.area]}</span>
+          <h1>{a.title}</h1>
+          <p class="act-meta"><span>{age}</span> · <span>{a.time}</span></p>
+          <p class="lead">{a.summary}</p>
+        </div>
+        <div class="act-scene">
+          <ActivityScene activity={a} />
+        </div>
+      </div>
+    </header>
+
+    <div class="container act-body">
+      <section class="block materials pebble" aria-labelledby="need-title">
+        <h2 id="need-title">You'll need</h2>
+        <ul class="need-list" role="list" data-materials>
+          {a.materials.map((m, i) => (
+            <li>
+              <label class="need">
+                <input type="checkbox" data-material={String(i)} />
+                <span>{m}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="act-main">
+        {a.safety && (
+          <aside class="safety" aria-label="Safety note">
+            <Icon name="info" size={22} />
+            <p><strong>Safety:</strong> {a.safety}</p>
+          </aside>
+        )}
+
+        <section class="block" aria-labelledby="steps-title">
+          <div class="steps-head">
+            <h2 id="steps-title">Steps</h2>
+            <StepMode title={a.title} steps={a.steps} />
+          </div>
+          <ol class="steps" role="list">
+            {a.steps.map((s, i) => (
+              <li><span class="step-n" aria-hidden="true">{i + 1}</span><span><span class="sr-only">Step {i + 1}: </span>{s}</span></li>
+            ))}
+          </ol>
+        </section>
+
+        <section class="block" aria-labelledby="builds-title">
+          <h2 id="builds-title">What it builds</h2>
+          <ul class="builds" role="list">
+            {a.builds.map((b, i) => (
+              <li>
+                <span class:list={['icon-badge', { 'icon-badge--blush': i === 1 }]}><Icon name={b.icon} /></span>
+                <span>{b.text}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <aside class="tip pebble tape tape--sage" aria-labelledby="tip-title">
+          <Ankur size={56} blink={false} class="tip-ankur" />
+          <div>
+            <h2 id="tip-title" class="tip-title">Grown-up tip</h2>
+            <p>{a.tip}</p>
+          </div>
+        </aside>
+
+        <div class="actions" data-actions>
+          <button type="button" class="btn btn--secondary act-tried" aria-pressed="false" data-tried>
+            <svg class="tried-leaf" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+              <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" /><path d="M5 19l8-8" fill="none" />
+            </svg>
+            <span data-tried-label>Mark as tried</span>
+          </button>
+          <button type="button" class="btn btn--secondary" data-share><Icon name="megaphone" />Share</button>
+          <button type="button" class="btn btn--secondary" data-print><Icon name="doc" />Print</button>
+        </div>
+
+        <p class="print-only print-foot">Unnati Montessori · {formatAddress()} · {site.school.display} · {siteUrl.replace(/^https?:\/\//, '')}/at-home</p>
+      </div>
+    </div>
+  </article>
+
+  <CtaBand title={atHome.ctaTitle} text={atHome.ctaLine} enquire />
+
+  <nav class="section--tight pager" aria-label="More activities">
+    <div class="container pager-inner">
+      <a class="pager-link" href={`/at-home/${prev.slug}`} rel="prev">
+        <Icon name="chevron-left" /><span><small>Previous activity</small>{prev.title}</span>
+      </a>
+      <a class="pager-link pager-link--next" href={`/at-home/${next.slug}`} rel="next">
+        <span><small>Next activity</small>{next.title}</span><Icon name="chevron-right" />
+      </a>
+    </div>
+  </nav>
+</BaseLayout>
+
+<script>
+  import { onPageLoad } from '../../scripts/lifecycle';
+  import { TRIED, getList, setList, toggleIn, materialsKey } from '../../scripts/at-home-store';
+  import { animate, EASE_POP } from '../../lib/motion';
+  import { nurture } from '../../scripts/nurture';
+
+  onPageLoad(() => {
+    const page = document.querySelector<HTMLElement>('[data-activity-page]');
+    if (!page) return;
+    const slug = page.dataset.activityPage!;
+
+    // Materials checklist, saved per activity.
+    const boxes = [...page.querySelectorAll<HTMLInputElement>('[data-material]')];
+    const ticked = getList(materialsKey(slug));
+    boxes.forEach((b) => (b.checked = ticked.includes(b.dataset.material!)));
+    const onMaterial = () => setList(materialsKey(slug), boxes.filter((b) => b.checked).map((b) => b.dataset.material!));
+    boxes.forEach((b) => b.addEventListener('change', onMaterial));
+
+    // Mark as tried.
+    const tried = page.querySelector<HTMLButtonElement>('[data-tried]')!;
+    const label = tried.querySelector<HTMLElement>('[data-tried-label]')!;
+    const leaf = tried.querySelector('svg')!;
+    const renderTried = (on: boolean) => {
+      tried.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? 'Tried ✓' : 'Mark as tried';
+    };
+    renderTried(getList(TRIED).includes(slug));
+    const onTried = () => {
+      const on = tried.getAttribute('aria-pressed') !== 'true';
+      toggleIn(TRIED, slug, on);
+      renderTried(on);
+      if (on) {
+        animate(leaf, [{ transform: 'scale(.4)' }, { transform: 'scale(1.25)', offset: 0.6 }, { transform: 'scale(1)' }], { duration: 300, easing: EASE_POP });
+        nurture(2);
+      }
+    };
+    tried.addEventListener('click', onTried);
+
+    // Share: the system share sheet, or WhatsApp with no number as a fallback.
+    const share = page.querySelector<HTMLButtonElement>('[data-share]')!;
+    const onShare = async () => {
+      const title = page.dataset.title!;
+      const text = `${title}: ${page.dataset.summary}`;
+      const url = location.origin + location.pathname;
+      if (typeof navigator.share === 'function') {
+        try {
+          await navigator.share({ title, text, url });
+          return;
+        } catch (err) {
+          if ((err as DOMException)?.name === 'AbortError') return;
+        }
+      }
+      window.open(`https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`, '_blank', 'noopener');
+    };
+    share.addEventListener('click', onShare);
+
+    const print = page.querySelector<HTMLButtonElement>('[data-print]')!;
+    const onPrint = () => window.print();
+    print.addEventListener('click', onPrint);
+
+    return () => {
+      boxes.forEach((b) => b.removeEventListener('change', onMaterial));
+      tried.removeEventListener('click', onTried);
+      share.removeEventListener('click', onShare);
+      print.removeEventListener('click', onPrint);
+    };
+  });
+</script>
+
+<style>
+  .act-hero { padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .act-hero-grid { display: grid; gap: clamp(1.5rem, 1rem + 2vw, 3rem); align-items: center; }
+  @media (min-width: 960px) { .act-hero-grid { grid-template-columns: 1fr 1.1fr; } }
+  .act-head { display: grid; gap: .6rem; justify-items: start; }
+  .act-head h1 { margin: .2rem 0 0; }
+  .act-head .lead { margin-top: .25rem; }
+  .crumb { margin: 0 0 .5rem; }
+  .crumb a { display: inline-flex; align-items: center; gap: .3rem; min-height: 44px; font-weight: 700; }
+  .area-chip { display: inline-block; padding: .3rem .8rem; border-radius: 999px; font-size: .875rem; font-weight: 800; color: var(--ink); }
+  .act-meta { margin: 0; font-weight: 700; color: rgb(59 36 20 / .8); }
+
+  .act-body { display: grid; gap: clamp(1.5rem, 1rem + 2vw, 3rem); padding-bottom: var(--space-section); align-items: start; }
+  @media (min-width: 960px) {
+    .act-body { grid-template-columns: 320px minmax(0, 1fr); }
+    .materials { position: sticky; top: 6rem; }
+  }
+  .act-main { display: grid; gap: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem); }
+  .block h2 { font-size: var(--fs-h3); margin: 0 0 1rem; }
+  .materials { padding: 1.25rem 1.25rem 1rem; }
+  .need-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+  .need { display: flex; align-items: flex-start; gap: .75rem; min-height: 44px; padding-block: .55rem; cursor: pointer; }
+  .need input { width: 22px; height: 22px; margin: .15rem 0 0; accent-color: var(--forest); flex: none; }
+  .need input:checked + span { text-decoration: line-through; text-decoration-color: rgb(118 61 13 / .45); color: rgb(59 36 20 / .7); }
+
+  .safety { display: flex; gap: .75rem; align-items: flex-start; padding: 1rem 1.15rem; border-radius: var(--r-md); background: var(--blush); color: var(--ink); }
+  .safety :global(svg) { flex: none; color: var(--brown); margin-top: .1rem; }
+  .safety p { margin: 0; }
+
+  .steps-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem 1rem; margin-bottom: 1rem; }
+  .steps-head h2 { margin: 0; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  .steps li { display: flex; gap: .9rem; align-items: flex-start; }
+  .step-n {
+    flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center;
+    background: var(--forest); color: var(--cream); font-family: var(--font-head); font-weight: 700;
+  }
+  .steps li > span:last-child { padding-top: .3rem; }
+
+  .builds { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+  @media (min-width: 720px) { .builds { grid-template-columns: repeat(3, 1fr); } }
+  .builds li { display: flex; gap: .8rem; align-items: center; font-weight: 700; }
+
+  .tip { display: flex; gap: 1rem; align-items: center; padding: 1.25rem 1.4rem; background: var(--paper); }
+  .tip :global(.tip-ankur) { flex: none; }
+  .tip-title { font-family: var(--font-hand); font-size: 1.6rem; color: var(--brown); margin: 0 0 .15rem; font-weight: 600; }
+  .tip p { margin: 0; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .tried-leaf { fill: transparent; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: fill 200ms ease; }
+  .act-tried[aria-pressed='true'] { background: var(--sage); border-color: var(--forest); color: var(--forest); }
+  .act-tried[aria-pressed='true'] .tried-leaf { fill: #8DBA62; }
+
+  .print-only { display: none; }
+
+  .pager { background: var(--paper); }
+  .pager-inner { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+  .pager-link {
+    display: flex; align-items: center; gap: .6rem; min-height: 64px; padding: .75rem 1rem; border-radius: var(--r-md);
+    border: 2px solid var(--line); text-decoration: none; color: var(--brown); font-weight: 800;
+  }
+  .pager-link:hover { border-color: var(--brown); }
+  .pager-link small { display: block; font-weight: 700; color: rgb(59 36 20 / .75); font-size: .8125rem; }
+  .pager-link--next { justify-content: flex-end; text-align: right; }
+</style>

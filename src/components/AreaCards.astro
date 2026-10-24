@@ -12,7 +12,7 @@ type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
 <ol class:list={['areas', 'scatter', { 'areas--detail': detail, stagger: !detail }]} role="list" data-reveal="children">
   {areas.map((a) => (
     <li class="area pebble pebble--hover">
-      <div class="area-art" style={`background:${a.tint}`} transition:name={`game-${a.href.split('/').pop()}`}>
+      <div class="area-art" style={`background:${a.tint}`}>
         <MaterialArt kind={a.id as Kind} size={detail ? 104 : 88} />
       </div>
       <div class="area-body">

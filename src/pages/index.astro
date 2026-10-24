@@ -10,8 +10,12 @@ import FindUsMap from '../components/FindUsMap.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import Doodle from '../components/Doodle.astro';
 import PhotoStrip from '../components/PhotoStrip.astro';
+import ActivityCard from '../components/ActivityCard.astro';
 import { site, statusLabel, siteUrl, wa, waText } from '../config/site';
-import { founderExcerpt } from '../content/copy';
+import { atHome, founderExcerpt } from '../content/copy';
+import { activities, activityBySlug } from '../content/at-home';
+
+const teaser = atHome.teaser.map((slug) => activityBySlug(slug)!);
 
 const description =
   'Authentic Montessori preschool for ages 2½–6 in Mogappair West, Chennai. Primary Environment, Day Care & After-school. Admissions open all year.';
@@ -86,7 +90,15 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- AT-HOME-TEASER -->
+  <section class="section at-home-teaser" aria-labelledby="teaser-title">
+    <div class="container">
+      <SectionHead title={atHome.title} intro={atHome.teaserLine} id="teaser-title" offset />
+      <ul class="teaser-grid scatter" role="list">
+        {teaser.map((a) => <ActivityCard activity={a} />)}
+      </ul>
+      <p class="more-link"><a class="btn btn--secondary" href="/at-home">See all {activities.length} <span aria-hidden="true">→</span><span class="sr-only"> Montessori at Home activities</span></a></p>
+    </div>
+  </section>
 
   <section class="section--tight founder-band" aria-labelledby="founder-title">
     <div class="container-narrow">
@@ -131,6 +143,9 @@ const jsonLd = {
   :global(.d-swirl) { right: 6%; top: 0; }
   .founder :global(.d-heart) { right: 18px; bottom: 16px; color: var(--leaf); }
   .more-link { margin-top: 1.75rem; }
+  .teaser-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .8rem + 1vw, 1.5rem); }
+  @media (min-width: 640px) { .teaser-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .teaser-grid { grid-template-columns: repeat(3, 1fr); } }
   .plane-link { margin-top: 1.5rem; font-weight: 700; }
   .plane-link a { display: inline-flex; min-height: 48px; align-items: center; }
   .founder-band { background: var(--cream); }

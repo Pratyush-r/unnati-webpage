@@ -1,0 +1,18 @@
+---
+// A child's hand for the activity scenes: wrist cuff on the left, fingers pointing right.
+// Placed with x/y (palm centre), rotate (degrees) and flip (mirror for the other hand).
+interface Props {
+  x: number;
+  y: number;
+  rotate?: number;
+  flip?: boolean;
+  sleeve?: string;
+}
+const { x, y, rotate = 0, flip = false, sleeve = 'var(--sage)' } = Astro.props;
+---
+<g transform={`translate(${x} ${y}) rotate(${rotate})${flip ? ' scale(-1 1)' : ''}`}>
+  <rect class="o" x="-34" y="-9" width="18" height="18" rx="5" fill={sleeve} />
+  <path class="o" d="M-17 -8 C-8 -12 5 -12 11 -8 C16 -4 16 4 11 7 C5 10 -8 10 -17 7 Z" fill="#C68A5B" />
+  <path class="o" d="M1 -9 C4 -16 12 -17 12 -10" fill="#C68A5B" />
+  <path d="M11 -2 H4 M11 3 H5" stroke="rgb(118 61 13 / .45)" stroke-width="1.4" stroke-linecap="round" fill="none" />
+</g>
