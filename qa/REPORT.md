@@ -153,3 +153,56 @@ Filmstrips are in `qa/transitions/` (frames at about 0, 120, 240 and 400 ms, plu
   - Under reduced motion, growing plays no animation.
 - The full suite passes: **247**, plus 1 skipped (Firefox touch).
 - **Manual check:** on a phone, tap around the home page and play a game. Ankur should gain leaves, then a bud, then flowers. His growth should still be there after closing and reopening the browser.
+
+---
+
+# Round 2 changes (24 October 2026)
+
+Brief: `CONSULTANCY_Unnati_Website_Changes_Prompt_v2.md`. Phases 1–7 were each committed separately. Decisions 76–98 are in `DECISIONS.md`.
+
+## Automated results (full suite: 321 passed, 1 skipped, 0 failed)
+
+| Suite | Result | What it covers |
+|---|---|---|
+| `round2-content.spec.ts` | ✅ 44 / 44 | No removed copy or code in `src/` and `dist/`: the old number, House for Children, `/play`, Little Hands, Did you know, Four Planes, Adolescence, Maturity, Reasoning Mind, speechSynthesis, AudioContext, `unnati:sound`. Plot No. 5 and +91 75500 22403 in every footer; Plot No. 5 on /contact, in the Find-us panel and in the JSON-LD. Every `tel:` and `wa.me` link uses 917550022403. `firstPlaneTitle` change → rebuild → heading updates → restored. Green-underline scan on all 19 pages at 360 and 1440 px (rest, nav hover, 40 keyboard focus stops). |
+| `at-home.spec.ts` | ✅ 20 / 20 | Filters (Sensorial → 1, 4+ → 8, 2½+ → 3 named), URL state, live region, empty state, no-JS view; all 8 activity pages; Watch how plays once, then nothing lingers; reduced motion makes 0 animations; step mode (Next/Back, arrows, swipe, Esc, focus return, 22 px+ text, 48 px+ buttons); tried + counter + undo; material ticks per activity; share fallback; print fits one A4 page; explorer by tap and keyboard, 3 ticks → 3 leaves, persisted; shelf and area links; `/play` redirects. |
+| Regression | ✅ 257 / 258 (1 skipped) | responsive (19 pages × 9 viewports: no sideways scroll, 48 px targets), axe on every page at two widths plus step mode open and an explorer card open (0 serious/critical), enquiry, growth, motion, guide/mascot, transitions in Chromium, Firefox and WebKit. The skip is the phone test in Firefox (no touch emulation). |
+
+The green-underline scan was checked against a page with an injected green underline and green focus ring, and it fails as it should.
+
+## Lighthouse (mobile): `qa/lighthouse/*.report.html`
+
+| Page | Perf | A11y | BP | SEO | LCP | CLS |
+|------|-----:|-----:|---:|----:|----:|----:|
+| `/` | 97 | 100 | 100 | 100 | 2.4 s | 0 |
+| `/approach` | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+| `/admissions` | 99 | 100 | 100 | 100 | 2.1 s | 0 |
+| `/at-home` | 97 | 100 | 100 | 100 | 2.4 s | 0.016 |
+| `/at-home/pouring-water` | 97 | 100 | 100 | 100 | 2.4 s | 0.009 |
+
+**JavaScript (gzipped):** `/at-home` 13.2 KB and each activity page 15.3 KB (budget 35 KB). Other pages are 12.0–14.0 KB. **Scene SVGs** are inline, at 2.5–4.7 KB each (budget 25 KB).
+
+## Visual review
+
+- Screenshots for every page at every viewport are in `qa/screenshots/` (the game screenshots were deleted). Navigation filmstrips, including the card → scene morph and the sprout reveal into /at-home, are in `qa/transitions/`.
+- All 8 "Watch how" presentations were checked frame by frame (start, two midpoints, finished state).
+- Fixed during QA:
+  - Hotspot cards reopened when Close returned focus to their leaf.
+  - On phones, the 48 px leaves overlapped, so the room now scrolls sideways inside its own frame.
+  - JS-revealed controls (filters, Watch how, Step-by-step) caused layout shift; they're now hidden for no-JS visitors with `<noscript>` instead.
+  - A few new controls were 44 px; they're now 48 px.
+
+## Manual checks for you
+
+1. On a phone, open an activity, tap **Step-by-step mode** and prop the phone up. The screen should stay on, and swiping should move between steps.
+2. Tap **Share** on a phone. The system share sheet should open; on a laptop, WhatsApp opens with the text instead.
+3. **Print** an activity (or Save as PDF). It should be one A4 page with the logo, steps and address.
+4. Read the 8 activities with a teacher's eye, especially the safety notes.
+5. Review the Day Care guide tip (unapproved copy, decision 97).
+6. After deploying, open `/play` and check it lands on Montessori at Home.
+
+## Known gaps
+
+- The scene illustrations are drawn simply (flat, mitten-style hands). Your own recorded clips (`brand-assets/at-home/{slug}.mp4`, README section 5) will replace them whenever you add them.
+- No `.mp4` clips are included yet, so the video path is untested with a real clip. It only renders when a file exists.
+- The WebKit workaround from the add-on is gone along with the games.

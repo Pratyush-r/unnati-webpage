@@ -10,7 +10,8 @@ interface Props {
 }
 const { title, steps } = Astro.props;
 ---
-<button class="btn btn--primary step-open" type="button" data-step-open hidden>
+<noscript><style>[data-step-open] { display: none !important; }</style></noscript>
+<button class="btn btn--primary step-open" type="button" data-step-open>
   <Icon name="showme" />Step-by-step mode
 </button>
 
@@ -47,8 +48,11 @@ const { title, steps } = Astro.props;
   onPageLoad(() => {
     const dlg = document.querySelector<HTMLDialogElement>('[data-stepmode]');
     const opener = document.querySelector<HTMLButtonElement>('[data-step-open]');
-    if (!dlg || !opener || typeof dlg.showModal !== 'function') return;
-    opener.hidden = false;
+    if (!dlg || !opener) return;
+    if (typeof dlg.showModal !== 'function') {
+      opener.hidden = true; // very old browser: the numbered steps are still on the page
+      return;
+    }
 
     const steps = [...dlg.querySelectorAll<HTMLElement>('[data-sm-step]')];
     const dots = [...dlg.querySelectorAll<HTMLElement>('.sm-dots li')];

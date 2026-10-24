@@ -1,6 +1,6 @@
-// Every page at every viewport: screenshot, no horizontal scroll, tap targets ≥ 48 px (≥ 64 in games).
+// Every page at every viewport: screenshot, no horizontal scroll, tap targets ≥ 48 px.
 import { test, expect, type Page } from '@playwright/test';
-import { ALL_PAGES, GAME_PAGES, VIEWPORTS, GAME_EXTRA_VIEWPORTS, SKIP_SHOWME, slugOf } from './pages';
+import { ALL_PAGES, VIEWPORTS, slugOf } from './pages';
 
 async function scrollThrough(page: Page) {
   await page.waitForTimeout(1500); // let start-up settle so scroll reveals fire in headless Chromium
@@ -35,25 +35,18 @@ async function smallTargets(page: Page, min: number) {
 }
 
 for (const path of ALL_PAGES) {
-  const isGame = GAME_PAGES.includes(path);
-  const sizes = isGame ? [...VIEWPORTS, ...GAME_EXTRA_VIEWPORTS] : VIEWPORTS;
-  for (const [w, h] of sizes) {
+  for (const [w, h] of VIEWPORTS) {
     test(`responsive ${path} @ ${w}x${h}`, async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width: w, height: h } });
-      await context.addInitScript(SKIP_SHOWME);
       const page = await context.newPage();
       const res = await page.goto(path, { waitUntil: 'networkidle' });
       if (path !== '/404') expect(res?.status()).toBe(200);
-      if (!isGame) await scrollThrough(page);
-      else await page.waitForTimeout(400);
-      await page.screenshot({ path: `qa/screenshots/${slugOf(path)}-${w}x${h}.png`, fullPage: !isGame });
+      await scrollThrough(page);
+      await page.screenshot({ path: `qa/screenshots/${slugOf(path)}-${w}x${h}.png`, fullPage: true });
 
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, 'horizontal scroll').toBeLessThanOrEqual(0);
-
-      // Games promise 64 px pieces from a 360 px-wide screen up; the site promises 48 px everywhere.
-      const min = isGame && w >= 360 ? 64 : 48;
-      expect(await smallTargets(page, min), `targets under ${min}px`).toEqual([]);
+      expect(await smallTargets(page, 48), 'targets under 48px').toEqual([]);
       await context.close();
     });
   }

@@ -2,7 +2,6 @@
 // form-field behaviour, the once-per-session greeting and accessibility with the bubble open.
 import { test, expect, type Page, type Browser } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { SKIP_SHOWME } from './pages';
 
 // Approved tip copy (add-on brief Section 6) plus the Day Care tip added for the owner's extra page.
 const TIPS: Record<string, string> = {
@@ -11,20 +10,20 @@ const TIPS: Record<string, string> = {
   '/approach': 'Tap a principle on the wheel to read about it.',
   '/admissions': 'Good news: children can join any time of the year.',
   '/day-care': 'Extended Day Care welcomes children aged 1–6. Ask us about timings.',
-  '/play': "Pick an activity. They're best enjoyed together with a grown-up.",
+  '/at-home': 'Try one activity this week. Slow and simple is best.',
+  '/at-home/pouring-water': 'Show it slowly, say very little, then let your child try.',
   '/teach': 'Our Primary Montessori Teacher Training starts in November 2026.',
   '/consultancy': "Building your own Montessori school? Let's talk.",
   '/contact': "We're near Casagrand Millenia. Tap Get directions for the way.",
 };
 const GUIDE_PAGES = Object.keys(TIPS);
-const NO_GUIDE = ['/play/set-the-table', '/play/knobbed-cylinders', '/play/sandpaper-letters', '/play/spindle-box', '/play/land-air-water', '/404', '/privacy'];
+const NO_GUIDE = ['/404', '/privacy'];
 // Mark the greeting as done so it doesn't open the bubble during tests that aren't about it.
 const GREETED = `try { sessionStorage.setItem('unnati:ankur-greeted', '1'); } catch (e) {}`;
 
 async function open(browser: Browser, path: string, opts: { greeted?: boolean; w?: number; h?: number; touch?: boolean } = {}) {
   const { greeted = true, w = 1280, h = 800, touch = false } = opts;
   const context = await browser.newContext({ viewport: { width: w, height: h }, hasTouch: touch, isMobile: touch });
-  await context.addInitScript(SKIP_SHOWME);
   if (greeted) await context.addInitScript(GREETED);
   const page = await context.newPage();
   await page.goto(path, { waitUntil: 'networkidle' });
@@ -46,7 +45,7 @@ const visibleAnkurs = (page: Page) =>
     }).length,
   );
 
-test('the guide shows on the guide pages and is hidden on games, /404 and /privacy', async ({ browser }) => {
+test('the guide shows on the guide pages and is hidden on /404 and /privacy', async ({ browser }) => {
   for (const path of GUIDE_PAGES) {
     const { context, page } = await open(browser, path);
     if (path === '/') await pastShelf(page);
@@ -133,8 +132,8 @@ test('bubble: opens by tap and Enter, closes by Esc (focus back) and outside tap
   await expect(d.page.locator('[data-bubble]')).toBeVisible();
   await expect(d.page.locator('[data-tip]')).toHaveText(TIPS['/consultancy']);
   const c2 = d.page.locator('[data-chips] a');
-  expect(await c2.nth(0).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/919003584303\?text=/);
-  expect(await c2.nth(1).getAttribute('href')).toBe('tel:+919003584303');
+  expect(await c2.nth(0).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/917550022403\?text=/);
+  expect(await c2.nth(1).getAttribute('href')).toBe('tel:+917550022403');
   await d.page.keyboard.press('Escape');
   await expect(d.page.locator('[data-bubble]')).toBeHidden();
   expect(await d.page.evaluate(() => document.activeElement?.hasAttribute('data-ankur-btn'))).toBe(true);
@@ -225,4 +224,17 @@ test('dock and bubble screenshots', async ({ browser }) => {
     await page.screenshot({ path: `qa/screenshots/ankur-bubble-${w}x${h}.png` });
     await context.close();
   }
+});
+
+test('activity pages: the step-mode chip opens step mode and the guide hides while it is open', async ({ browser }) => {
+  const { context, page } = await open(browser, '/at-home/sound-boxes');
+  await page.locator('[data-ankur-btn]').click();
+  await expect(page.locator('[data-bubble]')).toBeVisible();
+  await page.locator('[data-chips] button', { hasText: 'Step-by-step mode' }).click();
+  await expect(page.locator('[data-stepmode]')).toBeVisible();
+  await expect(page.locator('[data-ankur-btn]')).toBeHidden();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-stepmode]')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Step-by-step mode' }).first()).toBeFocused();
+  await context.close();
 });

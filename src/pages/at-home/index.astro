@@ -28,7 +28,8 @@ const areaIds = Object.keys(FILTER_NAMES) as AreaId[];
   <section class="section--tight ah-list" aria-labelledby="ah-activities">
     <div class="container">
       <h2 id="ah-activities" class="sr-only">Activities</h2>
-      <div class="filters" data-filters hidden>
+      <noscript><style>[data-filters] { display: none !important; }</style></noscript>
+      <div class="filters" data-filters>
         <div class="chip-row" role="group" aria-label="Filter by area">
           <span class="chip-label" aria-hidden="true">Area</span>
           <button type="button" class="f-chip" data-f="area" data-v="" aria-pressed="true">All</button>
@@ -82,7 +83,6 @@ const areaIds = Object.keys(FILTER_NAMES) as AreaId[];
     const live = document.querySelector<HTMLElement>('[data-f-live]')!;
     const empty = document.querySelector<HTMLElement>('[data-f-empty]')!;
     const triedLine = document.querySelector<HTMLElement>('[data-tried-count]')!;
-    filters.hidden = false;
 
     const validAreas = new Set(chips.filter((c) => c.dataset.f === 'area').map((c) => c.dataset.v));
     const validAges = new Set(chips.filter((c) => c.dataset.f === 'age').map((c) => c.dataset.v));
@@ -147,7 +147,7 @@ const areaIds = Object.keys(FILTER_NAMES) as AreaId[];
   .chip-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
   .chip-label { font-weight: 800; font-size: .8125rem; letter-spacing: .1em; text-transform: uppercase; color: rgb(59 36 20 / .75); min-width: 3.2rem; }
   .f-chip {
-    min-height: 44px; padding: .45rem 1rem; border-radius: 999px; cursor: pointer;
+    min-height: 48px; padding: .5rem 1.05rem; border-radius: 999px; cursor: pointer;
     font: inherit; font-weight: 700; font-size: .9375rem; color: var(--brown);
     background: transparent; border: 2px solid var(--line-strong);
     transition: background-color 160ms ease, border-color 160ms ease, transform 160ms var(--ease-pop);

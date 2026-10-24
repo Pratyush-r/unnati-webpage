@@ -21,8 +21,9 @@ const poster = Object.entries(posters).find(([path]) => path.replace(/\.[a-z]+$/
     <ActivityArt slug={a.slug} />
     {video && <video class="scene-video" src={video} poster={poster} playsinline muted preload="none" hidden />}
   </div>
+  <noscript><style>[data-play] { display: none !important; }</style></noscript>
   <figcaption class="scene-caption">
-    <button class="btn btn--secondary scene-play" type="button" data-play hidden>
+    <button class="btn btn--secondary scene-play" type="button" data-play>
       <Icon name="play" class="i-play" /><Icon name="again" class="i-again" /><span data-label>Watch how</span>
     </button>
     <p class="scene-now" data-now aria-live="polite"></p>
@@ -52,7 +53,6 @@ const poster = Object.entries(posters).find(([path]) => path.replace(/\.[a-z]+$/
       const still = reducedMotion();
       fig.classList.toggle('has-motion', !still);
       if (still && scene && !video) showEnd(art, scene);
-      btn.hidden = false;
 
       const label = btn.querySelector<HTMLElement>('[data-label]')!;
       const setLabel = (again: boolean) => {

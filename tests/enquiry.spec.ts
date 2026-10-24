@@ -91,9 +91,10 @@ test('every WhatsApp link says WhatsApp and every phone is a tel: link', async (
     const phones = await page.evaluate(() =>
       Array.from(document.querySelectorAll('a[href^="tel:"]')).map((a) => a.getAttribute('href')),
     );
-    expect(phones.every((h) => h === 'tel:+917550022403' || h === 'tel:+919003584303')).toBe(true);
+    expect(phones.every((h) => h === 'tel:+917550022403')).toBe(true);
   }
   await page.goto('/consultancy');
   const consultWa = await page.locator('main a[href^="https://wa.me/"]').first().getAttribute('href');
-  expect(consultWa).toContain('wa.me/919003584303');
+  expect(consultWa).toContain('wa.me/917550022403');
+  expect(decodeURIComponent(consultWa!)).toMatch(/consultancy/i);
 });

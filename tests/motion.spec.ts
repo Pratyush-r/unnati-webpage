@@ -1,11 +1,10 @@
-// With prefers-reduced-motion: reduce, interacting with the shelf, cards, toggle and a game
+// With prefers-reduced-motion: reduce, interacting with the shelf, toggle and Montessori at Home
 // leaves no running animations — states change instantly.
 import { test, expect, type Page } from '@playwright/test';
-import { SKIP_SHOWME } from './pages';
 
 const noAnimations = (page: Page) => page.evaluate(() => document.getAnimations().length);
 
-test('home: shelf, Ankur, flip cards, compare toggle, map', async ({ browser }) => {
+test('home: shelf, Ankur, compare toggle, map', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
   await page.goto('/', { waitUntil: 'networkidle' });
@@ -18,8 +17,6 @@ test('home: shelf, Ankur, flip cards, compare toggle, map', async ({ browser }) 
   await page.keyboard.press('Escape');
   await expect(page.locator('#chip-cultural')).toBeHidden();
   await page.click('.shelf-ankur');
-  await page.locator('[data-flip]').first().click();
-  await expect(page.locator('[data-flip]').first()).toHaveAttribute('aria-pressed', 'true');
   await page.click('[data-mode-btn="t"]');
   await expect(page.locator('[data-compare]').first()).toHaveAttribute('data-mode', 't');
   await page.locator('[data-map]').scrollIntoViewIfNeeded();
@@ -29,7 +26,7 @@ test('home: shelf, Ankur, flip cards, compare toggle, map', async ({ browser }) 
   await context.close();
 });
 
-test('approach: principles wheel, planes, reveal', async ({ browser }) => {
+test('approach: principles wheel, first plane, reveal', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
   await page.goto('/approach', { waitUntil: 'networkidle' });
@@ -41,37 +38,23 @@ test('approach: principles wheel, planes, reveal', async ({ browser }) => {
   await context.close();
 });
 
-test('games: a move, a refusal, show me and completion', async ({ browser }) => {
+test('at home: filters, watch how, step mode, tried, explorer', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
-  await context.addInitScript(SKIP_SHOWME);
   const page = await context.newPage();
-  await page.goto('/play/set-the-table', { waitUntil: 'networkidle' });
-  const ids = ['plate', 'katori', 'tumbler', 'spoon', 'napkin'];
-  // A refused move first.
-  await page.locator('[data-p="plate"]').focus();
-  await page.keyboard.press('Enter');
-  await page.keyboard.press('Enter');
-  for (const id of ids) {
-    await page.locator(`[data-p="${id}"]`).focus();
-    await page.keyboard.press('Enter');
-    for (let i = 0; i < 6; i++) {
-      if ((await page.evaluate(() => (document.activeElement as HTMLElement)?.dataset?.target)) === id) break;
-      await page.keyboard.press('ArrowRight');
-    }
-    await page.keyboard.press('Enter');
-    await page.waitForTimeout(30);
-    expect(await noAnimations(page), id).toBe(0);
-  }
-  await expect(page.locator('[data-complete]')).toBeVisible();
-  await page.waitForTimeout(100);
-  expect(await noAnimations(page)).toBe(0);
-  await page.click('[data-showme]');
-  await page.click('[data-again]');
+  await page.goto('/at-home', { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: 'Sensorial', exact: true }).click();
+  await page.locator('[data-spot-btn]').first().click();
+  await page.locator('.check-list input').first().check();
+  await page.waitForTimeout(50);
   expect(await noAnimations(page)).toBe(0);
 
-  await page.goto('/play/sandpaper-letters', { waitUntil: 'networkidle' });
-  await page.locator('[data-letter]').focus();
-  for (let k = 0; k < 12; k++) await page.keyboard.press('Space');
+  await page.goto('/at-home/peg-counting', { waitUntil: 'networkidle' });
+  await page.locator('[data-play]').click();
+  expect(await noAnimations(page)).toBe(0);
+  await page.getByRole('button', { name: 'Step-by-step mode' }).click();
+  await page.locator('[data-sm-next]').click();
+  await page.keyboard.press('Escape');
+  await page.locator('[data-tried]').click();
   await page.waitForTimeout(50);
   expect(await noAnimations(page)).toBe(0);
   await context.close();
