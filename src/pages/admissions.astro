@@ -37,9 +37,9 @@ import { parentFaq } from '../content/faq';
   <section class="section" aria-labelledby="register-title">
     <div class="container">
       <SectionHead title="Three simple steps" offset id="register-title" />
-      <ol class="steps scatter stagger" role="list" data-reveal="children">
+      <ol class="steps" role="list" data-reveal="children">
         {registerSteps.map((s, i) => (
-          <li class:list={['pebble', 'step', 'tape', ['', 'tape--sage', 'tape--blush'][i]]}>
+          <li class="pebble step">
             <span class="num" aria-hidden="true">{i + 1}</span>
             <h3>{s.title}</h3>
             <p>{s.text(site.school.display)}</p>

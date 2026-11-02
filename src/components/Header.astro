@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { site, telHref, wa, waText } from '../config/site';
+import { payments } from '../config/payments';
 
 interface Props {
   path: string;
@@ -57,6 +58,13 @@ const educatorsCurrent = educators.some((l) => current(l.href));
             <span class="nl-text">Contact</span>
           </a>
         </li>
+        {payments.linkFromSite && (
+          <li>
+            <a class="nav-link" href="/pay" aria-current={current('/pay')}>
+              <span class="nl-text">Pay Fees</span>
+            </a>
+          </li>
+        )}
       </ul>
     </nav>
 
@@ -85,6 +93,7 @@ const educatorsCurrent = educators.some((l) => current(l.href));
           {links.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
           {educators.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
           <li><a href="/contact" aria-current={current('/contact')}>Contact</a></li>
+          {payments.linkFromSite && <li><a href="/pay" aria-current={current('/pay')}>Pay Fees</a></li>}
         </ul>
       </nav>
       <a class="btn btn--secondary sheet-enquire" href={enquireHref} data-menu-close-link data-enquire>Send an enquiry</a>

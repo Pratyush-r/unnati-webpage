@@ -9,7 +9,7 @@
 
   .announce, .sticky-bar, .site-footer, .ankur-guide, .skip-link, .nav-progress,
   .site-header nav, .site-header button, .site-header .header-cta, .site-header .header-actions,
-  .act-scene, .crumb, .actions, .step-open, .stepmode, .cta, .pager, .builds, .tip, .tape::before, .tape::after { display: none !important; }
+  .act-scene, .crumb, .actions, .step-open, .stepmode, .cta, .pager, .builds, .tip { display: none !important; }
 
   .site-header { position: static !important; border: 0 !important; background: none !important; }
   .site-header .header-inner { padding: 0 0 4mm !important; min-height: 0 !important; }

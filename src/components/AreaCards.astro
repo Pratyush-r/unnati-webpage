@@ -9,7 +9,7 @@ interface Props {
 const { detail = false } = Astro.props;
 type Kind = 'practical' | 'sensorial' | 'language' | 'maths' | 'cultural';
 ---
-<ol class:list={['areas', 'scatter', { 'areas--detail': detail, stagger: !detail }]} role="list" data-reveal="children">
+<ol class:list={['areas', { 'areas--detail': detail }]} role="list" data-reveal="children">
   {areas.map((a) => (
     <li class="area pebble pebble--hover">
       <div class="area-art" style={`background:${a.tint}`}>

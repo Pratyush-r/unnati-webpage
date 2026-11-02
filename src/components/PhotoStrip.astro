@@ -1,5 +1,5 @@
 ---
-// Real photos of the school, shown as taped polaroids. Drop photos into brand-assets/photos/ and rebuild.
+// Real photos of the school, shown as polaroids. Drop photos into brand-assets/photos/ and rebuild.
 // The file name becomes the caption and alt text: "children-pouring-water.jpg" → "Children pouring water".
 // With no photos, nothing renders — there are never placeholder or stock images.
 import { Image } from 'astro:assets';
@@ -20,7 +20,7 @@ const caption = (path: string) => {
 const photos = Object.entries(files)
   .sort(([a], [b]) => a.localeCompare(b))
   .slice(0, max)
-  .map(([path, mod], i) => ({ src: mod.default, text: caption(path), tape: ['', 'tape--sage', 'tape--blush'][i % 3] }));
+  .map(([path, mod], i) => ({ src: mod.default, text: caption(path) }));
 ---
 {photos.length > 0 && (
   <section class="section photo-strip" aria-labelledby={headingId}>
@@ -28,7 +28,7 @@ const photos = Object.entries(files)
       <h2 id={headingId} class="strip-title">{title}</h2>
       <div class="polaroids">
         {photos.map((p, i) => (
-          <figure class:list={['polaroid', 'tape', p.tape]}>
+          <figure class="polaroid">
             <Image src={p.src} alt={p.text} widths={[260, 520]} sizes="260px" loading={i < 2 ? 'eager' : 'lazy'} />
             <figcaption>{p.text}</figcaption>
           </figure>

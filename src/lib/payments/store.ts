@@ -9,20 +9,25 @@ import { dirname, resolve } from 'node:path';
 import type { Order } from './types';
 
 let orders: Map<string, Order> | undefined;
+let loading: Promise<Map<string, Order>> | undefined;
 let file: string | undefined;
 let diskOk = true;
 let saving: Promise<void> = Promise.resolve();
 
-async function load(path?: string): Promise<Map<string, Order>> {
-  if (orders) return orders;
-  file = resolve(path || '.data/mock-orders.json');
-  try {
-    const list = JSON.parse(await readFile(file, 'utf8')) as Order[];
-    orders = new Map(list.map((o) => [o.id, o]));
-  } catch {
-    orders = new Map();
-  }
-  return orders;
+// One shared load: if two requests arrive before the file is read, both must get the same map,
+// or the second would replace the first and lose its order.
+function load(path?: string): Promise<Map<string, Order>> {
+  loading ??= (async () => {
+    file = resolve(path || '.data/mock-orders.json');
+    try {
+      const list = JSON.parse(await readFile(file, 'utf8')) as Order[];
+      orders = new Map(list.map((o) => [o.id, o]));
+    } catch {
+      orders = new Map();
+    }
+    return orders;
+  })();
+  return loading;
 }
 
 function save(): Promise<void> {

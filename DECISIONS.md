@@ -112,3 +112,4 @@ One line per judgement call made during the build.
 96. **The "Four Planes" content check is case-sensitive,** because the approved first-plane intro (6.4) says "described four planes of development".
 97. **Day Care guide tip** (decision 54) is still unapproved copy and needs the owner's review.
 98. **QA rebuild:** `astro.config.mjs` reads an optional `ASTRO_OUT_DIR` so the firstPlaneTitle test can rebuild into `.qa-build/` without touching `dist/` while other tests run.
+99. **Straight, even cards (owner request, 2 Nov 2026).** Washi tape is gone, and cards no longer tilt, stagger or use irregular corners. Programme and Mission/Vision cards now have equal widths. This replaces the tape and tilt parts of decisions 70, 71, 73 and 78. Torn section edges, paper grain, doodles and the three-over-two home area layout stay.

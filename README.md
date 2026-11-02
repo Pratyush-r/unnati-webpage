@@ -51,7 +51,7 @@ Edit only the text between quotes `'…'`. If a sentence contains an apostrophe 
 
 ## 4. Add real photos of the school
 
-Put photos (JPG or PNG) in `brand-assets/photos/` and rebuild. They appear as taped polaroids in an "Inside Unnati"
+Put photos (JPG or PNG) in `brand-assets/photos/` and rebuild. They appear as polaroids in an "Inside Unnati"
 section on the home and About pages (up to 6, in file-name order).
 
 **Name each file after what it shows.** The name becomes the caption and the description for screen readers, for example

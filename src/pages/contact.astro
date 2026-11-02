@@ -22,9 +22,9 @@ const cards = [
   </section>
 
   <section class="section--tight">
-    <div class="container cards scatter">
+    <div class="container cards">
       {cards.map((c) => (
-        <article class="pebble contact-card tape" style={`--tint:${c.tint}`} data-reveal>
+        <article class="pebble contact-card" style={`--tint:${c.tint}`} data-reveal>
           <h2>{c.title}</h2>
           <p>{c.text}</p>
           <a class="number" href={telHref(c.phone)}>{c.phone.display}</a>

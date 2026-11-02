@@ -27,11 +27,11 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
 
   <section class="section--tight" aria-labelledby="mission">
     <div class="container mv">
-      <article class="pebble mv-card tape tape--left" data-reveal>
+      <article class="pebble mv-card" data-reveal>
         <h2 id="mission" class="mv-label">Our mission</h2>
         <p class="mv-text">{mission}</p>
       </article>
-      <article class="pebble mv-card mv-card--vision tape tape--blush tape--right" data-reveal>
+      <article class="pebble mv-card mv-card--vision" data-reveal>
         <h2 class="mv-label">Our vision</h2>
         <p class="mv-body">{vision}</p>
       </article>
@@ -73,7 +73,6 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
   .mv { display: grid; gap: 1.25rem; }
   .mv-card { display: grid; gap: .75rem; }
   .mv-label { font-size: var(--fs-h3); color: var(--leaf); }
-  @media (min-width: 768px) { .mv-card { rotate: -.6deg; } .mv-card--vision { rotate: .8deg; margin-top: 2rem; } }
   .mv-text { font-family: var(--font-head); font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem); line-height: 1.35; color: var(--brown); font-weight: 500; }
   .mv-card--vision { background: var(--blush); }
   .name-block { text-align: center; display: grid; gap: .75rem; justify-items: center; }
@@ -83,6 +82,6 @@ const steps = journey.map((j, i) => ({ ...j, badge: i === 2 ? statusLabel : unde
   @media (min-width: 768px) {
     .about-hero { grid-template-columns: 1fr auto; }
     .about-hero :global(.about-emblem) { width: 200px; }
-    .mv { grid-template-columns: 1fr 1.3fr; align-items: stretch; }
+    .mv { grid-template-columns: repeat(2, 1fr); align-items: stretch; }
   }
 </style>

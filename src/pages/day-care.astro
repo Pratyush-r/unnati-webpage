@@ -44,7 +44,7 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
   <section class="section bg-paper" aria-labelledby="dc-why">
     <div class="container">
       <SectionHead title="More than minding — a day that helps children grow" id="dc-why" />
-      <ul class="ideas scatter stagger" role="list" data-reveal="children">
+      <ul class="ideas" role="list" data-reveal="children">
         {dayCare.ideas.map((idea, i) => (
           <li class="pebble pebble--hover idea">
             <span class:list={['icon-badge', { 'icon-badge--blush': i % 2 === 1 }]}><Icon name={idea.icon} /></span>
@@ -67,9 +67,9 @@ const hours = site.dayCare.hours || 'Call or WhatsApp us for timings';
   <section class="section bg-sage" aria-labelledby="dc-parents">
     <div class="container">
       <SectionHead title="Rest, and an update every day" offset id="dc-parents" />
-      <div class="parents scatter" data-reveal="children">
+      <div class="parents" data-reveal="children">
         {dayCare.forParents.map((p) => (
-          <article class="pebble parent-card tape tape--left">
+          <article class="pebble parent-card">
             <span class="icon-badge"><Icon name={p.icon} /></span>
             <div>
               <h3>{p.title}</h3>
