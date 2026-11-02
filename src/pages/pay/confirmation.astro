@@ -1,0 +1,129 @@
+---
+// Where every payment ends: paid, failed or cancelled, with the reference number.
+// The status always comes from the server (/api/payments/orders/:id), never from the URL.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { site, telHref, wa, waText } from '../../config/site';
+---
+<BaseLayout
+  title="Payment Status | Unnati Montessori"
+  description="The status and reference number of your Unnati Montessori fee payment."
+  noindex
+>
+  <DemoBanner />
+  <section class="section--tight">
+    <div class="container-narrow">
+      <div class="pebble confirm" data-confirm aria-live="polite">
+        <p data-state="loading">Checking your payment…</p>
+
+        <div data-state="paid" hidden>
+          <span class="badge badge--ok" aria-hidden="true"><Icon name="check" size={30} /></span>
+          <h1 tabindex="-1">Payment successful</h1>
+          <p class="lead">Thank you, <span data-f="parentName"></span>. We've received the <span data-f="feeLabelLower"></span> for <span data-f="childName"></span>.</p>
+        </div>
+
+        <div data-state="failed" hidden>
+          <span class="badge badge--warn" aria-hidden="true"><Icon name="close" size={30} /></span>
+          <h1 tabindex="-1">Payment failed</h1>
+          <p class="lead"><span data-f="failureReason"></span> You can try again, or call us and we'll help.</p>
+        </div>
+
+        <div data-state="cancelled" hidden>
+          <span class="badge" aria-hidden="true"><Icon name="close" size={30} /></span>
+          <h1 tabindex="-1">Payment cancelled</h1>
+          <p class="lead">The payment was cancelled, so nothing was paid. You can try again whenever you're ready.</p>
+        </div>
+
+        <div data-state="created" hidden>
+          <span class="badge" aria-hidden="true"><Icon name="clock" size={30} /></span>
+          <h1 tabindex="-1">Waiting for the payment</h1>
+          <p class="lead">We haven't heard back from the payment page yet. Please check again in a minute.</p>
+        </div>
+
+        <div data-state="missing" hidden>
+          <h1 tabindex="-1">We couldn't find this payment</h1>
+          <p class="lead">The link may be incomplete. If you've paid, call or WhatsApp us with your details and we'll check.</p>
+        </div>
+
+        <div class="details" data-details hidden>
+          <p class="ref-label">Reference number</p>
+          <p class="ref" data-f="reference"></p>
+          <p class="ref-hint">Please quote this if you contact us about this payment.</p>
+          <dl class="summary">
+            <div><dt>Child</dt><dd data-f="childName"></dd></div>
+            <div><dt>Paying for</dt><dd data-f="feeLabel"></dd></div>
+            <div><dt>Amount</dt><dd data-f="amount"></dd></div>
+            <div><dt>Status</dt><dd data-f="statusLabel"></dd></div>
+          </dl>
+        </div>
+
+        <div class="btn-row actions">
+          <a class="btn btn--primary" href="/pay" data-retry hidden>Try again</a>
+          <a class="btn btn--primary" href="/" data-home hidden>Back to home</a>
+          <a class="btn btn--secondary" href={wa(site.school, waText.general)} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp us</a>
+          <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .confirm { max-width: 720px; display: grid; gap: 1.25rem; }
+  .confirm h1 { font-size: var(--fs-h2); }
+  .confirm h1:focus { outline: none; }
+  .confirm .lead { margin-top: .5rem; }
+  .badge { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; background: var(--blush); color: var(--brown); margin-bottom: 1rem; }
+  .badge--ok { background: var(--sage); color: var(--forest); }
+  .badge--warn { background: var(--clay); color: var(--error); }
+  .details { background: var(--cream); border-radius: var(--r-md); padding: 1.1rem 1.25rem; }
+  .ref-label { font-weight: 700; color: var(--ink-soft); font-size: var(--fs-small); }
+  .ref { font-family: var(--font-head); font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem); font-weight: 600; color: var(--brown); letter-spacing: .04em; overflow-wrap: anywhere; }
+  .ref-hint { font-size: var(--fs-small); margin-bottom: .75rem; }
+  .summary { display: grid; margin: 0; border-top: 1px solid var(--line); }
+  .summary div { display: grid; grid-template-columns: minmax(7rem, 35%) 1fr; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--line); }
+  .summary div:last-child { border-bottom: 0; }
+  .summary dt { font-weight: 700; color: var(--ink-soft); }
+  .summary dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  [data-state][hidden], [data-retry][hidden], [data-home][hidden] { display: none; }
+</style>
+
+<script>
+  import { onPageLoad } from '../../scripts/lifecycle';
+  import { formatINR } from '../../config/payments';
+  import type { PublicOrder } from '../../lib/payments';
+
+  const STATUS_LABEL = { created: 'Waiting', paid: 'Paid', failed: 'Failed', cancelled: 'Cancelled' } as const;
+
+  onPageLoad(() => {
+    const root = document.querySelector<HTMLElement>('[data-confirm]');
+    if (!root) return;
+    const order = new URLSearchParams(location.search).get('order') ?? '';
+    let cancelled = false;
+
+    const show = (state: string, o?: PublicOrder) => {
+      root.querySelectorAll<HTMLElement>('[data-state]').forEach((el) => (el.hidden = el.dataset.state !== state));
+      root.querySelector<HTMLElement>('[data-details]')!.hidden = !o;
+      root.querySelector<HTMLElement>('[data-retry]')!.hidden = !(state === 'failed' || state === 'cancelled');
+      root.querySelector<HTMLElement>('[data-home]')!.hidden = state !== 'paid';
+      if (o) {
+        const values: Record<string, string> = {
+          reference: o.reference, parentName: o.parentName, childName: o.childName, feeLabel: o.feeLabel,
+          feeLabelLower: o.feeLabel.toLowerCase(), amount: formatINR(o.amount), statusLabel: STATUS_LABEL[o.status],
+          failureReason: o.failureReason ?? 'The payment did not go through.',
+        };
+        root.querySelectorAll<HTMLElement>('[data-f]').forEach((el) => (el.textContent = values[el.dataset.f!] ?? ''));
+      }
+      root.querySelector<HTMLElement>(`[data-state="${state}"] h1`)?.focus();
+    };
+
+    if (!order) { show('missing'); return; }
+    fetch(`/api/payments/orders/${encodeURIComponent(order)}`, { cache: 'no-store' })
+      .then((r) => (r.ok ? (r.json() as Promise<PublicOrder>) : Promise.reject()))
+      .then((o) => !cancelled && show(o.status, o))
+      .catch(() => !cancelled && show('missing'));
+
+    return () => { cancelled = true; };
+  });
+</script>

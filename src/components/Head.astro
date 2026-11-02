@@ -20,7 +20,8 @@ const ogImage = `${siteUrl}/og/default.png`;
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex" />}
 <meta name="color-scheme" content="light" />
-<meta name="theme-color" content="#FDF4E5" />
+<!-- Keep in sync with --cream in src/styles/tokens.css and in public/site.webmanifest (neither can read a CSS variable). -->
+<meta name="theme-color" content="#F5EFE6" />
 <link rel="preload" href="/fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png" />

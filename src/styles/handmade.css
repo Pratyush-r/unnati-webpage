@@ -51,11 +51,11 @@ body { background-image: var(--paper-grain); }
 .tape::before {
   content: ''; position: absolute; top: -13px; left: 50%; width: 96px; height: 26px; z-index: 2; pointer-events: none;
   translate: -50% 0; rotate: -4deg;
-  background: rgb(225 171 127 / .62);
+  background: color-mix(in srgb, var(--peach) 62%, transparent);
   -webkit-mask: var(--tape-mask) center / 100% 100% no-repeat; mask: var(--tape-mask) center / 100% 100% no-repeat;
 }
-.tape--sage::before { background: rgb(157 187 138 / .62); }
-.tape--blush::before { background: rgb(244 181 196 / .62); }
+.tape--sage::before { background: color-mix(in srgb, var(--felt) 62%, transparent); }
+.tape--blush::before { background: color-mix(in srgb, var(--pink-board) 62%, transparent); }
 .tape--left::before { left: 22%; rotate: 5deg; }
 .tape--right::before { left: 78%; rotate: -6deg; }
 
@@ -85,18 +85,18 @@ body { background-image: var(--paper-grain); }
 /* Lined notebook paper (the enquiry card). */
 .notebook {
   background-image:
-    linear-gradient(90deg, transparent 0 46px, rgb(214 144 94 / .28) 46px 47.5px, transparent 47.5px),
-    repeating-linear-gradient(to bottom, transparent 0 31px, rgb(118 61 13 / .07) 31px 32px);
+    linear-gradient(90deg, transparent 0 46px, color-mix(in srgb, var(--terracotta) 28%, transparent) 46px 47.5px, transparent 47.5px),
+    repeating-linear-gradient(to bottom, transparent 0 31px, var(--wash) 31px 32px);
   background-color: var(--paper);
 }
 @media (max-width: 639.98px) {
-  .notebook { background-image: repeating-linear-gradient(to bottom, transparent 0 31px, rgb(118 61 13 / .07) 31px 32px); }
+  .notebook { background-image: repeating-linear-gradient(to bottom, transparent 0 31px, var(--wash) 31px 32px); }
 }
 
 /* Polaroids for real photos. */
 .polaroids { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(1rem, .5rem + 2vw, 2rem); }
 .polaroid {
-  margin: 0; width: min(100%, 260px); background: #fff; padding: 10px 10px 14px; border-radius: 4px;
+  margin: 0; width: min(100%, 260px); background: var(--field); padding: 10px 10px 14px; border-radius: 4px;
   box-shadow: 0 14px 28px -16px rgb(59 36 20 / .45), 0 2px 4px rgb(59 36 20 / .08);
 }
 .polaroid img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }

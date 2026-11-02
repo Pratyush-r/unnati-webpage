@@ -1,17 +1,53 @@
-/* Design tokens — colours sampled from the logo files (brief 4.2). Use exactly. */
+/* Design tokens. Every UI colour lives here; tune the palette in this file only.
+   Beige is the base, the brand colours (brown, forest, leaf, sampled from the logo) are the accent.
+   Contrast (WCAG AA, 4.5:1) was checked for ink, ink-soft, ink-muted, brown, leaf, forest and error
+   on every background below; the lowest pair is error on clay at 4.68:1. */
 :root {
   color-scheme: light;
 
-  --cream: #FDF4E5;
-  --paper: #FFFAF2;
+  /* Beige base. Sections alternate cream (page) and paper (.bg-paper); cards sit on paper. */
+  --cream: #F5EFE6;      /* page background (beige 1). Repeated in Head.astro and site.webmanifest. */
+  --paper: #FAF6EF;      /* alternate sections, cards, footer (beige 2) */
+  --field: #FFFDF9;      /* form fields and photo frames: the lightest surface, never stark white */
+
+  /* Brand accents (logo colours, unchanged) */
   --brown: #763D0D;
   --ink: #3B2414;
   --forest: #0B4121;
+  --forest-hover: #0D4F28;
   --leaf: #0F692F;
   --peach: #E1AB7F;      /* illustration only, never text */
   --terracotta: #D6905E; /* illustration only, never text */
-  --sage: #DCE6D3;
-  --blush: #F6E1D3;
+
+  /* Muted, earthy pastels for tinted sections, cards and chips */
+  --sage: #DDE3D1;
+  --blush: #F1DFD2;
+  --rose: #F1E0DE;       /* Language area */
+  --wheat: #F0E3CD;      /* Mathematics area, after-school card */
+  --sky: #DFE6E7;        /* Cultural Studies area */
+  --clay: #E8D3BF;       /* franchise column */
+  --mint: #E8EEDF;       /* ticked checkbox chip */
+  --wheel-peach: #F2DAC2;
+  --wheel-peach-on: #E6B98F;
+  --wheel-sage: #D7E0CC;
+  --wheel-sage-on: #AFC5A0;
+  --shelf-top: #F3E2C8;
+  --shelf-bottom: #EED7B7;
+  --live-dot: #8FD19E;   /* "open" dot on the forest announcement bar */
+
+  /* Text tints and states */
+  --ink-soft: rgb(59 36 20 / .82);  /* secondary text: labels, captions */
+  --ink-muted: rgb(59 36 20 / .75); /* tertiary text: hints, counters */
+  --error: #A3361A;
+  --on-dark-soft: rgb(253 244 229 / .9);
+  --on-dark-wash: rgb(253 244 229 / .1);
+
+  /* Links, washes and overlays */
+  --link-underline: rgb(118 61 13 / .4);
+  --link-underline-hover: rgb(118 61 13 / .75);
+  --wash: rgb(118 61 13 / .07);
+  --scrim: rgb(59 36 20 / .35);
+  --scrim-strong: rgb(59 36 20 / .55);
 
   /* Montessori material colours — shelf and activity illustrations only */
   --wood: #E3BC8D;

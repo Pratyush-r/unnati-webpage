@@ -37,9 +37,9 @@ export const AGE_FILTERS = [2.5, 3, 4];
 export const AREA_TINTS: Record<AreaId, string> = {
   practical: 'var(--sage)',
   sensorial: 'var(--blush)',
-  language: '#FBE3E8',
-  maths: '#F5E6CF',
-  cultural: '#E3EEF6',
+  language: 'var(--rose)',
+  maths: 'var(--wheat)',
+  cultural: 'var(--sky)',
 };
 
 export const ageLabel = (a: number) => (a === 2.5 ? '2½+' : `${a}+`);

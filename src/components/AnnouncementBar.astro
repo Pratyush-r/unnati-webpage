@@ -20,9 +20,9 @@ import { site } from '../config/site';
   :global(html.announce-dismissed) .announce, .announce[hidden], .announce.is-dismissed { display: none; }
   .announce-inner { display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 48px; }
   .announce p { display: flex; align-items: center; gap: .6rem; line-height: 1.35; padding-block: .4rem; max-width: none; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #8FD19E; flex: none; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--live-dot); flex: none; }
   .announce-close { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; color: var(--cream); margin-right: -12px; }
-  .announce-close:hover { background: rgb(253 244 229 / .12); }
+  .announce-close:hover { background: var(--on-dark-wash); }
 </style>
 
 <script>

@@ -95,9 +95,9 @@ export type Area = {
 export const areas: Area[] = [
   { id: 'practical', name: 'Practical Life', text: 'Develops independence, coordination and care for self and the environment.', activity: 'Pouring Water', href: '/at-home/pouring-water', material: 'Jug and glass on a tray', tint: 'var(--sage)' },
   { id: 'sensorial', name: 'Sensorial', text: 'Refines the senses and helps children explore, compare and classify the world around them.', activity: 'Sound Boxes', href: '/at-home/sound-boxes', material: 'Knobbed cylinder block', tint: 'var(--blush)' },
-  { id: 'language', name: 'Language', text: 'Builds strong communication skills through listening, speaking, reading and writing experiences.', activity: 'I Spy Sounds', href: '/at-home/i-spy-sounds', material: 'Pink sandpaper letter "s"', tint: '#FBE3E8' },
-  { id: 'maths', name: 'Mathematics', text: 'Introduces number concepts, operations and problem-solving through concrete experiences.', activity: 'Peg Counting', href: '/at-home/peg-counting', material: 'Spindle box', tint: '#F5E6CF' },
-  { id: 'cultural', name: 'Cultural Studies', text: 'Explores geography, science, history, art and music to understand the world and our place in it.', activity: 'Sprouting Moong', href: '/at-home/sprouting-moong', material: 'Land-and-water globe', tint: '#E3EEF6' },
+  { id: 'language', name: 'Language', text: 'Builds strong communication skills through listening, speaking, reading and writing experiences.', activity: 'I Spy Sounds', href: '/at-home/i-spy-sounds', material: 'Pink sandpaper letter "s"', tint: 'var(--rose)' },
+  { id: 'maths', name: 'Mathematics', text: 'Introduces number concepts, operations and problem-solving through concrete experiences.', activity: 'Peg Counting', href: '/at-home/peg-counting', material: 'Spindle box', tint: 'var(--wheat)' },
+  { id: 'cultural', name: 'Cultural Studies', text: 'Explores geography, science, history, art and music to understand the world and our place in it.', activity: 'Sprouting Moong', href: '/at-home/sprouting-moong', material: 'Land-and-water globe', tint: 'var(--sky)' },
 ];
 
 

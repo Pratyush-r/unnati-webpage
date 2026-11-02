@@ -7,3 +7,5 @@ playwright-report/
 unnati-montessori-site.zip
 unnati-montessori-site/
 .qa-build/
+.data/
+.netlify/

@@ -5,6 +5,10 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# The payment API (/api/payments/*) is a Netlify Function. See README "Payments (prototype)".
+[functions]
+  directory = "netlify/functions"
+
 # The games were replaced by Montessori at Home (round 2). Keep old links working.
 [[redirects]]
   from = "/play"

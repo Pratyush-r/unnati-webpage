@@ -1,0 +1,261 @@
+---
+// Pay fees (prototype). Step 1: details. Step 2: order summary. Then the provider's checkout.
+// The browser checks the form for quick feedback; /api/payments/orders checks it again.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Icon from '../../components/Icon.astro';
+import { feeTypes, feeTypeIds } from '../../config/payments';
+import { isDemo } from '../../lib/payments';
+---
+<BaseLayout
+  title="Pay Fees | Unnati Montessori"
+  description="Pay the registration, admission or after-school activity fee for Unnati Montessori online."
+  noindex
+>
+  <DemoBanner />
+  <section class="page-hero">
+    <div class="container-narrow">
+      <h1>Pay fees online</h1>
+      <p class="lead">Registration, admission and after-school activity fees. You'll get a reference number to keep.</p>
+    </div>
+  </section>
+
+  <section class="section--tight pay-section">
+    <div class="container-narrow">
+      <div class="pay-card pebble" data-pay>
+        <div data-step="details">
+          <h2 class="step-title"><span class="step-n" aria-hidden="true">1</span>Your details</h2>
+          <form novalidate data-pay-form data-astro-reload>
+            <div class="pay-fields">
+              <div class="field">
+                <label for="pay-parent">Parent's name <span class="req">(required)</span></label>
+                <input class="input" id="pay-parent" name="parentName" autocomplete="name" required maxlength="80" aria-describedby="pay-parent-err" />
+                <p class="error" id="pay-parent-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="pay-child">Child's name <span class="req">(required)</span></label>
+                <input class="input" id="pay-child" name="childName" autocomplete="off" required maxlength="80" aria-describedby="pay-child-err" />
+                <p class="error" id="pay-child-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="pay-email">Email <span class="req">(required)</span></label>
+                <input class="input" id="pay-email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" aria-describedby="pay-email-err" />
+                <p class="error" id="pay-email-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="pay-phone">Mobile number <span class="req">(required)</span></label>
+                <input class="input" id="pay-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="pay-phone-hint pay-phone-err" />
+                <p class="hint" id="pay-phone-hint">10-digit Indian mobile number</p>
+                <p class="error" id="pay-phone-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="pay-fee">Paying for <span class="req">(required)</span></label>
+                <select class="select" id="pay-fee" name="feeType" required aria-describedby="pay-fee-err">
+                  <option value="">Choose a fee</option>
+                  {feeTypeIds.map((id) => <option value={id}>{feeTypes[id].label}</option>)}
+                </select>
+                <p class="error" id="pay-fee-err" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="pay-amount">Amount (₹) <span class="req">(required)</span></label>
+                <div class="amount-wrap">
+                  <span class="rupee" aria-hidden="true">₹</span>
+                  <input class="input" id="pay-amount" name="amount" inputmode="decimal" autocomplete="off" required aria-describedby="pay-amount-hint pay-amount-err" />
+                </div>
+                <p class="hint" id="pay-amount-hint">Filled in when you choose a fee.{isDemo() && ' Demo amounts, not our actual fees.'}</p>
+                <p class="error" id="pay-amount-err" aria-live="polite"></p>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary pay-submit">Review payment<Icon name="arrow-right" /></button>
+          </form>
+        </div>
+
+        <div data-step="summary" hidden>
+          <h2 class="step-title" tabindex="-1" data-summary-title><span class="step-n" aria-hidden="true">2</span>Order summary</h2>
+          <dl class="summary">
+            <div><dt>Parent</dt><dd data-sum="parentName"></dd></div>
+            <div><dt>Child</dt><dd data-sum="childName"></dd></div>
+            <div><dt>Email</dt><dd data-sum="email"></dd></div>
+            <div><dt>Mobile</dt><dd data-sum="phone"></dd></div>
+            <div><dt>Paying for</dt><dd data-sum="feeLabel"></dd></div>
+            <div class="total"><dt>Total</dt><dd data-sum="amount"></dd></div>
+          </dl>
+          <p class="pay-note"><Icon name="info" size={20} />You'll go to the payment page next. We never ask for, see or store card or bank details on this website.</p>
+          <p class="error form-error" data-form-error role="alert"></p>
+          <div class="btn-row">
+            <button type="button" class="btn btn--primary" data-continue><Icon name="rupee" />Continue to payment</button>
+            <button type="button" class="btn btn--secondary" data-edit>Edit details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pay-section { padding-top: 0; }
+  .pay-card { max-width: 780px; }
+  .step-title { display: flex; align-items: center; gap: .75rem; font-size: var(--fs-h3); margin-bottom: 1.25rem; }
+  .step-title:focus { outline: none; }
+  .step-n {
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none;
+    background: var(--forest); color: var(--cream); font-size: 1.125rem;
+  }
+  form { display: grid; gap: 1.1rem; }
+  .pay-fields { display: grid; gap: .5rem 1.1rem; }
+  @media (min-width: 640px) { .pay-fields { grid-template-columns: 1fr 1fr; } }
+  .req { font-weight: 600; color: var(--ink-muted); font-size: .875rem; }
+  .amount-wrap { position: relative; }
+  .rupee { position: absolute; left: 1rem; top: 50%; translate: 0 -50%; font-weight: 700; color: var(--ink-soft); pointer-events: none; }
+  .amount-wrap .input { padding-left: 2.1rem; }
+  .pay-submit { justify-self: start; min-height: 52px; padding-inline: 1.75rem; }
+
+  .summary { display: grid; gap: 0; margin: 0 0 1.25rem; border-top: 1px solid var(--line); }
+  .summary div { display: grid; grid-template-columns: minmax(7rem, 30%) 1fr; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .summary dt { font-weight: 700; color: var(--ink-soft); }
+  .summary dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .summary .total { border-bottom: 0; padding-top: 1rem; }
+  .summary .total dt, .summary .total dd { font-family: var(--font-head); font-size: 1.375rem; color: var(--brown); font-weight: 600; }
+  .pay-note { display: flex; gap: .6rem; align-items: flex-start; font-size: var(--fs-small); background: var(--cream); border-radius: var(--r-sm); padding: .75rem 1rem; }
+  .pay-note :global(svg) { color: var(--brown); flex: none; margin-top: .1rem; }
+  .form-error { margin-block: .75rem; }
+  .form-error:empty { display: none; }
+  [data-continue][aria-busy='true'] { opacity: .7; cursor: progress; }
+</style>
+
+<script>
+  import { onPageLoad } from '../../scripts/lifecycle';
+  import { validatePayment, type PaymentFields } from '../../lib/payments/validate';
+  import { feeTypes, isFeeType, formatINR } from '../../config/payments';
+  import type { CheckoutAction } from '../../lib/payments/types';
+
+  const FIELD_IDS: Record<PaymentFields, string> = {
+    parentName: 'pay-parent', childName: 'pay-child', email: 'pay-email', phone: 'pay-phone', feeType: 'pay-fee', amount: 'pay-amount',
+  };
+
+  /** Send the browser to the provider's checkout, whichever style the gateway uses. */
+  function goToCheckout(checkout: CheckoutAction) {
+    if (checkout.type === 'redirect') {
+      location.assign(checkout.url);
+      return;
+    }
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = checkout.url;
+    form.hidden = true;
+    for (const [name, value] of Object.entries(checkout.fields)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.append(input);
+    }
+    document.body.append(form);
+    form.submit();
+  }
+
+  onPageLoad(() => {
+    const card = document.querySelector<HTMLElement>('[data-pay]');
+    if (!card) return;
+    const ac = new AbortController();
+    const signal = ac.signal;
+    const form = card.querySelector<HTMLFormElement>('[data-pay-form]')!;
+    const details = card.querySelector<HTMLElement>('[data-step="details"]')!;
+    const summary = card.querySelector<HTMLElement>('[data-step="summary"]')!;
+    const summaryTitle = card.querySelector<HTMLElement>('[data-summary-title]')!;
+    const formError = card.querySelector<HTMLElement>('[data-form-error]')!;
+    const continueBtn = card.querySelector<HTMLButtonElement>('[data-continue]')!;
+    const fee = form.elements.namedItem('feeType') as HTMLSelectElement;
+    const amount = form.elements.namedItem('amount') as HTMLInputElement;
+    const input = (f: PaymentFields) => document.getElementById(FIELD_IDS[f]) as HTMLInputElement | HTMLSelectElement;
+
+    const raw = () => Object.fromEntries(new FormData(form)) as Record<string, string>;
+
+    const showErrors = (errors: Partial<Record<PaymentFields, string>>) => {
+      (Object.keys(FIELD_IDS) as PaymentFields[]).forEach((f) => {
+        const el = input(f);
+        const field = el.closest('.field') as HTMLElement;
+        const message = errors[f] ?? '';
+        field.querySelector('.error')!.textContent = message;
+        el.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (message) field.dataset.invalid = '';
+        else delete field.dataset.invalid;
+      });
+      const first = (Object.keys(FIELD_IDS) as PaymentFields[]).find((f) => errors[f]);
+      if (first) input(first).focus();
+    };
+
+    const showStep = (step: 'details' | 'summary') => {
+      details.hidden = step !== 'details';
+      summary.hidden = step !== 'summary';
+    };
+
+    // Prefill the amount from the fee type (the parent can still change it).
+    fee.addEventListener('change', () => {
+      if (isFeeType(fee.value)) amount.value = String(feeTypes[fee.value].amount);
+    }, { signal });
+
+    // Re-check a field when the parent leaves it, once it has an error showing.
+    form.addEventListener('focusout', (e) => {
+      const el = e.target as HTMLElement;
+      const field = el.closest<HTMLElement>('.field');
+      if (!field || field.dataset.invalid === undefined) return;
+      const result = validatePayment(raw());
+      const name = (el as HTMLInputElement).name as PaymentFields;
+      const message = result.ok ? '' : result.errors[name] ?? '';
+      field.querySelector('.error')!.textContent = message;
+      el.setAttribute('aria-invalid', message ? 'true' : 'false');
+      if (!message) delete field.dataset.invalid;
+    }, { signal });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const result = validatePayment(raw());
+      if (!result.ok) return showErrors(result.errors);
+      showErrors({});
+      const v = result.value;
+      const values: Record<string, string> = {
+        parentName: v.parentName, childName: v.childName, email: v.email,
+        phone: v.phone.replace(/^\+91(\d{5})(\d{5})$/, '+91 $1 $2'),
+        feeLabel: feeTypes[v.feeType].label, amount: formatINR(v.amount),
+      };
+      summary.querySelectorAll<HTMLElement>('[data-sum]').forEach((dd) => (dd.textContent = values[dd.dataset.sum!]));
+      formError.textContent = '';
+      showStep('summary');
+      summaryTitle.focus();
+    }, { signal });
+
+    card.querySelector('[data-edit]')!.addEventListener('click', () => {
+      showStep('details');
+      input('parentName').focus();
+    }, { signal });
+
+    continueBtn.addEventListener('click', async () => {
+      if (continueBtn.getAttribute('aria-busy') === 'true') return;
+      continueBtn.setAttribute('aria-busy', 'true');
+      formError.textContent = '';
+      try {
+        const res = await fetch('/api/payments/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(raw()),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 422 && data.errors) {
+          showStep('details');
+          showErrors(data.errors);
+        } else if (res.ok && data.checkout) {
+          goToCheckout(data.checkout as CheckoutAction);
+          return; // keep the button busy while the browser leaves
+        } else {
+          formError.textContent = data.error || 'We could not start the payment. Please try again.';
+        }
+      } catch {
+        formError.textContent = 'We could not reach the payment service. Please check your connection and try again.';
+      }
+      continueBtn.removeAttribute('aria-busy');
+    }, { signal });
+
+    return () => ac.abort();
+  });
+</script>

@@ -6,6 +6,7 @@ import Faq from '../components/Faq.astro';
 import EnquiryForm from '../components/EnquiryForm.astro';
 import Icon from '../components/Icon.astro';
 import { site, statusLabel, telHref, wa, waText } from '../config/site';
+import { payments } from '../config/payments';
 import { yearRound, registerSteps } from '../content/copy';
 import { parentFaq } from '../content/faq';
 ---
@@ -22,6 +23,7 @@ import { parentFaq } from '../content/faq';
         <a class="btn btn--primary" href={wa(site.school, waText.general)} target="_blank" rel="noopener"><Icon name="whatsapp" />WhatsApp us</a>
         <a class="btn btn--secondary" href={telHref(site.school)}><Icon name="phone" />Call {site.school.display}</a>
       </div>
+      {payments.linkFromSite && <a class="text-link pay-link" href="/pay">Pay registration or admission fees online</a>}
     </div>
   </section>
 
@@ -59,6 +61,7 @@ import { parentFaq } from '../content/faq';
 
 <style>
   .status { margin-top: 1rem; }
+  .pay-link { margin-top: .5rem; }
   .steps { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); counter-reset: s; }
   .step { display: grid; gap: .5rem; align-content: start; }
   .num { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--forest); color: var(--cream); font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; }

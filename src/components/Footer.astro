@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { site, formatAddress, telHref, wa, waText } from '../config/site';
+import { payments } from '../config/payments';
 
 const year = new Date().getFullYear();
 const socials = Object.entries(site.social).filter(([, url]) => url);
@@ -14,6 +15,7 @@ const quick = [
   { href: '/teach', label: 'Teach with Us' },
   { href: '/consultancy', label: 'Montessori Consultancy' },
   { href: '/contact', label: 'Contact' },
+  ...(payments.linkFromSite ? [{ href: '/pay', label: 'Pay fees' }] : []),
 ];
 ---
 <footer class="site-footer" transition:persist="site-footer">
@@ -63,7 +65,7 @@ const quick = [
   address :global(svg) { color: var(--brown); margin-top: .2rem; }
   .footer-h { font-family: var(--font-body); font-weight: 800; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; color: var(--leaf); margin-bottom: .75rem; }
   .contact-row + .contact-row { margin-top: 1rem; }
-  .label { font-weight: 700; font-size: var(--fs-small); color: rgb(59 36 20 / .82); }
+  .label { font-weight: 700; font-size: var(--fs-small); color: var(--ink-soft); }
   .phone {
     display: inline-flex; align-items: center; min-height: 48px; font-family: var(--font-head); font-size: 1.375rem; font-weight: 600;
     color: var(--brown); text-decoration: none;

@@ -1,0 +1,21 @@
+---
+// "Demo mode" banner for the /pay pages. Shown while PAYMENT_PROVIDER is the mock (read at build).
+import Icon from './Icon.astro';
+import { isDemo } from '../lib/payments';
+---
+{isDemo() && (
+  <div class="demo-banner" role="note" data-demo-banner>
+    <div class="container demo-inner">
+      <Icon name="info" size={22} />
+      <p><strong>Demo mode, no real payments are processed.</strong> This is a prototype of online fee payment. No money is taken and no card details are asked for.</p>
+    </div>
+  </div>
+)}
+
+<style>
+  .demo-banner { background: var(--blush); border-block: 1.5px dashed var(--line-strong); color: var(--ink); }
+  .demo-inner { display: flex; gap: .65rem; align-items: flex-start; padding-block: .85rem; }
+  .demo-inner :global(svg) { color: var(--brown); flex: none; margin-top: .15rem; }
+  .demo-inner p { max-width: none; font-size: var(--fs-small); }
+  .demo-inner strong { color: var(--brown); }
+</style>

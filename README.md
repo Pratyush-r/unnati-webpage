@@ -146,3 +146,69 @@ create a webhook (Make, n8n or Google Apps Script) and add the environment varia
   elements) from `src/scripts/lifecycle.ts`, and return a cleanup. Plain top-level code runs only once per visit.
 - `node scripts/filmstrip.mjs` captures navigation filmstrips into `qa/transitions/` (preview server running).
 - Judgement calls are listed in `DECISIONS.md`; QA results are in `qa/REPORT.md`.
+
+## 10. Payments (prototype)
+
+Parents can pay the registration, admission or after-school activity fee at **/pay**. Right now this is a
+**demo only**: no gateway is connected, no money moves, and every payment page shows a
+"Demo mode, no real payments are processed" banner. No card or bank details are ever asked for or stored
+on this website; with a real gateway, parents type those on the gateway's own page.
+
+### Run it
+
+```
+npm install
+cp .env.example .env      # optional: the defaults already use the mock
+npm run dev               # then open http://localhost:4321/pay
+```
+
+`npm run build && npm run preview` serves it too. On Netlify the payment API runs as a Netlify Function
+(`netlify/functions/payments.mts`), so it works with Git-based deploys. A drag-and-drop deploy of `dist/`
+has the pages but no payment API.
+
+### How the mock works
+
+1. **/pay**: the parent fills in their name, child's name, email, mobile, the fee type and the amount
+   (filled in from the fee type). The browser checks the form, then shows an **order summary**.
+2. **Continue to payment** sends the details to `POST /api/payments/orders`. The server checks everything
+   again, creates the order with a reference number (like `UNM-261101-7KQ3XD`) and asks the provider
+   where the parent should go to pay.
+3. The mock sends them to **/pay/mock-checkout**, a clearly labelled stand-in for a gateway's page, with
+   **Success**, **Failed** and **Cancelled** buttons.
+4. The button returns to `/api/payments/return`, where the provider verifies the result (the mock checks a
+   signed token) and the order is updated. The parent lands on **/pay/confirmation** with the status and
+   the reference number.
+
+Mock orders are saved in `.data/mock-orders.json` (ignored by git). On Netlify they're kept in memory only
+and disappear when the function restarts, which is fine for a demo but not for real payments.
+
+Fee types, demo amounts and limits are in `src/config/payments.ts`. **The amounts there are placeholders,
+not Unnati's fees.** Set `linkFromSite: false` there to remove the "Pay fees" links from the footer and the
+Admissions page (the /pay page itself stays reachable and is hidden from search engines).
+
+### Swap in a real gateway
+
+Everything gateway-specific sits behind one interface, `PaymentProvider` in `src/lib/payments/types.ts`
+(`createOrder`, `verifyPayment`, `handleWebhook`). The pages and the API never change.
+
+1. Copy `src/lib/payments/providers/mock.ts` to `src/lib/payments/providers/<gateway>.ts`
+   (for example `razorpay.ts`), set `id: '<gateway>'` and `demo: false`, and implement the three methods
+   with the gateway's server API, following the comments marked **REPLACE WITH REAL GATEWAY**:
+   - `createOrder`: create the order at the gateway (amount in paise, `order.reference` as the receipt,
+     `ctx.returnUrl` as the return/callback URL) and return its order id plus a checkout action:
+     `{ type: 'redirect', url }` for a hosted payment page, or `{ type: 'form-post', url, fields }` for a
+     gateway that expects a form POST.
+   - `verifyPayment`: read the gateway's return parameters and verify its signature, or fetch the payment
+     status from the gateway. Return `paid`, `failed` or `cancelled`.
+   - `handleWebhook`: verify the webhook signature with `PAYMENT_WEBHOOK_SECRET` and map the event to
+     `{ gatewayOrderId, status, gatewayPaymentId }`.
+2. Register it with one line in `src/lib/payments/index.ts` (the `factories` list).
+3. Set the environment variables (in `.env` locally, in Netlify → Site configuration → Environment
+   variables for the live site): `PAYMENT_PROVIDER=<gateway>`, `PAYMENT_KEY_ID`, `PAYMENT_KEY_SECRET`,
+   `PAYMENT_WEBHOOK_SECRET`. Never put keys in the code.
+4. In the gateway's dashboard, set the webhook URL to `https://<your domain>/api/payments/webhook`.
+5. Move orders from the JSON file to a real database (see the note in `src/lib/payments/store.ts`), replace
+   the demo amounts in `src/config/payments.ts` with the confirmed fees, and update the privacy note.
+6. Test with the gateway's test keys first, then switch to live keys.
+
+Tests: `tests/payments.spec.ts` covers validation, the summary, all three outcomes and the API's checks.

@@ -2,8 +2,11 @@
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 import sitemap from '@astrojs/sitemap';
+import paymentsApi from './src/integrations/payments-api.mjs';
 
 const env = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd(), '');
+// Payment settings (PAYMENT_*) from .env, for the payment API and the build. Real env vars win.
+for (const [key, value] of Object.entries(env)) if (key.startsWith('PAYMENT_') && process.env[key] === undefined) process.env[key] = value;
 const site = (env.SITE_URL || process.env.SITE_URL || 'https://unnati-montessori.netlify.app').replace(/\/$/, '');
 
 export default defineConfig({
@@ -14,7 +17,8 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   trailingSlash: 'ignore',
   build: { format: 'directory', inlineStylesheets: 'always' },
-  integrations: [sitemap({ filter: (page) => !page.includes('/404') })],
+  // paymentsApi serves /api/payments locally; in production it's netlify/functions/payments.mts.
+  integrations: [paymentsApi(), sitemap({ filter: (page) => !page.includes('/404') && !page.includes('/pay/') })],
   image: { responsiveStyles: false },
   vite: { envPrefix: ['PUBLIC_', 'SITE_URL'] },
 });

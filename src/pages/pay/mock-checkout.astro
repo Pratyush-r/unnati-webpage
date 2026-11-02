@@ -1,0 +1,116 @@
+---
+// The mock gateway's checkout page. Belongs to MockProvider: a real gateway hosts its own checkout,
+// so this page is simply never used once PAYMENT_PROVIDER points at a real adapter.
+// Each button posts the chosen outcome and the mock's signed token back to our return URL,
+// exactly where a real gateway would send the parent after paying.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoBanner from '../../components/DemoBanner.astro';
+import Icon from '../../components/Icon.astro';
+---
+<BaseLayout
+  title="Mock Checkout | Unnati Montessori"
+  description="Demo payment gateway for testing online fee payment. No real payments are processed."
+  noindex
+>
+  <DemoBanner />
+  <section class="page-hero">
+    <div class="container-narrow">
+      <p class="chip chip--blush mock-chip"><Icon name="gear" size={18} />Mock payment gateway</p>
+      <h1>Mock checkout</h1>
+      <p class="lead">This stands in for a real payment page. Choose what should happen to this payment.</p>
+    </div>
+  </section>
+
+  <section class="section--tight checkout-section">
+    <div class="container-narrow">
+      <div class="pebble checkout" data-checkout>
+        <p data-checkout-loading>Loading the order…</p>
+        <div data-checkout-ready hidden>
+          <dl class="summary">
+            <div><dt>Reference</dt><dd data-co="reference"></dd></div>
+            <div><dt>Child</dt><dd data-co="childName"></dd></div>
+            <div><dt>Paying for</dt><dd data-co="feeLabel"></dd></div>
+            <div class="total"><dt>Total</dt><dd data-co="amount"></dd></div>
+          </dl>
+          <form method="post" data-checkout-form data-astro-reload>
+            <input type="hidden" name="mock_token" />
+            <fieldset class="outcomes">
+              <legend>Simulate the outcome</legend>
+              <button type="submit" name="mock_outcome" value="success" class="btn btn--primary"><Icon name="check" />Success</button>
+              <button type="submit" name="mock_outcome" value="failed" class="btn btn--secondary"><Icon name="close" />Failed</button>
+              <button type="submit" name="mock_outcome" value="cancelled" class="btn btn--secondary">Cancelled</button>
+            </fieldset>
+          </form>
+        </div>
+        <div data-checkout-missing hidden>
+          <p>We couldn't find this order. It may have expired.</p>
+          <a class="btn btn--primary" href="/pay">Start again</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mock-chip { margin-bottom: .75rem; }
+  .checkout-section { padding-top: 0; }
+  .checkout { max-width: 640px; }
+  .summary { display: grid; margin: 0 0 1.5rem; border-top: 1px solid var(--line); }
+  .summary div { display: grid; grid-template-columns: minmax(7rem, 35%) 1fr; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+  .summary dt { font-weight: 700; color: var(--ink-soft); }
+  .summary dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .summary .total { border-bottom: 0; }
+  .summary .total dt, .summary .total dd { font-family: var(--font-head); font-size: 1.375rem; color: var(--brown); font-weight: 600; }
+  .outcomes { border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); padding: 1rem; margin: 0; display: flex; flex-wrap: wrap; gap: .75rem; }
+  .outcomes legend { font-weight: 800; padding-inline: .4rem; }
+  .outcomes .btn { flex: 1 1 10rem; }
+</style>
+
+<script>
+  import { onPageLoad } from '../../scripts/lifecycle';
+  import { formatINR } from '../../config/payments';
+  import type { PublicOrder } from '../../lib/payments';
+
+  onPageLoad(() => {
+    const root = document.querySelector<HTMLElement>('[data-checkout]');
+    if (!root) return;
+    const q = new URLSearchParams(location.search);
+    const order = q.get('order') ?? '';
+    const back = q.get('return') ?? '';
+    const loading = root.querySelector<HTMLElement>('[data-checkout-loading]')!;
+    const ready = root.querySelector<HTMLElement>('[data-checkout-ready]')!;
+    const missing = root.querySelector<HTMLElement>('[data-checkout-missing]')!;
+    const form = root.querySelector<HTMLFormElement>('[data-checkout-form]')!;
+    let cancelled = false;
+
+    // Only ever post back to our own return endpoint.
+    const sameSite = (() => {
+      try {
+        const u = new URL(back, location.origin);
+        return u.origin === location.origin && u.pathname.startsWith('/api/payments/return') ? u : null;
+      } catch { return null; }
+    })();
+
+    const fail = () => { loading.hidden = true; missing.hidden = false; };
+    if (!order || !sameSite) { fail(); return; }
+
+    fetch(`/api/payments/orders/${encodeURIComponent(order)}`)
+      .then((r) => (r.ok ? (r.json() as Promise<PublicOrder>) : Promise.reject()))
+      .then((o) => {
+        if (cancelled) return;
+        if (o.status !== 'created') {
+          location.replace(`/pay/confirmation/?order=${encodeURIComponent(order)}`);
+          return;
+        }
+        const values: Record<string, string> = { reference: o.reference, childName: o.childName, feeLabel: o.feeLabel, amount: formatINR(o.amount) };
+        root.querySelectorAll<HTMLElement>('[data-co]').forEach((dd) => (dd.textContent = values[dd.dataset.co!]));
+        form.action = sameSite.pathname + sameSite.search;
+        (form.elements.namedItem('mock_token') as HTMLInputElement).value = q.get('token') ?? '';
+        loading.hidden = true;
+        ready.hidden = false;
+      })
+      .catch(() => !cancelled && fail());
+
+    return () => { cancelled = true; };
+  });
+</script>

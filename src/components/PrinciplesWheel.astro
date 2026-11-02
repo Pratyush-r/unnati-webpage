@@ -82,11 +82,11 @@ const segs = principles.map((p, i) => {
   .wheel { width: 100%; height: auto; overflow: visible; }
   .seg { cursor: pointer; outline: none; transition: transform 250ms var(--ease-move); }
   .seg-shape { stroke: rgb(118 61 13 / .35); stroke-width: 1.5; transition: fill 250ms ease; }
-  .seg--peach .seg-shape { fill: #F6D9BD; }
-  .seg--sage .seg-shape { fill: #D6E4CC; }
+  .seg--peach .seg-shape { fill: var(--wheel-peach); }
+  .seg--sage .seg-shape { fill: var(--wheel-sage); }
   .seg[aria-checked='true'] { transform: translate(var(--dx), var(--dy)); }
-  .seg--peach[aria-checked='true'] .seg-shape { fill: #EDB98C; }
-  .seg--sage[aria-checked='true'] .seg-shape { fill: #A9C79A; }
+  .seg--peach[aria-checked='true'] .seg-shape { fill: var(--wheel-peach-on); }
+  .seg--sage[aria-checked='true'] .seg-shape { fill: var(--wheel-sage-on); }
   .seg:hover .seg-shape { stroke: var(--brown); }
   .seg:focus-visible .seg-shape { stroke: var(--brown); stroke-width: 5; }
   .seg-label { font: 700 16.5px var(--font-body); fill: var(--ink); pointer-events: none; }
